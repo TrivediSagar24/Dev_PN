@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="workhistoryCell" rowHeight="82" id="KGk-i7-Jjw" customClass="workhistoryCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="85"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="84"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U4S-C6-ayI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="84"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Geographer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cdy-sz-VA1">
+                                <rect key="frame" x="20" y="14" width="98" height="21"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.16078431369999999" green="0.16078431369999999" blue="0.16078431369999999" alpha="0.98034482759999997" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$60" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ek-IE-sQp">
+                                <rect key="frame" x="293" y="16" width="27" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.16078431369999999" green="0.16078431369999999" blue="0.16078431369999999" alpha="0.98034482759999997" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your review for this company" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FWB-pY-bqo">
+                                <rect key="frame" x="20" y="38" width="199" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.16078431369999999" green="0.16078431369999999" blue="0.16078431369999999" alpha="0.98034482759999997" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CbR-Ip-RjD" userLabel="Star">
+                                <rect key="frame" x="20" y="55" width="117" height="17"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Empty_icon_" translatesAutoresizingMaskIntoConstraints="NO" id="yUd-FQ-KYO">
+                                        <rect key="frame" x="0.0" y="0.0" width="17" height="17"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Empty_icon_" translatesAutoresizingMaskIntoConstraints="NO" id="waQ-Nv-dvY">
+                                        <rect key="frame" x="25" y="0.0" width="17" height="17"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Empty_icon_" translatesAutoresizingMaskIntoConstraints="NO" id="qSw-a4-FSS">
+                                        <rect key="frame" x="50" y="0.0" width="17" height="17"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Empty_icon_" translatesAutoresizingMaskIntoConstraints="NO" id="JCP-Zl-Ye2">
+                                        <rect key="frame" x="75" y="0.0" width="17" height="17"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Empty_icon_" translatesAutoresizingMaskIntoConstraints="NO" id="NtW-UU-0yI">
+                                        <rect key="frame" x="100" y="0.0" width="17" height="17"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="0ek-IE-sQp" firstAttribute="centerY" secondItem="cdy-sz-VA1" secondAttribute="centerY" id="9kr-rS-4r3"/>
+                            <constraint firstItem="FWB-pY-bqo" firstAttribute="leading" secondItem="cdy-sz-VA1" secondAttribute="leading" id="DvU-86-eLH"/>
+                            <constraint firstItem="CbR-Ip-RjD" firstAttribute="height" secondItem="U4S-C6-ayI" secondAttribute="height" multiplier="17:84" id="Nsb-Sm-aMo"/>
+                            <constraint firstAttribute="trailing" secondItem="0ek-IE-sQp" secondAttribute="trailing" id="NtD-1Z-Ku9"/>
+                            <constraint firstItem="cdy-sz-VA1" firstAttribute="top" secondItem="U4S-C6-ayI" secondAttribute="top" constant="14" id="bio-M6-Q0Y"/>
+                            <constraint firstItem="CbR-Ip-RjD" firstAttribute="top" secondItem="FWB-pY-bqo" secondAttribute="bottom" constant="-1" id="llI-Wd-91s"/>
+                            <constraint firstItem="CbR-Ip-RjD" firstAttribute="leading" secondItem="FWB-pY-bqo" secondAttribute="leading" id="pB6-Ay-bJQ"/>
+                            <constraint firstItem="FWB-pY-bqo" firstAttribute="top" secondItem="cdy-sz-VA1" secondAttribute="bottom" constant="3" id="rEc-AV-gyb"/>
+                            <constraint firstItem="cdy-sz-VA1" firstAttribute="leading" secondItem="U4S-C6-ayI" secondAttribute="leading" constant="20" id="umD-Ub-E58"/>
+                            <constraint firstItem="CbR-Ip-RjD" firstAttribute="width" secondItem="U4S-C6-ayI" secondAttribute="width" multiplier="117:320" id="zb9-Ga-O0Y"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="U4S-C6-ayI" secondAttribute="trailing" id="XHj-lW-kp3"/>
+                    <constraint firstItem="U4S-C6-ayI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="cUB-5u-nrK"/>
+                    <constraint firstAttribute="bottom" secondItem="U4S-C6-ayI" secondAttribute="bottom" id="oxx-4U-WwU"/>
+                    <constraint firstItem="U4S-C6-ayI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="vlx-MW-nLp"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="fiveStar" destination="NtW-UU-0yI" id="nHe-eQ-DZZ"/>
+                <outlet property="fourStar" destination="JCP-Zl-Ye2" id="gUx-ub-Lad"/>
+                <outlet property="jobTitle" destination="cdy-sz-VA1" id="vPQ-bA-IjU"/>
+                <outlet property="oneStar" destination="yUd-FQ-KYO" id="7Nr-pl-3gr"/>
+                <outlet property="priceLbl" destination="0ek-IE-sQp" id="GYF-TQ-DfV"/>
+                <outlet property="reviewLbl" destination="FWB-pY-bqo" id="3R9-J7-cN2"/>
+                <outlet property="starView" destination="CbR-Ip-RjD" id="vPE-5H-lTI"/>
+                <outlet property="threeStar" destination="qSw-a4-FSS" id="ytj-q5-LJx"/>
+                <outlet property="twoStar" destination="waQ-Nv-dvY" id="FCK-3H-Kk5"/>
+            </connections>
+            <point key="canvasLocation" x="271" y="321"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Empty_icon_" width="40" height="39"/>
+    </resources>
+</document>

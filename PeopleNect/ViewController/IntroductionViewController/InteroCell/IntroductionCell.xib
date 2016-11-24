@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="IntroductionCell" id="gTV-IL-0wX" customClass="IntroductionCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="285"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="285"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OKP-aL-lvV">
+                        <rect key="frame" x="40" y="20" width="240" height="109"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tell us what kind of work you can offer" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eWL-hp-2Vd">
+                        <rect key="frame" x="40" y="139" width="240" height="138"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="OKP-aL-lvV" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" multiplier="109:285" id="Bya-L6-Vyg"/>
+                <constraint firstItem="OKP-aL-lvV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="40" id="ClO-6I-Rh2"/>
+                <constraint firstAttribute="bottom" secondItem="eWL-hp-2Vd" secondAttribute="bottom" constant="8" id="E2y-uI-017"/>
+                <constraint firstAttribute="trailing" secondItem="OKP-aL-lvV" secondAttribute="trailing" constant="40" id="MdG-6q-rKB"/>
+                <constraint firstItem="OKP-aL-lvV" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="20" id="QNh-7S-ttf"/>
+                <constraint firstAttribute="trailing" secondItem="eWL-hp-2Vd" secondAttribute="trailing" constant="40" id="ZyE-Fy-Ufh"/>
+                <constraint firstItem="eWL-hp-2Vd" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="40" id="jXN-NW-D4Y"/>
+                <constraint firstItem="eWL-hp-2Vd" firstAttribute="top" secondItem="OKP-aL-lvV" secondAttribute="bottom" constant="10" id="n5f-vh-iyB"/>
+            </constraints>
+            <connections>
+                <outlet property="imgLogo" destination="OKP-aL-lvV" id="D1m-Rj-J52"/>
+                <outlet property="lblDetail" destination="eWL-hp-2Vd" id="Ndl-De-bTd"/>
+            </connections>
+            <point key="canvasLocation" x="357" y="469.5"/>
+        </collectionViewCell>
+    </objects>
+</document>
