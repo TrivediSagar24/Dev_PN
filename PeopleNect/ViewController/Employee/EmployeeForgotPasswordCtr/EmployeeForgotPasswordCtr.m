@@ -86,23 +86,30 @@
         [_param setObject:@"forgotPassword" forKey:@"methodName"];
         [_param setObject:_tfEmail.text forKey:@"email"];
         
-        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-        {
-            [kAppDel.progressHud hideAnimated:YES];
+        
+        if ([GlobalMethods InternetAvailability]) {
             
+            [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+             {
+                 [kAppDel.progressHud hideAnimated:YES];
+                 
             if ([responseObject valueForKey:@"OTP"]) {
-                employeeVerifyOTP *obj_employeeVerifyOTP = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeVerifyOTP"];
-                obj_employeeVerifyOTP.EmployeeOTP = [responseObject valueForKey:@"OTP"];
-                
-                NSString * str = [responseObject valueForKey:@"userId"];
-                [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
+        employeeVerifyOTP *obj_employeeVerifyOTP = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeVerifyOTP"];
+        obj_employeeVerifyOTP.EmployeeOTP = [responseObject valueForKey:@"OTP"];
+                     
+            NSString * str = [responseObject valueForKey:@"userId"];
+            [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
-                [self.navigationController pushViewController:obj_employeeVerifyOTP animated:YES];
-            }
-            else
-                [self presentViewController:[GlobalMethods AlertWithTitle:@"Error" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        }];
+            [self.navigationController pushViewController:obj_employeeVerifyOTP animated:YES];
+                 }
+                 else
+                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Error" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 [kAppDel.progressHud hideAnimated:YES];
+             }];
+        }else{
+              [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
     }
 }
 

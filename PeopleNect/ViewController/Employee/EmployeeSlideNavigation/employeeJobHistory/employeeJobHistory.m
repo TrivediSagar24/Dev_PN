@@ -149,13 +149,21 @@
 -(void)employeesJobsHistory
 {
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    
+    _WorkhistoryArray = [[NSMutableArray alloc]init];
+    _declineJobArray = [[NSMutableArray alloc]init];
+    _otherJobArray = [[NSMutableArray alloc]init];
+
     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"employeesJobsHistory" forKey:@"methodName"];
+    [_param setObject:@"JobHistory" forKey:@"methodName"];
     [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
 
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
        [kAppDel.progressHud hideAnimated:YES];
         
+        _WorkhistoryArray = [[responseObject valueForKey:@"data"]valueForKey:@"jobHistory"];
+        _declineJobArray = [[responseObject valueForKey:@"data"]valueForKey:@"rejectedInvitation"];
+        _otherJobArray = [[responseObject valueForKey:@"data"]valueForKey:@"otherInvitation"];
         [_JobHistoryTV reloadData];
        
    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {

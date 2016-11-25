@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EmployerjJobHistoryCollectionCell.h"
+#import "GlobalMethods.h"
+#import "PN_Constants.h"
+
 @interface EmployerJobHistory : UIViewController
+<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property (strong, nonatomic) IBOutlet UILabel *jobHistoryLbl;
 @property (strong, nonatomic) IBOutlet UICollectionView *jobHistoryCollectionView;

@@ -189,7 +189,7 @@ if (section==2){
         cell.multiplyImage.hidden = YES;
         cell.AcceptedLbl.hidden = YES;
         cell.arrowImage.hidden = YES;
-    cell.acceptRefuseView.hidden = YES;
+        cell.acceptRefuseView.hidden = YES;
         
         cell.ratingLbl.hidden = NO;
         cell.ratingImage.hidden = NO;
@@ -392,9 +392,14 @@ if (section==2){
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     selectedEmployeeInfo *selectedEmployeeInfo = [self.storyboard instantiateViewControllerWithIdentifier:@"selectedEmployeeInfo"];
+    employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
     
-    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:selectedEmployeeInfo];
+    obj_employerInviteForJobVC.employeeSelected = indexPath.row;
+    obj_employerInviteForJobVC.isfromOpenJobSelected = YES;
+
+    obj_employerInviteForJobVC.invitedJobListArray = [[NSMutableArray alloc]init];
+    
+    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_employerInviteForJobVC];
     
     obj_nav.definesPresentationContext = YES;
     
@@ -402,21 +407,23 @@ if (section==2){
     
     if (indexPath.section==0) {
         
-        [self presentViewController:obj_nav animated:YES completion:nil];
+        obj_employerInviteForJobVC.invitedJobListArray = _hiredArray;
     }
     if (indexPath.section==1) {
-        
-        [self presentViewController:obj_nav animated:YES completion:nil];
+
+        obj_employerInviteForJobVC.invitedJobListArray = _selectedArray;
     }
     if (indexPath.section==2) {
         
-        [self presentViewController:obj_nav animated:YES completion:nil];
+        obj_employerInviteForJobVC.invitedJobListArray = _applicantArray;
     }
     if (indexPath.section==3) {
         
-        [self presentViewController:obj_nav animated:YES completion:nil];
+        obj_employerInviteForJobVC.invitedJobListArray = _rejectedArray;
     }
+[self presentViewController:obj_nav animated:YES completion:nil];
 }
+
 #pragma mark - <FZAccordionTableViewDelegate> -
 
 - (void)tableView:(FZAccordionTableView *)tableView willOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
@@ -450,8 +457,6 @@ if (section==2){
     [_param setObject:_jobId forKey:@"jobId"];
     
    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-       
-       NSLog(@"job user list %@",responseObject);
        
        [kAppDel.progressHud hideAnimated:YES];
        

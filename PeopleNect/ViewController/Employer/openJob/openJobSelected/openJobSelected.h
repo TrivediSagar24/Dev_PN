@@ -15,7 +15,6 @@
 #import "OpenJobCandidatesCell.h"
 #import "UIImageView+WebCache.h"
 #import "inviteCandidates.h"
-#import "selectedEmployeeInfo.h"
 #import "noBalance.h"
 
 static NSString *const kTableViewCellReuseIdentifier = @"TableViewCellReuseIdentifier";

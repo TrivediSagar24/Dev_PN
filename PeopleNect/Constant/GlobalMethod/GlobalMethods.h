@@ -13,6 +13,7 @@
 #import "ViewController.h"
 #import "MenuCtr.h"
 #import "PN_Constants.h"
+#import "Reachability.h"
 
 @interface GlobalMethods : NSObject
 
@@ -35,9 +36,10 @@
 
 +(NSDictionary*)UpdateEmployerWithID:(NSString*)EmployerId cityID:(NSString*)cityID companyName :(NSString *)CompanyName Name:(NSString*)Name Phone:(NSString*)Phone StateID:(NSString*)StateID Surname:(NSString*)Surname zipCode :(NSString*)zipCode countryCode:(NSString *)countryCode Streetname:(NSString*)StreetName Password:(NSString*)Password Adress1:(NSString*)Address1 Address2:(NSString*)Address2 countryID:(NSString*)countryID;
 
++(BOOL)InternetAvailability;
+
+
+
 
 +(void)dataTaskCancel;
-+(void)SlideNavigationLeftMenu;
-+(void)SlideNavigationRootViewForEmployee;
-+(void)SlideNavigationRootViewForEmployer;
 @end

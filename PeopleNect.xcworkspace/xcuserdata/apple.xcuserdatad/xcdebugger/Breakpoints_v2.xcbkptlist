@@ -307,8 +307,8 @@
                   symbolName = "-[employeeMainChat collectionView:attributedTextForCellTopLabelAtIndexPath:]"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNect/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "501684705.168819"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
+                  timestampString = "501763660.703563"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "213"
@@ -322,8 +322,8 @@
                   symbolName = "-[employeeMainChat collectionView:attributedTextForCellTopLabelAtIndexPath:]"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNect/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "501684705.16898"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
+                  timestampString = "501763660.703871"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "213"
@@ -542,12 +542,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/openJob/openJobSelected/openJobSelected.m"
-            timestampString = "501676734.871359"
+            timestampString = "501756748.961793"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
-            landmarkName = "-viewDidLoad"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -558,12 +558,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/openJob/openJobSelected/openJobSelected.m"
-            timestampString = "501676895.534191"
+            timestampString = "501756751.225237"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
-            landmarkName = "-btnInvitesClicked:"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
+            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employer/employerInviteForJobVC/employerInviteForJobVC.m"
+            timestampString = "501769024.410455"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "-scrollViewDidEndDecelerating:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

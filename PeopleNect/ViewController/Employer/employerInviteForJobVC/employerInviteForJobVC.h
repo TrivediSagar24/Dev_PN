@@ -35,6 +35,10 @@
 @property (strong, nonatomic) IBOutlet UIView *ProfileView;
 @property (strong, nonatomic) IBOutlet UIButton *ProfileBtn;
 @property (strong, nonatomic) NSMutableArray *_chatHistoryArray;
+@property(nonatomic)BOOL isfromOpenJobSelected;
+@property (strong, nonatomic) IBOutlet UIView *invitedJobView;
+@property (strong, nonatomic) IBOutlet UIButton *postedJobBtn;
+@property(strong,nonatomic)NSMutableArray *invitedJobListArray;
 
 - (IBAction)onClickMenu:(id)sender;
 - (IBAction)onClickChat:(id)sender;

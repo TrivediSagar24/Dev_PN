@@ -100,75 +100,82 @@
         [dict setObject:DevideID forKey:@"deviceId"];
         [dict setObject:@"ios" forKey:@"os"];
         [dict setObject:@"employerLogin" forKey:@"methodName"];
-        kAppDel.progressHud  = [GlobalMethods ShowProgressHud:self.view];
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * task, id   responseObject) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
+       
+        if ([GlobalMethods InternetAvailability]) {
             
-        NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"employerId"];
-        
-        
-        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployerUserID"];
-        
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        
-        NSString * countryId = [[responseObject objectForKey:@"data"]valueForKey:@"countryId"];
+            kAppDel.progressHud  = [GlobalMethods ShowProgressHud:self.view];
             
-        
-        [[NSUserDefaults standardUserDefaults] setObject:countryId forKey:@"countryId"];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-    if([[responseObject valueForKey:@"status"] isEqual:@1]){
-        
-    self.loginEmployerId =[[responseObject valueForKey:@"data"]valueForKey:@"employerId" ];
-        
-    kAppDel.obj_responseDataOC = [[responseDataOC alloc] initWithDictionary:responseObject];
-        
-        
-    NSData *loginObject = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseDataOC];
+            [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * task, id   responseObject) {
                 
-    [[NSUserDefaults standardUserDefaults] setObject:loginObject  forKey:@"employerLogin"];
-        
-    [[NSUserDefaults standardUserDefaults] synchronize];
+                [kAppDel.progressHud hideAnimated:YES];
                 
-        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"employerLogin"];
-        if (data!=nil) {
-            kAppDel.obj_responseDataOC = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        }
-        
-    if(kAppDel.obj_responseDataOC.employerCompanyName != (id)[NSNull null] && kAppDel.obj_responseDataOC.employerProfilePic != (id)[NSNull null] ){
-        [[NSUserDefaults standardUserDefaults] setObject:@"Login" forKey:@"Update"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        
-        employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[self.storyboard
-                                                                       instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-
-        [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
-        
-        
-            MenuCtr *obj_MenuCtr  = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
-            [self.navigationController pushViewController:obj_MenuCtr animated:YES];
+                NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"employerId"];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployerUserID"];
+                
+                
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                
+                NSString * countryId = [[responseObject objectForKey:@"data"]valueForKey:@"countryId"];
+                
+                
+                [[NSUserDefaults standardUserDefaults] setObject:countryId forKey:@"countryId"];
+                
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                if([[responseObject valueForKey:@"status"] isEqual:@1]){
                     
-            }
-                
-        else{
-            EmployerSecondScreenCtr *obj_EmployerSecondScreenCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerSecondScreenCtr"];
-           
-            [self.navigationController pushViewController:obj_EmployerSecondScreenCtr animated:YES];
-            }
-            }
-    else{
-        [self presentViewController:[GlobalMethods AlertWithTitle:@"Error " Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-        }
-    }
-        failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                    [kAppDel.progressHud hideAnimated:YES];
+                    self.loginEmployerId =[[responseObject valueForKey:@"data"]valueForKey:@"employerId" ];
+                    
+                    kAppDel.obj_responseDataOC = [[responseDataOC alloc] initWithDictionary:responseObject];
+                    
+                    
+                    NSData *loginObject = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseDataOC];
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:loginObject  forKey:@"employerLogin"];
+                    
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    
+                    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"employerLogin"];
+                    if (data!=nil) {
+                        kAppDel.obj_responseDataOC = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                    }
+                    
+            if(kAppDel.obj_responseDataOC.employerCompanyName != (id)[NSNull null] && kAppDel.obj_responseDataOC.employerProfilePic != (id)[NSNull null] ){
+                        [[NSUserDefaults standardUserDefaults] setObject:@"Login" forKey:@"Update"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                        
+            employeeSlideNavigation *leftMenu = [self.storyboard
+                                                             instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+                        
+                [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
+                        
+                        
+                MenuCtr *obj_MenuCtr  = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
+                [self.navigationController pushViewController:obj_MenuCtr animated:YES];
+                        
+                    }
+                    
+                else{
+                        EmployerSecondScreenCtr *obj_EmployerSecondScreenCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerSecondScreenCtr"];
+                        
+                        [self.navigationController pushViewController:obj_EmployerSecondScreenCtr animated:YES];
+                    }
                 }
-         ];
+                else{
+                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Error " Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+                }
+            }
+                    failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                        [kAppDel.progressHud hideAnimated:YES];
+                    }
+             ];
+        }else{
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
     }
 }
 

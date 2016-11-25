@@ -13,7 +13,7 @@
 #define kAFClient [AFAPIClient sharedClient]
 
 #define MAIN_URL @"http://peoplenect.inexture.com/webservice"
-
+#define InternetAvailbility @"Internet is not Available."
 #define MAIN_URL_DOMAIN @""
 #define IS_DEBUG 1
 #define APP_NAME @""

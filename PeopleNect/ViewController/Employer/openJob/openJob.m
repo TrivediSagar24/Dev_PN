@@ -172,11 +172,10 @@
 
  #pragma mark - openJobs -
  -(void)openJobs{
- NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
      _currentJob = [[NSMutableArray alloc]init];
      _guestJob = [[NSMutableArray alloc]init];
-     
- kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
  [_param setObject:@"openJobs" forKey:@"methodName"];
  [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
  [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
@@ -184,8 +183,6 @@
      
  _currentJob = [[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"];
 _guestJob = [[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"];
-     
-     NSLog(@"open job  %@ ",responseObject);
      
      _openJobTableView.delegate = self;
      _openJobTableView.dataSource = self;

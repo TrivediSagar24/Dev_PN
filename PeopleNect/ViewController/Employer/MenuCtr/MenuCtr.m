@@ -15,12 +15,10 @@ static CLLocationCoordinate2D currentLocation;
     UITapGestureRecognizer *tap;
     NSMutableArray *arraySelectedItems,*arrayCategoryId,*arrayCategoryList;
     NSString *EmployerUserID,*selectedCategoryName,*totalRecords;
-    NSInteger selectedTab,check,flag;
+    NSInteger selectedTab,check,flag,selectedTabNumber,lastSelectedIndex,nearByCount,selectedtag;
     GMSMarker *currentMarker,*markerUserLocation;
     NSMutableArray *EmployeeDetails;
     GMSCoordinateBounds *visibleRegions;
-    UISwipeGestureRecognizer * swipeleft,* swiperight;
-
 }
 @end
 
@@ -36,7 +34,8 @@ static CLLocationCoordinate2D currentLocation;
     self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
     self.totalRecordEmployee.text = @"";
     
-    
+    EmployeeDetails = [[NSMutableArray alloc]init];
+
     [self showCurrentLocation];
     [self businessCategoryList];
     
@@ -52,56 +51,26 @@ static CLLocationCoordinate2D currentLocation;
     check = 0;
     [self jobPostingPriceAndBalance];
     
-    
-     swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft)];
-    
-    swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
-    
-   [_obj_MainTableView addGestureRecognizer:swipeleft];
-    
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
+    
+    UISwipeGestureRecognizer *swipeRightSide = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideToRightWithGesture:)];
+    swipeRightSide.direction = UISwipeGestureRecognizerDirectionRight;
+    
+    
+    UISwipeGestureRecognizer *swipeLeftSide = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideToLeftWithGesture:)];
+    swipeLeftSide.direction = UISwipeGestureRecognizerDirectionLeft;
+    
+    
+    swipeLeftSide.delegate = self;
+    swipeRightSide.delegate = self;
+    
+    [_obj_MainTableView addGestureRecognizer:swipeRightSide];
+    [_obj_MainTableView addGestureRecognizer:swipeLeftSide];
 
-   swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight)];
-    swiperight.direction=UISwipeGestureRecognizerDirectionRight;
 
-  [_obj_MainTableView addGestureRecognizer:swiperight];
     
 }
 
--(void)swipeleft{
-    
-    NSArray *visibleItems = [self.obj_MainCollectionView indexPathsForVisibleItems];
-   
-    NSIndexPath *currentItem = [visibleItems objectAtIndex:0];
-   
-    NSIndexPath *nextItem = [NSIndexPath indexPathForItem:currentItem.item + 1 inSection:currentItem.section];
-    
-    NSLog(@"left item %ld",(long)nextItem.item);
-    
- selectedTab = nextItem.row;
-   
-[self.obj_MainCollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
-}
-
-
--(void)swiperight{
-   
-    NSArray *visibleItems = [self.obj_MainCollectionView indexPathsForVisibleItems];
-    
-    NSIndexPath *currentItem = [visibleItems objectAtIndex:0];
-    
-    NSIndexPath *nextItem = [NSIndexPath indexPathForItem:currentItem.item -1 inSection:currentItem.section];
-    
-  selectedTab = nextItem.row;
-
-
-    if (nextItem.row>0) {
-        
-        NSLog(@"right item %ld",(long)nextItem.item);
-        
-    [self.obj_MainCollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-    }
-}
 
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -281,12 +250,19 @@ static CLLocationCoordinate2D currentLocation;
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     employerMainTVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"employerMainTVCell"];
+    
     cell.lblEmpNameMainTVC.text = [[EmployeeDetails valueForKey:@"name"]objectAtIndex:indexPath.row];
+   
     cell.lblCategoryMainTVCell.text = [NSString stringWithFormat:@"%@ - %@years/ %@km",[[EmployeeDetails valueForKey:@"categoryName"] objectAtIndex:indexPath.row],[[EmployeeDetails valueForKey:@"exp_years"] objectAtIndex:indexPath.row],[[EmployeeDetails valueForKey:@"distance"] objectAtIndex:indexPath.row]];
+    
     cell.lblRatingMainTVCell.text = [[EmployeeDetails valueForKey:@"rating"] objectAtIndex:indexPath.row];
+   
     cell.lblEmpNameMainTVC.text = [[EmployeeDetails valueForKey:@"name"] objectAtIndex:indexPath.row];
+    
     [cell.imgVwMainTVCell sd_setImageWithURL: [NSURL URLWithString:[[EmployeeDetails valueForKey:@"image_url"] objectAtIndex:indexPath.row ]]placeholderImage:[UIImage imageNamed:@"plceholder"]];
+    
     return cell;
 }
 
@@ -318,36 +294,6 @@ static CLLocationCoordinate2D currentLocation;
     obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
     
     [self presentViewController:obj_nav animated:YES completion:nil];
-}
-
-
-#pragma mark - CollectionView Delegate & Datasource -
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [arrayCategoryList count];
-}
-
-
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-  
-    MainCollectionVeiwCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-    cell.lblMainContentCell.text = [arrayCategoryList objectAtIndex:indexPath.row];
-       cell.lblMainContentCell.textColor = [UIColor colorWithRed:149.0/255.0 green:149.0/255.0 blue:149.0/255.0 alpha:1.0 ];
-    if(selectedTab == indexPath.row){
-        cell.lblMainContentCell.textColor = [UIColor colorWithRed:53.0/255.0 green:116.0/255.0 blue:158.0/255.0 alpha:1.0 ];
-        cell.lblMainBorderCell.hidden = NO;
-    }
-    else{
-        cell.lblMainContentCell.textColor = [UIColor colorWithRed:149.0/255.0 green:149.0/255.0 blue:149.0/255.0 alpha:1.0 ];
-        cell.lblMainBorderCell.hidden = YES;
-    }
-    return  cell;
-}
-
-
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    selectedTab = indexPath.row;
-    [_obj_MainCollectionView reloadData];
-    [self nearByEmployeesSelected:selectedTab];
 }
 
 
@@ -385,7 +331,6 @@ static CLLocationCoordinate2D currentLocation;
         
         kAppDel.obj_responseEmployeesList = [[responseEmployeesList alloc] initWithDictionary:responseObject];
        
-//        NSLog(@"Employee List%@",responseObject);
         
         NSData *EmployeeList = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseEmployeesList];
         
@@ -393,26 +338,17 @@ static CLLocationCoordinate2D currentLocation;
         
         [[NSUserDefaults standardUserDefaults] synchronize];
         
-        
-        EmployeeDetails = [[NSMutableArray alloc]init];
-        EmployeeDetails = [responseObject valueForKey:@"data"];
+        EmployeeDetails = [[responseObject valueForKey:@"data"]mutableCopy];
         
         [self.obj_MapView clear];
         
-        //for visibleRegions of map
-        
-        for(int i=0;i<[[EmployeeDetails valueForKey:@"name"]count];i++)
-        {
-            CLLocationCoordinate2D position = CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]);
-            [visibleRegions includingCoordinate:position];
-        }
-        
         [self UserLocationMarker:currentLocation];
         [self mapMarker];
+        
         self.obj_MainTableView.delegate = self;
         self.obj_MainTableView.dataSource = self;
         [self.obj_MainTableView reloadData];
-        
+
     /*--Getting total records of particular selected data---*/
         
     totalRecords = [responseObject valueForKey:@"totalRecords"];
@@ -463,8 +399,7 @@ static CLLocationCoordinate2D currentLocation;
                     count --;
         }
         [self nearByEmployeesSelected:0];
-        self.obj_MainCollectionView.delegate = self;
-        self.obj_MainCollectionView.dataSource = self;
+        [ self topTabCreate];
     }
     failure:^(NSURLSessionDataTask *  task, NSError *  error) {
                 [kAppDel.progressHud hideAnimated:YES];
@@ -596,5 +531,234 @@ static CLLocationCoordinate2D currentLocation;
         }
     }
 }
+
+#pragma mark - topTapCreate -
+-(void)topTabCreate
+{
+    int scrollWidh = 0;
+    int distX = 10;
+    int spacer = 10;
+    
+    nearByCount = 0;
+    
+    for(int i=0 ;i<[arrayCategoryList count];i++)
+    {
+        
+        NSString *str_uppercase = [arrayCategoryList objectAtIndex:i];
+        
+        UIButton *btnAddTemp = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 40)];
+        [btnAddTemp setTitle:str_uppercase forState:UIControlStateNormal];
+        
+        [btnAddTemp sizeToFit];
+        
+        UIButton *btnAddActual = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, 40)];
+        [btnAddActual setTitle:str_uppercase forState:UIControlStateNormal];
+        
+        [btnAddActual setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        
+        
+        UIImageView *lineimage = [[UIImageView alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, 37, (btnAddTemp.frame.size.width+spacer*2)+1, 3)];
+        
+        
+        lineimage.backgroundColor = [UIColor blueColor];
+        
+        UILabel *separatorLabel = [[UILabel alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, 10, 1.0, 20)];
+        separatorLabel.backgroundColor = [UIColor lightGrayColor];
+        
+        btnAddActual.tag =i;
+        lineimage.tag =i;
+        
+        lineimage.hidden = YES;
+        [btnAddActual addTarget:self action:@selector(tabSelectAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [_categoryScrollView addSubview:lineimage];
+        [_categoryScrollView addSubview:btnAddActual];
+        [_categoryScrollView addSubview:separatorLabel];
+        
+        if (i==arrayCategoryList.count-1)
+        {
+            UIButton *btnAddActualTemp = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, 40)];
+            [btnAddActualTemp setTitle:str_uppercase forState:UIControlStateNormal];
+            
+            [btnAddActualTemp addTarget:self action:@selector(btnActualTempForTagsPressed:) forControlEvents:UIControlEventTouchUpInside];
+            btnAddActualTemp.tag =i;
+            
+            [_categoryScrollView addSubview:btnAddActualTemp];
+        }
+        distX += btnAddActual.frame.size.width+spacer*2;
+    }
+    
+    UILabel *separatorLabel = [[UILabel alloc]initWithFrame:CGRectMake(distX-spacer-1, 10, 1.0, 20)];
+    separatorLabel.backgroundColor = [UIColor lightGrayColor];
+    [_categoryScrollView addSubview:separatorLabel];
+    
+    scrollWidh = distX-spacer;
+    
+    _categoryScrollView.contentSize = CGSizeMake(scrollWidh, 40);
+    
+    UIButton *btn = [[UIButton alloc]init];
+    btn.tag = selectedTabNumber;
+    [self tabSelectAction:btn];
+}
+
+#pragma mark btnAddActualTemp -
+- (void)btnActualTempForTagsPressed:(UIButton *)sender
+{
+    [self performSelector:@selector(tabSelectAction:) withObject:sender afterDelay:0.01];
+    
+}
+#pragma mark - tabSelect Method -
+-(IBAction)tabSelectAction:(UIButton*)sender
+{
+    nearByCount = nearByCount+1;
+    
+    if(self.view.userInteractionEnabled == NO)
+    {
+        return;
+    }
+    
+    lastSelectedIndex = selectedTabNumber;
+    
+    selectedtag = ((UIButton *)sender).tag;
+    
+    
+    for(UIView * subView in _categoryScrollView.subviews )
+    {
+        if([subView isKindOfClass:[UIImageView class]])
+        {
+            if(selectedtag == subView.tag)
+            {
+                subView.hidden = NO;
+                
+                selectedTabNumber= selectedtag;
+            }
+            else
+            {
+                subView.hidden = YES;
+            }
+        }
+        
+        if ([subView isKindOfClass:[UIButton class]]) {
+            
+            UIButton *btn = (UIButton*)subView;
+            
+            if(selectedtag == subView.tag){
+                
+                [btn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+                subView.hidden = NO;
+            }
+            else{
+                [btn setTitleColor:[UIColor colorWithRed:151.0/255.0 green:151.0/255.0 blue:151.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+            }
+        }
+    }
+    
+    if (lastSelectedIndex>selectedTabNumber)
+    {
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.5;
+        transition.type = kCATransitionPush;
+        transition.subtype = kCATransitionFromLeft;
+        [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        
+        [_obj_MainTableView beginUpdates];
+        [_obj_MainTableView.layer addAnimation:transition forKey:nil];
+        [_obj_MainTableView endUpdates];
+        
+        [_obj_MainTableView reloadData];
+    }
+    else if (lastSelectedIndex<selectedTabNumber)
+    {
+        CATransition *transition = [CATransition animation];
+        transition.duration = 0.5;
+        transition.type = kCATransitionPush;
+        transition.subtype = kCATransitionFromRight;
+        [transition setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        [_obj_MainTableView beginUpdates];
+        [_obj_MainTableView.layer addAnimation:transition forKey:nil];
+        [_obj_MainTableView endUpdates];
+        
+        [_obj_MainTableView reloadData];
+    }
+    
+    int spacer= 10;
+    for(UIButton * subView in _categoryScrollView.subviews)
+    {
+        if([subView isKindOfClass:[UIButton class]])
+        {
+            if(selectedtag == subView.tag)
+            {
+                CGRect visibleRect = CGRectMake(subView.frame.origin.x-spacer, subView.frame.origin.y, subView.frame.size.width+2*spacer, subView.frame.size.height);
+                [_categoryScrollView scrollRectToVisible:visibleRect animated:YES];
+            }
+            else
+            {
+                [subView setTitleColor:[UIColor colorWithRed:151.0/255.0 green:151.0/255.0 blue:151.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+            }
+            
+        }
+    }
+    
+    if (nearByCount>1) {
+        [self nearByEmployeesSelected:selectedtag];
+    }
+}
+
+#pragma mark - swipe gesture to slide between view -
+-(void)slideToRightWithGesture:(UISwipeGestureRecognizer *)gestureRecognizer
+{
+    
+    
+    if(selectedTabNumber == 0)
+    {
+        
+    }
+    else
+    {
+        UIButton *btn = [[UIButton alloc]init];
+        btn.tag = selectedTabNumber-1;
+        [self tabSelectAction:btn];
+        
+    }
+}
+
+-(void)slideToLeftWithGesture:(UISwipeGestureRecognizer *)gestureRecognizer
+{
+    if(selectedTabNumber == [arrayCategoryList count]-1)
+    {
+        
+    }
+    else
+    {
+        UIButton *btn = [[UIButton alloc]init];
+        btn.tag = selectedTabNumber+1;
+        [self tabSelectAction:btn];
+        
+        
+    }
+}
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if(self.view.userInteractionEnabled == NO)
+    {
+        return NO;
+    }
+    return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    
+    
+    if ([touch.view isKindOfClass:[UIControl class]])
+    {
+        return NO;
+    }
+    return YES;
+}
+-(void)enableUserInteractionForView:(id)sender
+{
+    self.view.userInteractionEnabled = YES;
+}
+
+
 
 @end

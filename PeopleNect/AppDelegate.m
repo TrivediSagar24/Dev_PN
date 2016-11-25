@@ -50,10 +50,7 @@ BOOL employerLogin, employeeLogin;
    
     mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle: nil];
    
-//    employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[mainStoryboard
-//                                                                   instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-//    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
-//    
+
     
     [SlideNavigationController sharedInstance].menuRevealAnimationDuration = .18;
     
@@ -84,6 +81,11 @@ BOOL employerLogin, employeeLogin;
         if ([[[NSUserDefaults standardUserDefaults]
               stringForKey:@"Category_id"]isEqualToString:@"Category_id"])
         {
+            employeeSlideNavigation *leftMenu = [mainStoryboard
+                                                 instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+            
+            [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
+            
             employeeJobNotification * obj_employeeJobNotification = [mainStoryboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
             UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
             [navigationController pushViewController:obj_employeeJobNotification animated:NO];
@@ -92,6 +94,10 @@ BOOL employerLogin, employeeLogin;
     if (kAppDel.obj_FinalRegisteredEmployee.Employee_category_id.length>0)
     {
        
+        employeeSlideNavigation *leftMenu = [mainStoryboard
+                                             instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+        
+        [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
         employeeJobNotification * obj_employeeJobNotification = [mainStoryboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
         UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
         [navigationController pushViewController:obj_employeeJobNotification animated:NO];
@@ -160,8 +166,10 @@ BOOL employerLogin, employeeLogin;
             
             self.obj_responseDataOC = [[NSUserDefaults standardUserDefaults] objectForKey:@"employerLogin"];
             
-//            [GlobalMethods SlideNavigationRootViewForEmployer];
-//            [GlobalMethods SlideNavigationLeftMenu];
+            employeeSlideNavigation *leftMenu = [mainStoryboard
+                                                 instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+            
+            [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
             MenuCtr *obj_MenuCtr = [mainStoryboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
              UINavigationController *obj_navigation = (UINavigationController *)self.window.rootViewController;
             [obj_navigation pushViewController:obj_MenuCtr animated:NO];

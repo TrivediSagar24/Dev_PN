@@ -47,27 +47,32 @@
 #pragma mark - IBAction -
 - (IBAction)GoogleLoginClicked:(id)sender
 {
-    [signIn authentication];
-   
+        [signIn authentication];
 }
 - (IBAction)FacebookLoginClicked:(id)sender
 {
-    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     
-    [login
-     logInWithReadPermissions: @[@"public_profile",@"email", @"user_friends"]
-     fromViewController:self
-     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
-     {
-         if (error)
+    if ([GlobalMethods InternetAvailability]) {
+        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        
+        [login
+         logInWithReadPermissions: @[@"public_profile",@"email", @"user_friends"]
+         fromViewController:self
+         handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
          {
-         } else if (result.isCancelled)
-         {
-         } else
-         {
-             [self getInfo];
-         }
-     }];
+             if (error)
+             {
+             } else if (result.isCancelled)
+             {
+             } else
+             {
+                 [self getInfo];
+             }
+         }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
+   
 }
 - (IBAction)LoginClicked:(id)sender
 {
@@ -103,66 +108,73 @@
     }
     if (password == YES)
     {
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeLoginWithEmail:_tfEmail.text Password:_tfPassword.text DeviceId:DevideID] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-     {
-         kAppDel.obj_reponseGmailFacebookLogin
-         = [[reponseGmailFacebookLogin alloc] initWithDictionary:responseObject];
-         /*-------Archiving the data----*/
-         
-         NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_reponseGmailFacebookLogin];
-         
-         /*-------Setting user default data-----------*/
-         
-         [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employeeRegisterSocial"];
-         
-         [[NSUserDefaults standardUserDefaults] synchronize];
-
-         if ([[responseObject valueForKey:@"data"]valueForKey:@"category_id"])
-         {
-            [[NSUserDefaults standardUserDefaults] setObject:@"Category_id" forKey:@"Category_id"];
-             
-             [[NSUserDefaults standardUserDefaults] synchronize];
-             
-             
-             employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[self.storyboard
-                                                                            instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-             
-             [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
-             employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
-             [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
-         }
-         
-         [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
-         
-         [[NSUserDefaults standardUserDefaults] synchronize];
-         
-         [kAppDel.progressHud hideAnimated:YES];
-         
-         if ([[[responseObject valueForKey:@"data"]valueForKey:@"userId"] length]>0 && ![[responseObject valueForKey:@"data"]valueForKey:@"category_id"])
-         {
-             CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
+        
+        if ([GlobalMethods InternetAvailability]) {
             
-             [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
-         }
-        if ([[responseObject valueForKey:@"status"] isEqual:@1])
-         {
-             NSString *imageString = [[responseObject valueForKey:@"data"]valueForKey:@"jobseeker_profile_pic"];
-             
-             kAppDel.EmployeeProfileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageString]]];
-             NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
-             
-             [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
-             
-             [[NSUserDefaults standardUserDefaults] synchronize];
-         }
-         else
-         {
-              [self presentViewController:[GlobalMethods AlertWithTitle:@"Error" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-         }
-     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-         [kAppDel.progressHud hideAnimated:YES];
-    }];
+            kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+            [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeLoginWithEmail:_tfEmail.text Password:_tfPassword.text DeviceId:DevideID] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+             {
+                 kAppDel.obj_reponseGmailFacebookLogin
+                 = [[reponseGmailFacebookLogin alloc] initWithDictionary:responseObject];
+                 /*-------Archiving the data----*/
+                 
+                 NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_reponseGmailFacebookLogin];
+                 
+                 /*-------Setting user default data-----------*/
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employeeRegisterSocial"];
+                 
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 
+                 if ([[responseObject valueForKey:@"data"]valueForKey:@"category_id"])
+                 {
+                     [[NSUserDefaults standardUserDefaults] setObject:@"Category_id" forKey:@"Category_id"];
+                     
+                     [[NSUserDefaults standardUserDefaults] synchronize];
+                     
+                     
+                     employeeSlideNavigation *leftMenu =[self.storyboard
+                                                         instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+                     
+                     [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
+                     employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
+                     [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
+                 }
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
+                 
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 
+                 [kAppDel.progressHud hideAnimated:YES];
+                 
+                 if ([[[responseObject valueForKey:@"data"]valueForKey:@"userId"] length]>0 && ![[responseObject valueForKey:@"data"]valueForKey:@"category_id"])
+                 {
+                     CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
+                     
+                     [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
+                 }
+                 if ([[responseObject valueForKey:@"status"] isEqual:@1])
+                 {
+                     NSString *imageString = [[responseObject valueForKey:@"data"]valueForKey:@"jobseeker_profile_pic"];
+                     
+                     kAppDel.EmployeeProfileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageString]]];
+                     NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
+                     
+                     [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
+                     
+                     [[NSUserDefaults standardUserDefaults] synchronize];
+                 }
+                 else
+                 {
+                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Error" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+                 }
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                 [kAppDel.progressHud hideAnimated:YES];
+             }];
+            
+        }else{
+             [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
 }
 }
 - (IBAction)forgotPasswordClicked:(id)sender
@@ -227,7 +239,7 @@
                    kAppDel.EmployeeProfileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageString]]];
                }
                
-               employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[self.storyboard
+               employeeSlideNavigation *leftMenu = [self.storyboard
                                                                               instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
                
                [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
@@ -344,7 +356,7 @@
                         
                 }
                 
-                employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[self.storyboard
+                employeeSlideNavigation *leftMenu = [self.storyboard
                                                                                instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
                 
                 [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];

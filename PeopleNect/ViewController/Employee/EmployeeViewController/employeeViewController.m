@@ -119,21 +119,29 @@ static int count = 0;
 {
     facebook = TRUE;
     google = FALSE;
-    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login
-     logInWithReadPermissions: @[@"public_profile",@"email", @"user_friends"]
-     fromViewController:self
-     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
-    {
-         if (error)
+    
+    if ([GlobalMethods InternetAvailability]) {
+        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        [login
+         logInWithReadPermissions: @[@"public_profile",@"email", @"user_friends"]
+         fromViewController:self
+         handler:^(FBSDKLoginManagerLoginResult *result, NSError *error)
          {
-         } else if (result.isCancelled)
-         {
-         } else
-         {
-             [self getInfo];
-         }
-     }];
+             if (error)
+             {
+             } else if (result.isCancelled)
+             {
+             } else
+             {
+                 [self getInfo];
+             }
+         }];
+    }
+    else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
+    
 }
 
 
@@ -239,58 +247,70 @@ if (emailflag == YES)
             
             if (cim == nil && cgref == NULL)
             {
-                [self updateRegister];
+                if ([GlobalMethods InternetAvailability]) {
+                    [self updateRegister];
+                }else{
+                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+                }
             }
             else
             {
-               [self UpdateUserDetail];
+                if ([GlobalMethods InternetAvailability]) {
+                    [self UpdateUserDetail];
+                }else{
+                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+                }
             }
         }
     else
         {
-        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-          
-        [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeRegisterWith:@"email" Email:_tfEmail.text Name:_tfName.text Surname:_tfSurname.text Password:_tfPassword.text  Phone:_tfPhoneNumber.text DevideId:@"" Access_Token:@"" Access_identifire:@"" ZipCode:_tfZipCode.text StreetName:_tfStreetName.text StreetNumber:_tfStreetNumber.text countryCode:_tfPhoneCountryCode.text] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-             {
-                 [kAppDel.progressHud hideAnimated:YES];
-                 
-                 kAppDel.obj_responseRegiserEmployee = [[responseRegiserEmployee alloc]initWithDictionary:responseObject];
-                 
-                 /*-------Archiving the data----*/
-                 
-                 NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseRegiserEmployee];
-                 
-                 /*-------Setting user default data-----------*/
-                 
-                 [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employeeRegister"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                 
-                 if ([[responseObject valueForKey:@"status"] isEqual:@1])
+            if ([GlobalMethods InternetAvailability]) {
+                
+                kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+                
+                [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeRegisterWith:@"email" Email:_tfEmail.text Name:_tfName.text Surname:_tfSurname.text Password:_tfPassword.text  Phone:_tfPhoneNumber.text DevideId:@"" Access_Token:@"" Access_identifire:@"" ZipCode:_tfZipCode.text StreetName:_tfStreetName.text StreetNumber:_tfStreetNumber.text countryCode:_tfPhoneCountryCode.text] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
                  {
+                     [kAppDel.progressHud hideAnimated:YES];
                      
-                     NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
-                     [[NSUserDefaults standardUserDefaults] setObject: str forKey:@"EmployeeUserId"];
+                     kAppDel.obj_responseRegiserEmployee = [[responseRegiserEmployee alloc]initWithDictionary:responseObject];
                      
+                     /*-------Archiving the data----*/
+                     
+                     NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseRegiserEmployee];
+                     
+                     /*-------Setting user default data-----------*/
+                     
+            [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employeeRegister"];
                      [[NSUserDefaults standardUserDefaults] synchronize];
                      
-                        [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
-                     
-                     CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard  instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
-                     
-                     [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES ];
-                 }
-                 else
-                 {
-                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Error!" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"]animated:YES completion:nil];
-                 }
-             }
-                    failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-             {
-                 [kAppDel.progressHud hideAnimated:YES];
-             }];
+        if ([[responseObject valueForKey:@"status"] isEqual:@1])
+                    {
+                         
+                NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
+            [[NSUserDefaults standardUserDefaults] setObject: str forKey:@"EmployeeUserId"];
+                         
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                         
+                [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
+                         
+            CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard  instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
+                         
+            [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES ];
+            }else{
+                [self presentViewController:[GlobalMethods AlertWithTitle:@"Error!" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"]animated:YES completion:nil];
+                }
+            }
+        failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error){
+                [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+    [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+            }
         }
     }
 }
+
 
 
 - (IBAction)btnPrivacyClicked:(id)sender
@@ -299,8 +319,7 @@ if (emailflag == YES)
 
 
 #pragma mark - Navigation Bar Back Button -
--(void)barBackButton
-{
+-(void)barBackButton{
     [self.navigationController popToRootViewControllerAnimated:YES];
     count = 0;
 }

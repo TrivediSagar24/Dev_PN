@@ -17,6 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     _jobHistoryCollectionView.backgroundColor = [UIColor clearColor];
+    [self employerJobHistory];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -38,5 +39,37 @@
 {
     return NO;
 }
+
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return 5;
+}
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    EmployerjJobHistoryCollectionCell *Cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"EmployerjJobHistoryCollectionCell" forIndexPath:indexPath];
+    
+    return Cell;
+}
+
+#pragma mark - employeesJobsHistory -
+-(void)employerJobHistory{
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+    [_param setObject:@"closedJobs" forKey:@"methodName"];
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+    
+    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        [kAppDel.progressHud hideAnimated:YES];
+        
+        _jobHistoryCollectionView.delegate = self;
+        _jobHistoryCollectionView.dataSource = self;
+        [_jobHistoryCollectionView reloadData];
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [kAppDel.progressHud hideAnimated:YES];
+    }];
+}
+
 
 @end

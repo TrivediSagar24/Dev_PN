@@ -192,53 +192,16 @@ NSMutableDictionary  *_params = [[NSMutableDictionary alloc]init];
     }
 }
 
-+(void)SlideNavigationLeftMenu
-{
-    UIStoryboard *mainStoryboard= [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-   
-
-    employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[mainStoryboard
-    instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
-    [SlideNavigationController sharedInstance].menuRevealAnimationDuration = .18;
++(BOOL)InternetAvailability{
+    if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus]==NotReachable)
+    {
+        return NO;
+    }
+    else
+    {
+        return YES;
+    }
 }
 
-+(void)SlideNavigationRootViewForEmployee
-{
-//   [[SlideNavigationController sharedInstance]clearSharedInstance];
-    UIStoryboard *mainStoryboard= [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-    
-    SlideNavigationController *obj_SlideNavigationController;
-    ViewController *obj_ViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"ViewController"];
-  obj_SlideNavigationController = [[SlideNavigationController alloc]initWithRootViewController:obj_ViewController];
-}
-+(void)SlideNavigationRootViewForEmployer
-{
-  [[SlideNavigationController sharedInstance]clearSharedInstance];
-//    SlideNavigationController *obj_SlideNavigationController;
-//    SplashEmployerCtr *obj_SplashEmployerCtr = [mainStoryboard instantiateViewControllerWithIdentifier:@"SplashEmployerCtr"];
-// obj_SlideNavigationController = [[SlideNavigationController alloc]initWithRootViewController:obj_SplashEmployerCtr];
-    
-    
-    UIStoryboard *mainStoryboard= [UIStoryboard storyboardWithName:@"Main" bundle: nil];
-     SplashEmployerCtr *obj_SplashEmployerCtr = [mainStoryboard instantiateViewControllerWithIdentifier:@"SplashEmployerCtr"];
-    
-    
-    UINavigationController *nav = [[SlideNavigationController alloc] initWithRootViewController:obj_SplashEmployerCtr];
-    
-    
-    employeeSlideNavigation *leftMenu = (employeeSlideNavigation*)[mainStoryboard
-                                                                   instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-    [SlideNavigationController sharedInstance].leftMenu = leftMenu;
-    
-   
-[SlideNavigationController sharedInstance].menuRevealAnimationDuration = .18;
-    
-    // add it to the menu root view
-    
-//  [[kAppDel.window] setRootViewController:nav];
-    
-   [kAppDel.window setRootViewController:nav];
-}
 
 @end

@@ -125,16 +125,21 @@
 - (IBAction)btnProfessionalClick:(id)sender
 {
      [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"EmployeeUserId"];
+    
+    
     SplashEmployerCtr *objSplashEmployerCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"SplashEmployerCtr"];
+    
+    [self.navigationController pushViewController:objSplashEmployerCtr animated:YES];
+    
 
-    CATransition* transition = [CATransition animation];
-    transition.duration = 0.0;
-    transition.type = kCATransitionReveal;
-    transition.subtype = kCATransitionFromTop;
-    
-    [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
-    
-    [self.navigationController pushViewController:objSplashEmployerCtr animated:NO];
+//    CATransition* transition = [CATransition animation];
+//    transition.duration = 0.0;
+//    transition.type = kCATransitionReveal;
+//    transition.subtype = kCATransitionFromTop;
+//    
+//    [self.navigationController.view.layer addAnimation:transition forKey:kCATransition];
+//    
+//    [self.navigationController pushViewController:objSplashEmployerCtr animated:NO];
 }
     
 

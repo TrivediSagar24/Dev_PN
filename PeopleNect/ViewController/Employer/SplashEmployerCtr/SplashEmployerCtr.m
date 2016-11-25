@@ -118,23 +118,29 @@
     
     //[self dismissViewControllerAnimated:YES completion:nil];
     
-    CATransition* transition = [CATransition animation];
-    transition.duration = 0.4f;
-    transition.type = kCATransitionReveal;
-    transition.subtype = kCATransitionFromBottom;
-    [self.navigationController.view.layer addAnimation:transition
-    forKey:kCATransition];
+    ViewController *objViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
     
-    //[self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController pushViewController:objViewController animated:YES];
     
-    for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
-    {
-        if ([viewControllrObj isKindOfClass:[ViewController class]])
-        {
-            [self.navigationController popToViewController:viewControllrObj animated:YES];
-        }
-    }
-
+    
+    
+//    CATransition* transition = [CATransition animation];
+//    transition.duration = 0.4f;
+//    transition.type = kCATransitionReveal;
+//    transition.subtype = kCATransitionFromBottom;
+//    [self.navigationController.view.layer addAnimation:transition
+//    forKey:kCATransition];
+//    
+//    //[self.navigationController popViewControllerAnimated:NO];
+//    
+//    for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
+//    {
+//        if ([viewControllrObj isKindOfClass:[ViewController class]])
+//        {
+//            [self.navigationController popToViewController:viewControllrObj animated:YES];
+//        }
+//    }
+//
 
 }
 

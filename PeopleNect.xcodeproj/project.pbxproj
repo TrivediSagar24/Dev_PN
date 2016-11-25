@@ -34,7 +34,7 @@
 		18AB57441DC06FA10033C47A /* CustomPlaceHolderTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB573F1DC06FA10033C47A /* CustomPlaceHolderTextField.m */; };
 		18AB57451DC06FA10033C47A /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB57411DC06FA10033C47A /* CustomPlaceHolderTextView.m */; };
 		18AB57461DC06FA10033C47A /* NSString+TextDirectionality.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB57431DC06FA10033C47A /* NSString+TextDirectionality.m */; };
-		18DEC98C1D9D393100640A58 /* selectedEmployeeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DEC98B1D9D393100640A58 /* selectedEmployeeInfo.m */; };
+		18BCE6251DE86B42005EF308 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCE6241DE86B42005EF308 /* Reachability.m */; };
 		18E0568A1DBF6A1B00D40392 /* EmployerJobHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E056891DBF6A1B00D40392 /* EmployerJobHistory.m */; };
 		18E60EEA1DA6371600B832E4 /* onGoingJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E60EE91DA6371600B832E4 /* onGoingJobs.m */; };
 		18E7A9C31DA653E700E572DA /* onGoingSectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E7A9C11DA653E700E572DA /* onGoingSectionCell.m */; };
@@ -87,7 +87,6 @@
 		C52D11501D87F77400AABB86 /* transactionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D111B1D87F77400AABB86 /* transactionCell.m */; };
 		C52D11511D87F77400AABB86 /* EmployerLoginCtr.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D111F1D87F77400AABB86 /* EmployerLoginCtr.m */; };
 		C52D11521D87F77400AABB86 /* employerMainTVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D11231D87F77400AABB86 /* employerMainTVCell.m */; };
-		C52D11531D87F77400AABB86 /* MainCollectionVeiwCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D11251D87F77400AABB86 /* MainCollectionVeiwCell.m */; };
 		C52D11541D87F77400AABB86 /* MenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D11281D87F77400AABB86 /* MenuCell.m */; };
 		C52D11551D87F77400AABB86 /* MenuCtr.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D112A1D87F77400AABB86 /* MenuCtr.m */; };
 		C52D115A1D87F77400AABB86 /* EmployerLastDetailsCtr.m in Sources */ = {isa = PBXBuildFile; fileRef = C52D11371D87F77400AABB86 /* EmployerLastDetailsCtr.m */; };
@@ -227,8 +226,8 @@
 		18AB57411DC06FA10033C47A /* CustomPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomPlaceHolderTextView.m; sourceTree = "<group>"; };
 		18AB57421DC06FA10033C47A /* NSString+TextDirectionality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TextDirectionality.h"; sourceTree = "<group>"; };
 		18AB57431DC06FA10033C47A /* NSString+TextDirectionality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TextDirectionality.m"; sourceTree = "<group>"; };
-		18DEC98A1D9D393100640A58 /* selectedEmployeeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = selectedEmployeeInfo.h; sourceTree = "<group>"; };
-		18DEC98B1D9D393100640A58 /* selectedEmployeeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = selectedEmployeeInfo.m; sourceTree = "<group>"; };
+		18BCE6231DE86B42005EF308 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		18BCE6241DE86B42005EF308 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		18E056881DBF6A1B00D40392 /* EmployerJobHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmployerJobHistory.h; sourceTree = "<group>"; };
 		18E056891DBF6A1B00D40392 /* EmployerJobHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmployerJobHistory.m; sourceTree = "<group>"; };
 		18E60EE81DA6371600B832E4 /* onGoingJobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = onGoingJobs.h; sourceTree = "<group>"; };
@@ -334,8 +333,6 @@
 		C52D111F1D87F77400AABB86 /* EmployerLoginCtr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmployerLoginCtr.m; sourceTree = "<group>"; };
 		C52D11221D87F77400AABB86 /* employerMainTVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = employerMainTVCell.h; sourceTree = "<group>"; };
 		C52D11231D87F77400AABB86 /* employerMainTVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = employerMainTVCell.m; sourceTree = "<group>"; };
-		C52D11241D87F77400AABB86 /* MainCollectionVeiwCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainCollectionVeiwCell.h; sourceTree = "<group>"; };
-		C52D11251D87F77400AABB86 /* MainCollectionVeiwCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainCollectionVeiwCell.m; sourceTree = "<group>"; };
 		C52D11271D87F77400AABB86 /* MenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCell.h; sourceTree = "<group>"; };
 		C52D11281D87F77400AABB86 /* MenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuCell.m; sourceTree = "<group>"; };
 		C52D11291D87F77400AABB86 /* MenuCtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuCtr.h; sourceTree = "<group>"; };
@@ -551,6 +548,7 @@
 		185259DB1D48AE410018AC24 /* ExternalLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				18BCE6221DE86B42005EF308 /* Reachability */,
 				18AB573D1DC06FA10033C47A /* CustomPlaceholderTextField */,
 				188C661B1DAF3EDC00EA3CD5 /* MVPlaceSearchTextField */,
 				C56CF5C51D9A2C4C0031D26D /* FZAccordionTableView */,
@@ -744,13 +742,13 @@
 			path = CustomPlaceholderTextField;
 			sourceTree = "<group>";
 		};
-		18DEC9891D9D391000640A58 /* SelectedEmployeeInfo */ = {
+		18BCE6221DE86B42005EF308 /* Reachability */ = {
 			isa = PBXGroup;
 			children = (
-				18DEC98A1D9D393100640A58 /* selectedEmployeeInfo.h */,
-				18DEC98B1D9D393100640A58 /* selectedEmployeeInfo.m */,
+				18BCE6231DE86B42005EF308 /* Reachability.h */,
+				18BCE6241DE86B42005EF308 /* Reachability.m */,
 			);
-			path = SelectedEmployeeInfo;
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		18E056871DBF69FC00D40392 /* EmployerJobHistory */ = {
@@ -1147,8 +1145,6 @@
 			children = (
 				C52D11221D87F77400AABB86 /* employerMainTVCell.h */,
 				C52D11231D87F77400AABB86 /* employerMainTVCell.m */,
-				C52D11241D87F77400AABB86 /* MainCollectionVeiwCell.h */,
-				C52D11251D87F77400AABB86 /* MainCollectionVeiwCell.m */,
 			);
 			path = MainCell;
 			sourceTree = "<group>";
@@ -1493,7 +1489,6 @@
 		C5D6DCE91D955B5F00998F96 /* openJob */ = {
 			isa = PBXGroup;
 			children = (
-				18DEC9891D9D391000640A58 /* SelectedEmployeeInfo */,
 				C56CF5D61D9AAAEB0031D26D /* inviteCandidates */,
 				C523D5591D9942DD00A201D5 /* openJobSelected */,
 				C5D6DCED1D955B9100998F96 /* openJobCell */,
@@ -1809,6 +1804,7 @@
 				C50D64DB1D7EED1E00A9794D /* employeePendingCell.m in Sources */,
 				C52D114F1D87F77400AABB86 /* employerTransaction.m in Sources */,
 				C52D11551D87F77400AABB86 /* MenuCtr.m in Sources */,
+				18BCE6251DE86B42005EF308 /* Reachability.m in Sources */,
 				188C662E1DAF3EDC00EA3CD5 /* PlaceObject.m in Sources */,
 				C5524E531D58B83400D79801 /* EmployeeForgotPasswordCtr.m in Sources */,
 				C508772D1D785F0B0059140B /* NSData+ImageContentType.m in Sources */,
@@ -1894,12 +1890,10 @@
 				188C662A1DAF3EDC00EA3CD5 /* MLPAutoCompleteTextField.m in Sources */,
 				52B70BF51D476E6E00037603 /* main.m in Sources */,
 				C508773B1D785F0B0059140B /* UIView+WebCacheOperation.m in Sources */,
-				18DEC98C1D9D393100640A58 /* selectedEmployeeInfo.m in Sources */,
 				C5EBD9F11D79322B0014DC9F /* CERangeSliderTrackLayer.m in Sources */,
 				C5DAE6DE1D70764400312341 /* employeeWeekCell.m in Sources */,
 				C526480D1D8C1B9B00267C04 /* PN_TextViewGlobalMethods.m in Sources */,
 				18AB57461DC06FA10033C47A /* NSString+TextDirectionality.m in Sources */,
-				C52D11531D87F77400AABB86 /* MainCollectionVeiwCell.m in Sources */,
 				18AB57441DC06FA10033C47A /* CustomPlaceHolderTextField.m in Sources */,
 				C574D66F1D59A2EA00E26716 /* EmployeeNewPassword.m in Sources */,
 				18A24C1B1D9E3E0D0090AB23 /* noBalance.m in Sources */,

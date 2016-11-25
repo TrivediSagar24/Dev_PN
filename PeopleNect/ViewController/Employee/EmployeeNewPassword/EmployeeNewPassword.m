@@ -54,7 +54,6 @@
             [passwordTest evaluateWithObject:_tfNewPassword.text];
         if([passwordTest evaluateWithObject:_tfNewPassword.text])
         {
-            kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];[_param setObject:@"resetPassword"forKey:@"methodName"];
        
         NSString * userId = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
@@ -62,33 +61,43 @@
     [_param setObject:userId forKey:@"userId"];
             
     [_param setObject:_tfNewPassword.text forKey:@"newPassword"];
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-        {
-        
+            
+            
+        if ([GlobalMethods InternetAvailability]) {
+                
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+                 {
+                     
             [kAppDel.progressHud hideAnimated:YES];
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Password Changed" message:[responseObject valueForKey:@"message"] preferredStyle:UIAlertControllerStyleAlert];
-        
+        UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Password Changed" message:[responseObject valueForKey:@"message"] preferredStyle:UIAlertControllerStyleAlert];
+                     
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
-                {
-          
+                        {
+                                           
                 if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"LoginData"] isEqualToString:@"Employer"])                        {
-                EmployerLoginCtr *EmployerLoginCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLoginCtr"];
-                [self.navigationController pushViewController:EmployerLoginCtr animated:YES];
-                                          
-                    }
-                                      
-            else{
-            employeeLoginCtr *obj_employeeLoginCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeLoginCtr"];
-        [self.navigationController pushViewController:obj_employeeLoginCtr animated:YES];
-                                      }
-                                      
-                                  }]];
-                [self presentViewController:alert animated:YES completion:nil];
+                        EmployerLoginCtr *EmployerLoginCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLoginCtr"];
+                            [self.navigationController pushViewController:EmployerLoginCtr animated:YES];
+                                               
+                        }
+                                           
+                        else{
+                    employeeLoginCtr *obj_employeeLoginCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeLoginCtr"];
+                    [self.navigationController pushViewController:obj_employeeLoginCtr animated:YES];
+                            }
+                                           
+            }]];
+            [self presentViewController:alert animated:YES completion:nil];
             }
-       
- failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-        {
-        }];
+                 
+        failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+                 {
+                     [kAppDel.progressHud hideAnimated:YES];
+
+                 }];
+            }else{
+                [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+            }
     }
     else{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Invalid Password" Message:@"Password must contain an alphabet, a special character, a capital alphabet  and a number" AlertMessage:@"OK"]animated:YES completion:nil];

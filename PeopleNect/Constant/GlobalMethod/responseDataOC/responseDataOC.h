@@ -227,6 +227,9 @@
 @property (nonatomic,strong) NSString  *countryCode;
 @property(nonatomic,strong) NSString *countryID;
 
-
 -(EmployerDetails *)initWithDictionary:(NSMutableDictionary *)dictionary;
 @end
+
+
+
+
