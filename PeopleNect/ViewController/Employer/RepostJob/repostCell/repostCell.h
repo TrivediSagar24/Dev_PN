@@ -15,5 +15,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *respostJobLbl;
 @property (strong, nonatomic) IBOutlet UIButton *arrowBtn;
 @property (strong, nonatomic) IBOutlet UIButton *closeBtn;
+@property (strong, nonatomic) IBOutlet UILabel *borderLabel;
 
 @end

@@ -445,100 +445,114 @@ if (section==2){
 
 #pragma mark - jobUsersList -
 -(void)jobUsersList{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    _selectedArray = [[NSMutableArray alloc]init];
-    _hiredArray = [[NSMutableArray alloc]init];
-    _rejectedArray = [[NSMutableArray alloc]init];
-    _applicantArray = [[NSMutableArray alloc]init];
     
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"jobUsersList" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    [_param setObject:_jobId forKey:@"jobId"];
-    
-   [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-       
-       [kAppDel.progressHud hideAnimated:YES];
-       
-       NSString *publishStatus = [responseObject valueForKey:@"publish_status"];
-       
-       if ([publishStatus isEqualToString:@"1"]) {
-           _postJobView.hidden = YES;
-            _tableViewHeight.constant = (self.view.frame.size.height*332)/568+_postJobView.frame.size.height;
-       }
-       else{
-
-           _postJobViewHeight.constant = (self.view.frame.size.height*91)/568;
-           _tableViewHeight.constant = (self.view.frame.size.height*332)/568;
-           _postJobView.hidden = NO;
-       }
-       
-       _hiredArray  = [[responseObject valueForKey:@"data"]valueForKey:@"hired"];
-       _selectedArray = [[responseObject valueForKey:@"data"]valueForKey:@"selected"];
-       _applicantArray = [[responseObject valueForKey:@"data"]valueForKey:@"applicants"];
-       _rejectedArray = [[responseObject valueForKey:@"data"]valueForKey:@"rejected"];
-       
-       _candidatesTableView.hidden = NO;
-       
-       [_candidatesTableView reloadData];
-       
-   } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-       [kAppDel.progressHud hideAnimated:YES];
-   }];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        _selectedArray = [[NSMutableArray alloc]init];
+        _hiredArray = [[NSMutableArray alloc]init];
+        _rejectedArray = [[NSMutableArray alloc]init];
+        _applicantArray = [[NSMutableArray alloc]init];
+        
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"jobUsersList" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        [_param setObject:_jobId forKey:@"jobId"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            NSString *publishStatus = [responseObject valueForKey:@"publish_status"];
+            
+            if ([publishStatus isEqualToString:@"1"]) {
+                _postJobView.hidden = YES;
+                _tableViewHeight.constant = (self.view.frame.size.height*332)/568+_postJobView.frame.size.height;
+            }
+            else{
+                
+                _postJobViewHeight.constant = (self.view.frame.size.height*91)/568;
+                _tableViewHeight.constant = (self.view.frame.size.height*332)/568;
+                _postJobView.hidden = NO;
+            }
+            
+            _hiredArray  = [[responseObject valueForKey:@"data"]valueForKey:@"hired"];
+            _selectedArray = [[responseObject valueForKey:@"data"]valueForKey:@"selected"];
+            _applicantArray = [[responseObject valueForKey:@"data"]valueForKey:@"applicants"];
+            _rejectedArray = [[responseObject valueForKey:@"data"]valueForKey:@"rejected"];
+            
+            _candidatesTableView.hidden = NO;
+            
+            [_candidatesTableView reloadData];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+        
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
 #pragma mark - publishJob -
 -(void)publishJob{
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
-    [_param setObject:@"publishJob" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [_param setObject:_jobId forKey:@"jobId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
         
-        [kAppDel.progressHud hideAnimated:YES];
+        [_param setObject:@"publishJob" forKey:@"methodName"];
         
-        _postJobView.hidden = YES;
-        _tableViewHeight.constant = (self.view.frame.size.height*332)/568+_postJobView.frame.size.height;
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
         
-        TotalBalance = TotalBalance - jobPostingPrice;
+        [_param setObject:_jobId forKey:@"jobId"];
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            _postJobView.hidden = YES;
+            _tableViewHeight.constant = (self.view.frame.size.height*332)/568+_postJobView.frame.size.height;
+            
+            TotalBalance = TotalBalance - jobPostingPrice;
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
 #pragma mark - acceptRefuseEmployee -
 -(void)acceptRefuseEmployee:(NSString *)Accept userID:(NSString *)userID type: (NSString *)type
 {
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    [_param setObject:@"acceptEmployee" forKey:@"methodName"];
-    
-    [_param setObject:Accept forKey:@"accept"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [_param setObject:userID forKey:@"userId"];
-
-    [_param setObject:_jobId forKey:@"jobId"];
-    
-    [_param setObject:type forKey:@"type"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        
+        [_param setObject:@"acceptEmployee" forKey:@"methodName"];
+        
+        [_param setObject:Accept forKey:@"accept"];
+        
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [_param setObject:userID forKey:@"userId"];
+        
+        [_param setObject:_jobId forKey:@"jobId"];
+        
+        [_param setObject:type forKey:@"type"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 #pragma mark - TypeAcceptRefuse -
@@ -572,29 +586,33 @@ if (section==2){
 #pragma mark - hireEmployee -
 -(void)hireEmployee:(NSString *)userId type:(NSString *)type
 {
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-     [_param setObject:@"hireEmployee"forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [_param setObject:userId forKey:@"userId"];
-    
-    [_param setObject:_jobId forKey:@"jobId"];
-    
-    [_param setObject:type forKey:@"type"];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"hireEmployee"forKey:@"methodName"];
+        
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [_param setObject:userId forKey:@"userId"];
+        
+        [_param setObject:_jobId forKey:@"jobId"];
+        
+        [_param setObject:type forKey:@"type"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            NSLog(@"Hired response %@",responseObject);
+            
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
 
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        NSLog(@"Hired response %@",responseObject);
-        
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
-    
-    
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
 }
 
 @end

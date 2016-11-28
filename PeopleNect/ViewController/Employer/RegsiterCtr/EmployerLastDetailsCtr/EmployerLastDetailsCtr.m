@@ -16,7 +16,7 @@
     float totalhours,totalAmount;
     NSDateFormatter *dateFormatter,*hourFormatter;
     int count,diff,hourDay ;
-    BOOL flagImg1;
+    BOOL flagImg1,LAST;
     NSString *startDate,*endDate,*fordatePickerStart ,*fordatePickerEnd,*totalHourMessage;
     NSInteger excludingWeekDay,includingWeekDay,noEndDate;
     NSArray *json;
@@ -29,27 +29,32 @@
 #pragma mark - ViewLifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
+   
     dispatch_async(dispatch_get_main_queue(), ^{
     [self Initial];
     });
+    
     workingDay = 0;
     noEndDate=0;
     sameLocation = 1;
-
+    
     self.tfTotallPay.text = [NSString stringWithFormat:@"$0"];
     self.btnCheckBox2.selected = YES;
     
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"last"]){
-        _tfJobTitle.enabled = NO;
-        _tvJobDescription.userInteractionEnabled = NO;
-        _btnCheckBox1.userInteractionEnabled = NO;
-        _btnCheckBox2.userInteractionEnabled  = NO;
-        _tfHoursPerDay.enabled = NO;
-        _tfMoneyPerHour.enabled = NO;
-        _addBtn.userInteractionEnabled = NO;
-        _subtractBtn.userInteractionEnabled = NO;
-        _tfJobTitle.text = [_EmployerDetailPost valueForKey:@"jobTitle"];
-        _tfMoneyPerHour.text = [_EmployerDetailPost valueForKey:@"rate"];
+        
+//        _tfJobTitle.enabled = NO;
+//        _tvJobDescription.userInteractionEnabled = NO;
+//        _btnCheckBox1.userInteractionEnabled = NO;
+//        _btnCheckBox2.userInteractionEnabled  = NO;
+//        _tfHoursPerDay.enabled = NO;
+//        _tfMoneyPerHour.enabled = NO;
+//        _addBtn.userInteractionEnabled = NO;
+//        _subtractBtn.userInteractionEnabled = NO;
+        
+        [self jobDetailbyId];
+       
+        LAST = YES;
     }
     
     [self unarchivingData];
@@ -64,7 +69,6 @@
     _tfStreetName.autoCompleteShouldHideOnSelection = YES;
     _tfStreetName.maximumNumberOfAutoCompleteRows = 5;
     
-
     _addressView.hidden = YES;
     
     _addressViewHeightConstraints.constant = 0;
@@ -77,11 +81,27 @@
     
     _profileImage.layer.masksToBounds = YES;
     
-    if (kAppDel.EmployerProfileImage==nil) {
-        _profileImage.image = [UIImage imageNamed:@"profile"];
-    }
+    if (_isFrominVitedScreen == YES) {
+        [_profileImage sd_setImageWithURL:[NSURL URLWithString:_employeeProfielImage] placeholderImage:[UIImage imageNamed:@"profile"]] ;
+        _lastDetailsLbl.text = _employeeName;
+        _starView.hidden = NO;
+    }else{
+        _lastDetailsLbl.text = @"Last Details";
+        _starView.hidden = YES;
+
+        if (LAST==YES) {
+            
+        [_profileImage sd_setImageWithURL:[NSURL URLWithString:_repostProfileURL] placeholderImage:[UIImage imageNamed:@"profile"]];
+        }
         else{
-        _profileImage.image = kAppDel.EmployerProfileImage;
+            
+            if (kAppDel.EmployerProfileImage==nil) {
+                _profileImage.image = [UIImage imageNamed:@"profile"];
+            }
+            else{
+                _profileImage.image = kAppDel.EmployerProfileImage;
+            }
+        }
     }
 }
 
@@ -375,7 +395,11 @@ if (textField==_tfHoursPerDay || textField ==_tfMoneyPerHour) {
     [self.view endEditing:YES];
     Location = responseDict.coordinate;
     NSString *req = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&sensor=true",Location.latitude,Location.longitude];
-    [self usingNsurljsonParsing:req];
+    if ([GlobalMethods InternetAvailability]) {
+        [self usingNsurljsonParsing:req];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
@@ -413,6 +437,7 @@ if (textField==_tfHoursPerDay || textField ==_tfMoneyPerHour) {
 }
 
 - (IBAction)onClickAdd:(id)sender {
+    
     count ++;
     self.lblCounter.text = [NSString stringWithFormat:@"%d",count];
 }
@@ -512,15 +537,15 @@ if (_tfJobTitle.text.length==0) {
                             [self presentViewController:[GlobalMethods AlertWithTitle:@"Please enter Valid Time" Message:[NSString stringWithFormat:@" you can enter time upto %@ hour",totalHourMessage] AlertMessage:@"OK"] animated:YES completion:nil];
                         }
                         else{
-                            if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"last"]){
+                            if (_isFrominVitedScreen==YES){
                                 [self postJobById];
                             }
-                            else{
+                    else{
                                 
-                                if (kAppDel.obj_jobPostingPriceBalance.jobPostingPrice <=kAppDel.obj_jobPostingPriceBalance.balance) {
-                                    [self PostJob];
-                                }
-                            else{
+                    if (kAppDel.obj_jobPostingPriceBalance.jobPostingPrice <=kAppDel.obj_jobPostingPriceBalance.balance) {
+                        [self PostJob];
+                    }
+                    else{
                     noBalance *noBalance = [self.storyboard instantiateViewControllerWithIdentifier:@"noBalance"];
                     UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:noBalance];
                         obj_nav.definesPresentationContext = YES;
@@ -584,133 +609,167 @@ if (_tfJobTitle.text.length==0) {
 #pragma mark - PostJobByID -
 -(void)postJobById{
     
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+    if ([GlobalMethods InternetAvailability]) {
+       
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        
+        [_param setObject:@"postJobById" forKey:@"methodName"];
+
+        [_param setObject:self.tfJobTitle.text forKey:@"jobTitle"];
     
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    [_param setObject:@"postJobById" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [_param setObject:_tfJobTitle.text forKey:@"jobTitle"];
-    
-     [_param setObject:_tvJobDescription.text forKey:@"description"];
-    
-    [_param setObject:@"" forKey:@"assignJobseekerId"];
-    
-    [_param setObject:_tfStartDate.text forKey:@"startDate"];
-    
-    if (noEndDate==0) {
-        [_param setObject:self.tfEndDate.text forKey:@"endDate"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+       
+        [_param setObject:self.categoryId forKey:@"categoryId"];
+        
+        [_param setObject:self.subCategoryId forKey:@"subCategoryId"];
+        
+        [_param setObject:_tvJobDescription.text forKey:@"description"];
+
+        [_param setObject:_employeeID forKey:@"assignJobseekerId"];
+       
+        [_param setObject:_tfStartDate.text forKey:@"startDate"];
+
+        if (noEndDate==0) {
+            [_param setObject:self.tfEndDate.text forKey:@"endDate"];
+        }else{
+            [_param setObject:@"" forKey:@"endDate"];
+        }
+
+        [_param setObject:_tfStartHour.text forKey:@"startHour"];
+
+        [_param setObject:_tfEndHour.text forKey:@"endHour"];
+
+        [_param setObject:[NSNumber numberWithFloat:totalhours] forKey:@"totalHours"];
+
+        [_param setObject:[NSNumber numberWithInteger:workingDay] forKey:@"workingDay"];
+
+        
+        [_param setObject:self.tfHoursPerDay.text forKey:@"hoursPerDay"];
+
+        [_param setObject:_tfMoneyPerHour.text forKey:@"rate"];
+
+        [_param setObject:[NSNumber numberWithInteger:totalAmount ] forKey:@"totalAmount"];
+        
+        [_param setObject:[NSNumber numberWithInteger:sameLocation] forKey:@"sameLocationOfTheCompany"];
+
+        if (sameLocation == 1) {
+            
+            [_param setObject:@"" forKey:@"streetName"];
+            [_param setObject:@"" forKey:@"zip"];
+            [_param setObject:@"" forKey:@"state"];
+            [_param setObject:@"" forKey:@"city"];
+            [_param setObject:@"" forKey:@"address1"];
+            [_param setObject:@"" forKey:@"address2"];
+            
+        }else{
+            [_param setObject:_tfStreetName.text forKey:@"streetName"];
+            [_param setObject:_tfZipCode.text forKey:@"zip"];
+            [_param setObject:_tfState.text forKey:@"state"];
+            [_param setObject:_tfCity.text forKey:@"city"];
+            [_param setObject:_tfStreetNumber.text forKey:@"address1"];
+            [_param setObject:_tfComplement.text forKey:@"address2"];
+        }
+        
+        [_param setObject:[NSNumber numberWithInteger:noEndDate] forKey:@"long_term_job"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
     }else{
-        [_param setObject:@"" forKey:@"endDate"];
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
     }
-     [_param setObject:_tfStartHour.text forKey:@"startHour"];
-    
-      [_param setObject:_tfEndHour.text forKey:@"endHour"];
-    
-    [_param setObject:[NSNumber numberWithInteger:workingDay] forKey:@"workingDay"];
-    
-     [_param setObject:self.tfHoursPerDay.text forKey:@"hoursPerDay"];
-    
-    [_param setObject:[NSNumber numberWithFloat:totalhours] forKey:@"totalHours"];
-    
-    [_param setObject:_tfMoneyPerHour.text forKey:@"rate"];
-    
-    [_param setObject:[NSNumber numberWithInteger:totalAmount ] forKey:@"totalAmount"];
-    
-     [_param setObject:[NSNumber numberWithInteger:sameLocation] forKey:@"sameLocationOfTheCompany"];
-    
-    [_param setObject:self.categoryId forKey:@"categoryId"];
-    
-    [_param setObject:self.subCategoryId forKey:@"subCategoryId"];
-    [_param setObject:[NSNumber numberWithInteger:noEndDate] forKey:@"long_term_job"];
-  
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        NSLog(@"Response Object");
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-         [kAppDel.progressHud hideAnimated:YES];
-    }];
 }
 
 
 #pragma mark - PostJob -
 -(void)PostJob{
-    parameterDictionary = [[NSMutableDictionary alloc] init];
-    
-    [parameterDictionary setObject:@"postJob" forKey:@"methodName"];
-
-    [parameterDictionary setObject:self.tfJobTitle.text forKey:@"jobTitle"];
-    
-    [parameterDictionary setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [parameterDictionary setObject:self.categoryId forKey:@"categoryId"];
-    
-    [parameterDictionary setObject:self.subCategoryId forKey:@"subCategoryId"];
-    
-    [parameterDictionary setObject:self.tvJobDescription.text forKey:@"description"];
-    
-    [parameterDictionary setObject:self.lblCounter.text forKey:@"noOfPosition"];
-    
-    [parameterDictionary setObject:self.tfStartDate.text forKey:@"startDate"];
-    
-    if (noEndDate==0) {
-         [parameterDictionary setObject:self.tfEndDate.text forKey:@"endDate"];
-    }else{
+    if ([GlobalMethods InternetAvailability]) {
+        
+        parameterDictionary = [[NSMutableDictionary alloc] init];
+        
+        [parameterDictionary setObject:@"postJob" forKey:@"methodName"];
+        
+        [parameterDictionary setObject:self.tfJobTitle.text forKey:@"jobTitle"];
+        
+        [parameterDictionary setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [parameterDictionary setObject:self.categoryId forKey:@"categoryId"];
+        
+        [parameterDictionary setObject:self.subCategoryId forKey:@"subCategoryId"];
+        
+        [parameterDictionary setObject:self.tvJobDescription.text forKey:@"description"];
+        
+        [parameterDictionary setObject:self.lblCounter.text forKey:@"noOfPosition"];
+        
+        [parameterDictionary setObject:self.tfStartDate.text forKey:@"startDate"];
+        
+        if (noEndDate==0) {
+            [parameterDictionary setObject:self.tfEndDate.text forKey:@"endDate"];
+        }else{
         [parameterDictionary setObject:@"" forKey:@"endDate"];
-    }
-   
-    [parameterDictionary setObject:[NSNumber numberWithInteger:totalhours] forKey:@"totalHours"];
-    
-    [parameterDictionary setObject:self.tfStartHour.text forKey:@"startHour"];
-    
-    [parameterDictionary setObject:self.tfEndHour.text forKey:@"endHour"];
-    [parameterDictionary setObject:[NSNumber numberWithInteger:workingDay] forKey:@"workingDay"];
-    
-    [parameterDictionary setObject:self.tfHoursPerDay.text forKey:@"hoursPerDay"];
-    
-    [parameterDictionary setObject:self.tfMoneyPerHour.text forKey:@"rate"];
-    
-    [parameterDictionary setObject:[NSNumber numberWithInteger:totalAmount ] forKey:@"totalAmount"];
-    
-    [parameterDictionary setObject:[NSNumber numberWithInteger:sameLocation] forKey:@"sameLocationOfTheCompany"];
-    
-    if (sameLocation == 1) {
+        }
         
-    [parameterDictionary setObject:@"" forKey:@"streetName"];
-    [parameterDictionary setObject:@"" forKey:@"zip"];
-    [parameterDictionary setObject:@"" forKey:@"state"];
-    [parameterDictionary setObject:@"" forKey:@"city"];
-    [parameterDictionary setObject:@"" forKey:@"address1"];
-    [parameterDictionary setObject:@"" forKey:@"address2"];
+        [parameterDictionary setObject:[NSNumber numberWithInteger:totalhours] forKey:@"totalHours"];
         
+        [parameterDictionary setObject:self.tfStartHour.text forKey:@"startHour"];
+        
+        [parameterDictionary setObject:self.tfEndHour.text forKey:@"endHour"];
+        [parameterDictionary setObject:[NSNumber numberWithInteger:workingDay] forKey:@"workingDay"];
+        
+        [parameterDictionary setObject:self.tfHoursPerDay.text forKey:@"hoursPerDay"];
+        
+        [parameterDictionary setObject:self.tfMoneyPerHour.text forKey:@"rate"];
+        
+        [parameterDictionary setObject:[NSNumber numberWithInteger:totalAmount ] forKey:@"totalAmount"];
+        
+        [parameterDictionary setObject:[NSNumber numberWithInteger:sameLocation] forKey:@"sameLocationOfTheCompany"];
+        
+        if (sameLocation == 1) {
+            
+            [parameterDictionary setObject:@"" forKey:@"streetName"];
+            [parameterDictionary setObject:@"" forKey:@"zip"];
+            [parameterDictionary setObject:@"" forKey:@"state"];
+            [parameterDictionary setObject:@"" forKey:@"city"];
+            [parameterDictionary setObject:@"" forKey:@"address1"];
+            [parameterDictionary setObject:@"" forKey:@"address2"];
+            
+        }else{
+            
+            [parameterDictionary setObject:_tfStreetName.text forKey:@"streetName"];
+            [parameterDictionary setObject:_tfZipCode.text forKey:@"zip"];
+            [parameterDictionary setObject:_tfState.text forKey:@"state"];
+            [parameterDictionary setObject:_tfCity.text forKey:@"city"];
+            [parameterDictionary setObject:_tfStreetNumber.text forKey:@"address1"];
+            [parameterDictionary setObject:_tfComplement.text forKey:@"address2"];
+        }
+        
+        [parameterDictionary setObject:[NSNumber numberWithFloat:totalhours] forKey:@"journeyHours"];
+        
+        [parameterDictionary setObject:[NSNumber numberWithInteger:noEndDate] forKey:@"long_term_job"];
+        
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        
+        
+        [kAFClient POST:MAIN_URL parameters:parameterDictionary progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
     }else{
-        
-        [parameterDictionary setObject:_tfStreetName.text forKey:@"streetName"];
-        [parameterDictionary setObject:_tfZipCode.text forKey:@"zip"];
-        [parameterDictionary setObject:_tfState.text forKey:@"state"];
-        [parameterDictionary setObject:_tfCity.text forKey:@"city"];
-        [parameterDictionary setObject:_tfStreetNumber.text forKey:@"address1"];
-        [parameterDictionary setObject:_tfComplement.text forKey:@"address2"];
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
     }
-    
-    [parameterDictionary setObject:[NSNumber numberWithFloat:totalhours] forKey:@"journeyHours"];
-    
-    [parameterDictionary setObject:[NSNumber numberWithInteger:noEndDate] forKey:@"long_term_job"];
-    
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    
-    [kAFClient POST:MAIN_URL parameters:parameterDictionary progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
-
-        [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
 }
 
 
@@ -797,38 +856,36 @@ if (_tfJobTitle.text.length==0) {
     
     [[session dataTaskWithURL:[NSURL URLWithString:encodedUrlAsString]
             completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-                if (!error){
-                    if ([response isKindOfClass:[NSHTTPURLResponse class]]){
-                        NSError *jsonError;
-                        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                        if (jsonError){
-                        } else{
-                            dispatch_async(dispatch_get_main_queue(), ^(void){
-                                NSArray *StateCity = [[json valueForKey:@"results"]valueForKey:@"address_components"];
+        if (!error){
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+        NSError *jsonError;
+        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+            if (jsonError){
+            } else{
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+        NSArray *StateCity = [[json valueForKey:@"results"]valueForKey:@"address_components"];
                                 
-                                NSMutableDictionary *dict = [StateCity objectAtIndex:0];
+        NSMutableDictionary *dict = [StateCity objectAtIndex:0];
                                 
-                                for (int i = 0; i<dict.count; i++) {
+    for (int i = 0; i<dict.count; i++) {
                                     
-                                    NSArray *type = [[dict valueForKey:@"types"]objectAtIndex:i];
-                                    if ([type containsObject:@"administrative_area_level_1"]) {
-                                        _tfState.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
-                                    }
-                                    if ([type containsObject:@"administrative_area_level_2"]) {
-                                        _tfCity.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
-                                    }
-                                    if ([type containsObject:@"postal_code"]) {
-                                        _tfZipCode.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
-                                    }
-                                    
-                                }
-                            });
-                        }
+    NSArray *type = [[dict valueForKey:@"types"]objectAtIndex:i];
+    if ([type containsObject:@"administrative_area_level_1"]) {
+        _tfState.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
                     }
-                } else{
-                    //NSLog(@"error : %@", error.description);
-                }
-            }] resume];
+    if ([type containsObject:@"administrative_area_level_2"]) {
+        _tfCity.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                    }
+    if ([type containsObject:@"postal_code"]) {
+        _tfZipCode.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                    }
+                    }
+                });
+            }
+        }
+    } else{
+            }
+    }] resume];
 }
 
 
@@ -854,4 +911,91 @@ if (_tfJobTitle.text.length==0) {
     self.tfTotallPay.text = [NSString stringWithFormat:@"$%ld",(long)totalAmount];
 }
 
+
+#pragma mark -jobDetailbyId -
+-(void)jobDetailbyId{
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *param = [[NSMutableDictionary alloc]init];
+        [param setObject:@"jobDetailbyId" forKey:@"methodName"];
+        
+    [param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [param setObject:_jobId forKey:@"jobId"];
+        
+        [param setObject:@"" forKey:@"jobSeekerId"];
+       
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        
+        [kAFClient POST:MAIN_URL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+        _tfJobTitle.text = [[responseObject valueForKey:@"data"]valueForKey:@"jobTitle"];
+        _tvJobDescription.text = [[responseObject valueForKey:@"data"]valueForKey:@"jobDescription"];
+        
+        self.lblCounter.text  =[[responseObject valueForKey:@"data"]valueForKey:@"position"];
+            
+        count = [[[responseObject valueForKey:@"data"]valueForKey:@"position"]intValue];
+      
+        noEndDate =(NSInteger)[[responseObject valueForKey:@"data"]valueForKey:@"long_term_job"];
+            
+            if (noEndDate==1) {
+                _tfEndDate.hidden=YES;
+                _tfEndDate.text = @"Date";
+            }
+            
+        _tfStartDate.text = [[responseObject valueForKey:@"data"]valueForKey:@"start_date"];
+        _tfEndDate.text = [[responseObject valueForKey:@"data"]valueForKey:@"end_date"];
+        _tfStartHour.text = [[responseObject valueForKey:@"data"]valueForKey:@"start_hour"];
+        _tfEndHour.text = [[responseObject valueForKey:@"data"]valueForKey:@"end_hour"];
+
+    workingDay = (NSInteger)[[responseObject valueForKey:@"data"]valueForKey:@"working_day"];
+            
+            if (workingDay==1) {
+                self.btnCheckBox1.selected = YES;
+            }
+            _tfHoursPerDay.text = [[responseObject valueForKey:@"data"]valueForKey:@"hoursPerDay"];
+            
+            _tfHoursPerDay.text = [[responseObject valueForKey:@"data"]valueForKey:@"hoursPerDay"];
+            
+            _tfMoneyPerHour.text =   [[responseObject valueForKey:@"data"]valueForKey:@"hourlyRate"];
+            
+            totalhours = [[[responseObject valueForKey:@"data"]valueForKey:@"totalHour"] floatValue];
+            
+           _categoryId =[[responseObject valueForKey:@"data"]valueForKey:@"categoryId"];
+            
+            _subCategoryId =[[responseObject valueForKey:@"data"]valueForKey:@"subCategoryId"];
+            
+            sameLocation = [[[responseObject valueForKey:@"data"]valueForKey:@"same_as_company_location"]intValue];
+            
+            if (sameLocation==1) {
+                self.btnCheckBox2.selected = NO;
+                
+                sameLocation = 0;
+                _addressView.hidden = NO;
+                _addressViewHeightConstraints.constant = addressViewHeight;
+                [UIView animateWithDuration:0.5 animations:^{
+                    [self.view layoutIfNeeded];
+                    
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
+            
+            _tfStreetName.text = [[responseObject valueForKey:@"data"]valueForKey:@"streetName"];
+            _tfStreetNumber.text = [[responseObject valueForKey:@"data"]valueForKey:@"address1"];
+            _tfComplement.text = [[responseObject valueForKey:@"data"]valueForKey:@"address2"];
+            _tfZipCode.text = [[responseObject valueForKey:@"data"]valueForKey:@"zip"];
+            _tfState.text = [[responseObject valueForKey:@"data"]valueForKey:@"state"];
+            _tfCity.text = [[responseObject valueForKey:@"data"]valueForKey:@"city"];
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+   
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
+}
 @end

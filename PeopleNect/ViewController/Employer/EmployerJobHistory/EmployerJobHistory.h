@@ -12,9 +12,9 @@
 #import "PN_Constants.h"
 
 @interface EmployerJobHistory : UIViewController
-<UICollectionViewDelegate,UICollectionViewDataSource>
+<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) IBOutlet UILabel *jobHistoryLbl;
 @property (strong, nonatomic) IBOutlet UICollectionView *jobHistoryCollectionView;
-
+@property(strong,nonatomic) NSMutableArray *responseHistory;
 @end

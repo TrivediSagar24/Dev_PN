@@ -27,8 +27,9 @@
 @property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) IBOutlet UIView *bottomView;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressViewHeightConstraints;
-@property (strong, nonatomic) NSMutableArray *EmployerDetailPost;
-//@property (strong, nonatomic) IBOutlet NSLayoutConstraint *containerHeightConstraints;
+@property (strong, nonatomic) NSString *jobId;
+@property (strong, nonatomic) NSString *repostProfileURL;
+
 @property (strong, nonatomic) IBOutlet UIView *addressView;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfJobTitle;
 @property (strong, nonatomic) IBOutlet UIView *profileView;
@@ -56,6 +57,13 @@
 @property (strong, nonatomic) IBOutlet MVPlaceSearchTextField *tfStreetName;
 @property (strong, nonatomic) IBOutlet PN_ButtonGlobalMethods *noEndDateBtn;
 @property (nonatomic)  BOOL isFrominVitedScreen;
+@property(strong,nonatomic) NSString *employeeName;
+@property(strong,nonatomic) NSString *employeeID;
+@property(strong,nonatomic) NSString *employeeProfielImage;
+@property (strong, nonatomic) IBOutlet UIView *starView;
+@property (strong, nonatomic) IBOutlet UILabel *lastDetailsLbl;
+
+
 
 - (IBAction)noEndDateClicked:(id)sender;
 - (IBAction)onClickAdd:(id)sender;

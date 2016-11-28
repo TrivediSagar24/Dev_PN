@@ -56,31 +56,34 @@
 
 
 - (IBAction)SendClicked:(id)sender {
-    
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
-    [_param setValue:@"rateEmployer" forKey:@"methodName"];
-    
-    [_param setValue:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [_param setValue:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [_param setValue:@"4" forKey:@"rating"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-        [kAppDel.progressHud hideAnimated:YES];
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
         
-        NSLog(@"Response Object %@",responseObject);
+        [_param setValue:@"rateEmployer" forKey:@"methodName"];
         
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [_param setValue:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
+        [_param setValue:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
         
-    }];
+        [_param setValue:@"4" forKey:@"rating"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            NSLog(@"Response Object %@",responseObject);
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
 }
 
 @end

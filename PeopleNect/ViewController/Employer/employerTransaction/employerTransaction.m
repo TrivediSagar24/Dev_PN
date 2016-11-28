@@ -24,7 +24,12 @@
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBar.translucent = NO;
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
-    [self transactionHistory];
+    if ([GlobalMethods InternetAvailability]) {
+        [self transactionHistory];
+    }
+    else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 
     if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"Transaction"] isEqualToString:@"Navigation"]){
         self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"Gray_right_arrow_" ];

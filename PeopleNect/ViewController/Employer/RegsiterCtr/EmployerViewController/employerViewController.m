@@ -232,36 +232,42 @@ numberOfRowsInComponent:(NSInteger)component{
         NSString *countryCode = _tfCountryCode.text;
     countryCode = [countryCode stringByReplacingOccurrencesOfString:@"+" withString:@""];
         
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployerRegister:@"" email:_tfEmail.text name:_tfName.text password:_tfPassword.text phone:_tfPhoneNumber.text surname:_tfSurname.text countryCode:countryCode] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
-        if ([[responseObject valueForKey:@"status"] isEqual:@0]){
-        [self presentViewController:[GlobalMethods AlertWithTitle:@"Error!" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"]animated:YES completion:nil];
-        }
-        else{
-            NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"employerId"];
-            [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployerUserID"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+        if ([GlobalMethods InternetAvailability]) {
             
-            kAppDel.obj_responseDataOC  = [[responseDataOC alloc] initWithDictionary:responseObject ];
-            NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseDataOC ];
-            [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employerRegister"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
+            kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+            [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployerRegister:@"" email:_tfEmail.text name:_tfName.text password:_tfPassword.text phone:_tfPhoneNumber.text surname:_tfSurname.text countryCode:countryCode] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                
+                [kAppDel.progressHud hideAnimated:YES];
+                if ([[responseObject valueForKey:@"status"] isEqual:@0]){
+                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Error!" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"]animated:YES completion:nil];
+                }
+                else{
+        NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"employerId"];
+        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployerUserID"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+                    
+        kAppDel.obj_responseDataOC  = [[responseDataOC alloc] initWithDictionary:responseObject ];
+        NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseDataOC ];
+        [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employerRegister"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+                    
         EmployerSecondScreenCtr *objEmployerSecondScreenCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerSecondScreenCtr"];
-            
-            [[NSUserDefaults standardUserDefaults] setObject:countryId forKey:@"countryId"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-                                
+                    
+        [[NSUserDefaults standardUserDefaults] setObject:countryId forKey:@"countryId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+                    
         [self.navigationController pushViewController:objEmployerSecondScreenCtr animated:YES];
         }
-
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
-        
+                
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                
+                [kAppDel.progressHud hideAnimated:YES];
+            }];
+        }
+        else{
+            
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
  }
 }
 

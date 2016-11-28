@@ -60,11 +60,12 @@ static int employerCount = 0;
     }
      
      */
+    _ProfileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
+    _ProfileImage.layer.masksToBounds = YES;
 }
 
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     employeeUserDetailData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeUserDetail"];
     if (employeeUserDetailData!=nil) {
@@ -116,11 +117,9 @@ static int employerCount = 0;
 }
 
 
--(void)viewDidAppear:(BOOL)animated
-{
+-(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:YES];
-    _ProfileImage.layer.cornerRadius = _ProfileImage.frame.size.height/2;
-    _ProfileImage.layer.masksToBounds = YES;
+   
     _rightButtonTrailing.constant = (self.view.frame.size.width*90)/414 ;
     _imageTrailing.constant = (self.view.frame.size.width *79)/414;
 }

@@ -36,12 +36,19 @@ static CLLocationCoordinate2D currentLocation;
     
     EmployeeDetails = [[NSMutableArray alloc]init];
 
-    [self showCurrentLocation];
-    [self businessCategoryList];
+    //[self showCurrentLocation];
     
-    //currentLocation = CLLocationCoordinate2DMake(23.0813, 72.5269);
+    if ([GlobalMethods InternetAvailability]) {
+        [self businessCategoryList];
+        [self jobPostingPriceAndBalance];
+
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
     
-//    currentLocation = CLLocationCoordinate2DMake(kAppDel.obj_responseDataOC.employerLocationLat, kAppDel.obj_responseDataOC.employerLocationLat);
+   //currentLocation = CLLocationCoordinate2DMake(23.0813, 72.5269);
+    
+   currentLocation = CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLat doubleValue]);
     
     markerUserLocation = [[GMSMarker alloc]init];
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:16.0];
@@ -49,7 +56,7 @@ static CLLocationCoordinate2D currentLocation;
     selectedTab = 0;
     flag = 0;
     check = 0;
-    [self jobPostingPriceAndBalance];
+    
     
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
     
@@ -66,8 +73,6 @@ static CLLocationCoordinate2D currentLocation;
     
     [_obj_MainTableView addGestureRecognizer:swipeRightSide];
     [_obj_MainTableView addGestureRecognizer:swipeLeftSide];
-
-
     
 }
 
@@ -78,12 +83,10 @@ static CLLocationCoordinate2D currentLocation;
     _heightOfMapView.constant =(self.view.frame.size.height*235)/568;
     _heightOfMiddleView.constant = (self.view.frame.size.height*75)/568;
     _heightOfTableView.constant = self.objScrollView.frame.size.height - self.sectionView.frame.size.height;
-    
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
-
 }
 
 
@@ -125,14 +128,12 @@ static CLLocationCoordinate2D currentLocation;
 -(void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position{
     
     if ([visibleRegions containsCoordinate:position.target]) {
-        NSLog(@"visible  idleAtCameraPosition");
     }
 }
 
 -(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position{
     
     if ([visibleRegions containsCoordinate:position.target]) {
-        NSLog(@"visible  didChangeCameraPosition");
     }
 }
 
@@ -192,7 +193,7 @@ static CLLocationCoordinate2D currentLocation;
             bounds = [bounds includingCoordinate:marker.position];
         marker.accessibilityLabel = [NSString stringWithFormat:@"%d",i];
         
-        marker.iconView = [self EmployeeMarker:i];
+        marker.iconView = [self EmployerMarker:i];
         marker.appearAnimation = kGMSMarkerAnimationPop;
         marker.map = _obj_MapView;
     }
@@ -222,7 +223,7 @@ static CLLocationCoordinate2D currentLocation;
 }
 
 
--(UIView *)EmployeeMarker:(int)labelTextInt{
+-(UIView *)EmployerMarker:(int)labelTextInt{
     UIView *customMarker =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 63, 40)];
     UIImageView *imgViewCustomMarker = [[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 24, 25)];
     imgViewCustomMarker.image = [UIImage imageNamed:@"iconMapUser.png"];
@@ -324,6 +325,7 @@ static CLLocationCoordinate2D currentLocation;
     [parameterDictionary setObject:[arrayCategoryId objectAtIndex:selectedCategory] forKey:@"categoryId"];
     [parameterDictionary setObject:[[NSString alloc] initWithFormat:@"%f", currentLocation.latitude] forKey:@"latitude"];
     [parameterDictionary setObject:[[NSString alloc] initWithFormat:@"%f", currentLocation.longitude] forKey:@"longitude"];
+    
     [kAFClient POST:MAIN_URL parameters:parameterDictionary progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject) {
         [kAppDel.progressHud hideAnimated:YES];
         
@@ -398,7 +400,11 @@ static CLLocationCoordinate2D currentLocation;
         [arrayCategoryId addObject:[[[responseObject valueForKey:@"categoryList"] valueForKey:@"categoryId"] objectAtIndex:i]];
                     count --;
         }
-        [self nearByEmployeesSelected:0];
+        if ([GlobalMethods InternetAvailability]) {
+            [self nearByEmployeesSelected:0];
+        }else{
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
         [ self topTabCreate];
     }
     failure:^(NSURLSessionDataTask *  task, NSError *  error) {
@@ -700,15 +706,17 @@ static CLLocationCoordinate2D currentLocation;
     }
     
     if (nearByCount>1) {
-        [self nearByEmployeesSelected:selectedtag];
+        if ([GlobalMethods InternetAvailability]) {
+            [self nearByEmployeesSelected:selectedtag];
+        }else{
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
     }
 }
 
 #pragma mark - swipe gesture to slide between view -
 -(void)slideToRightWithGesture:(UISwipeGestureRecognizer *)gestureRecognizer
 {
-    
-    
     if(selectedTabNumber == 0)
     {
         

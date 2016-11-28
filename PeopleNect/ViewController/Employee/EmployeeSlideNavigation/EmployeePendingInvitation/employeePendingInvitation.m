@@ -102,56 +102,63 @@
 #pragma mark - GetPendingInvitation -
 -(void)GetPendingInvitation
 {
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    _pendingJobInfo = [[NSMutableArray alloc]init];
-    
-    [_param setObject:@"getPendingInvitations" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        _pendingJobInfo = [[responseObject valueForKey:@"data"]mutableCopy];
-        _pendingCollectionView.delegate = self;
-        _pendingCollectionView.dataSource = self;
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        _pendingJobInfo = [[NSMutableArray alloc]init];
+        
+        [_param setObject:@"getPendingInvitations" forKey:@"methodName"];
+        
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            _pendingJobInfo = [[responseObject valueForKey:@"data"]mutableCopy];
+            _pendingCollectionView.delegate = self;
+            _pendingCollectionView.dataSource = self;
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
 #pragma mark - Accept Invitation -
--(void)AcceptInvitation:(NSString*)accept jobid:(NSString *)JobId indexPath:(NSInteger)indexPath
-{
-     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    [_param setObject:@"acceptJobInvitation" forKey:@"methodName"];
+-(void)AcceptInvitation:(NSString*)accept jobid:(NSString *)JobId indexPath:(NSInteger)indexPath{
     
-    [_param setObject:accept forKey:@"accept"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [_param setObject:JobId forKey:@"jobId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        [_param setObject:@"acceptJobInvitation" forKey:@"methodName"];
         
-        [kAppDel.progressHud hideAnimated:YES];
+        [_param setObject:accept forKey:@"accept"];
         
-        if ([accept isEqual:@"1"]) {
-            [self presentViewController:[GlobalMethods AlertWithTitle:nil Message:@"Invitation accepted" AlertMessage:@"OK"]animated:YES completion:nil];
-        }
-        if ([accept isEqual:@"0"]) {
-            [self presentViewController:[GlobalMethods AlertWithTitle:nil Message:@"Invitation refused" AlertMessage:@"OK"]animated:YES completion:nil];
-        }
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
         
+        [_param setObject:JobId forKey:@"jobId"];
         
-        [_pendingJobInfo removeObjectAtIndex:indexPath];
-        [_pendingCollectionView reloadData];
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            if ([accept isEqual:@"1"]) {
+                [self presentViewController:[GlobalMethods AlertWithTitle:nil Message:@"Invitation accepted" AlertMessage:@"OK"]animated:YES completion:nil];
+            }
+            if ([accept isEqual:@"0"]) {
+                [self presentViewController:[GlobalMethods AlertWithTitle:nil Message:@"Invitation refused" AlertMessage:@"OK"]animated:YES completion:nil];
+            }
+            
+            
+            [_pendingJobInfo removeObjectAtIndex:indexPath];
+            [_pendingCollectionView reloadData];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
-
 
 @end

@@ -81,39 +81,45 @@
 
 #pragma mark - Get User Availibility -
 -(void)getUserAvailibility{
-    responseSelectedAvailibility = [[NSMutableArray alloc]init];
-   
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    [_param setObject:@"getUserAvailability" forKey:@"methodName"];
-    [_param setObject:_employeeUserId forKey:@"userId"];
     
-//    kAppDel.progressHud = [GlobalMethods ShowProgressHud:kAppDel.window];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject){
+    if ([GlobalMethods InternetAvailability]) {
+        responseSelectedAvailibility = [[NSMutableArray alloc]init];
         
-         [responseSelectedAvailibility addObject:[responseObject valueForKey:@"data"] ];
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        [_param setObject:@"getUserAvailability" forKey:@"methodName"];
+        [_param setObject:_employeeUserId forKey:@"userId"];
         
-         NSArray *dayArray = [[responseSelectedAvailibility valueForKey:@"day"] objectAtIndex:0];
-         
-         for (int i = 0; i<[[responseSelectedAvailibility firstObject]count]; i++) {
-             
-             NSString *dayIndexString = [dayArray objectAtIndex:i];
-             
-             int dayIndex = [dayIndexString intValue];
-             
-             dayIndex = dayIndex-1;
-             
-             [selectedWeekAvailibility replaceObjectAtIndex:dayIndex withObject:@"1"];
-         }
+        //    kAppDel.progressHud = [GlobalMethods ShowProgressHud:kAppDel.window];
         
-        _availableCollectionView.delegate= self;
-        _availableCollectionView.dataSource = self;
-         [_availableCollectionView reloadData];
-        [kAppDel.progressHud hideAnimated:YES];
-        
-     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-         [kAppDel.progressHud hideAnimated:YES];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject){
+            
+            [responseSelectedAvailibility addObject:[responseObject valueForKey:@"data"] ];
+            
+            NSArray *dayArray = [[responseSelectedAvailibility valueForKey:@"day"] objectAtIndex:0];
+            
+            for (int i = 0; i<[[responseSelectedAvailibility firstObject]count]; i++) {
+                
+                NSString *dayIndexString = [dayArray objectAtIndex:i];
+                
+                int dayIndex = [dayIndexString intValue];
+                
+                dayIndex = dayIndex-1;
+                
+                [selectedWeekAvailibility replaceObjectAtIndex:dayIndex withObject:@"1"];
+            }
+            
+            _availableCollectionView.delegate= self;
+            _availableCollectionView.dataSource = self;
+            [_availableCollectionView reloadData];
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
 
-     }];
+    }
 }
 @end

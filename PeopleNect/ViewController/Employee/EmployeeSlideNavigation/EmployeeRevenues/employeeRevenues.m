@@ -98,29 +98,35 @@
     _revenuesInfo = [[NSMutableArray alloc]init];
     _monthName = [[NSMutableArray alloc]init];
     
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    [_param setObject:@"employeesRevenues" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
+    if ([GlobalMethods InternetAvailability]) {
         
-        _revenuesInfo = [[responseObject valueForKey:@"data"]mutableCopy];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-        _monthName = [_revenuesInfo valueForKey:@"date"];
+        [_param setObject:@"employeesRevenues" forKey:@"methodName"];
         
-        _totalMonthWiseRevenue = [_revenuesInfo  valueForKey:@"revenue"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
         
-        _revenueTableView.delegate = self;
-        _revenueTableView.dataSource = self;
-       
-        [_revenueTableView reloadData];
-      
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            _revenuesInfo = [[responseObject valueForKey:@"data"]mutableCopy];
+            
+            _monthName = [_revenuesInfo valueForKey:@"date"];
+            
+            _totalMonthWiseRevenue = [_revenuesInfo  valueForKey:@"revenue"];
+            
+            _revenueTableView.delegate = self;
+            _revenueTableView.dataSource = self;
+            
+            [_revenueTableView reloadData];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
 }
 
 @end

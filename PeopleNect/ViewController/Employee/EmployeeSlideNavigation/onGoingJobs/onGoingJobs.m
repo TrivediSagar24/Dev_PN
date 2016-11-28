@@ -175,24 +175,27 @@
 
 
 #pragma mark - GetOnGoingJobs -
--(void)GetOnGoingJobs
-{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"getOngoingJobs" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+-(void)GetOnGoingJobs{
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"getOngoingJobs" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
         
-        [kAppDel.progressHud hideAnimated:YES];
-        
-        _nextApplicationArray = [[responseObject valueForKey:@"data"]valueForKey:@"nextJobCollection"];
-        _pendingApplicationArray = [[responseObject valueForKey:@"data"]valueForKey:@"acceptedInvitation"];
-        [_onGoingTV reloadData];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            _nextApplicationArray = [[responseObject valueForKey:@"data"]valueForKey:@"nextJobCollection"];
+            _pendingApplicationArray = [[responseObject valueForKey:@"data"]valueForKey:@"acceptedInvitation"];
+            [_onGoingTV reloadData];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 #pragma mark - IBActions -
@@ -251,82 +254,86 @@
     
     [_param setObject:jobId forKey:@"job_id"];
     
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-        [kAppDel.progressHud hideAnimated:YES];
-
-          EmployeeApplyForJob *obj_EmployeeApplyForJob = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployeeApplyForJob"];
-        
-        NSString *eStatus= [[responseObject valueForKey:@"data"]valueForKey:@"employerStatus"];
-        
-        NSString*jStatus= [[responseObject valueForKey:@"data"]valueForKey:@"jobseekerStatus"];
-        
-        obj_EmployeeApplyForJob.companyName = [[_pendingApplicationArray objectAtIndex:Sender.tag]valueForKey:@"companyName"];
-        
-        obj_EmployeeApplyForJob.jobTitle = [[_pendingApplicationArray objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
-        
-        obj_EmployeeApplyForJob.applicationSent = @"Application Sent";
-        obj_EmployeeApplyForJob.applicationWaiting = @"Waiting for hiring manager to check your application";
-        obj_EmployeeApplyForJob.applicationFeedback = @"Waiting feedback";
-        
-        if ([Method isEqualToString:@"followUp"]) {
-            if ([eStatus isEqual:@0] &&   [jStatus isEqual:@0]) {
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            EmployeeApplyForJob *obj_EmployeeApplyForJob = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployeeApplyForJob"];
+            
+            NSString *eStatus= [[responseObject valueForKey:@"data"]valueForKey:@"employerStatus"];
+            
+            NSString*jStatus= [[responseObject valueForKey:@"data"]valueForKey:@"jobseekerStatus"];
+            
+            obj_EmployeeApplyForJob.companyName = [[_pendingApplicationArray objectAtIndex:Sender.tag]valueForKey:@"companyName"];
+            
+            obj_EmployeeApplyForJob.jobTitle = [[_pendingApplicationArray objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
+            
+            obj_EmployeeApplyForJob.applicationSent = @"Application Sent";
+            obj_EmployeeApplyForJob.applicationWaiting = @"Waiting for hiring manager to check your application";
+            obj_EmployeeApplyForJob.applicationFeedback = @"Waiting feedback";
+            
+            if ([Method isEqualToString:@"followUp"]) {
+                if ([eStatus isEqual:@0] &&   [jStatus isEqual:@0]) {
+                }
+                else if ([eStatus isEqual:@5] &&   [jStatus isEqual:@0]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                    obj_EmployeeApplyForJob.wait = @"wait";
+                    
+                    
+                }
+                else if ([eStatus isEqual:@4] &&   [jStatus isEqual:@0]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                    obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
+                    obj_EmployeeApplyForJob.result = @"selected";
+                    
+                }
+                else if ([eStatus isEqual:@2] &&   [jStatus isEqual:@0]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                    obj_EmployeeApplyForJob.applicationFeedback = @"You were rejected!";
+                    obj_EmployeeApplyForJob.result = @"rejected";
+                    
+                }
             }
-            else if ([eStatus isEqual:@5] &&   [jStatus isEqual:@0]) {
-                 obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-                obj_EmployeeApplyForJob.wait = @"wait";
+            if ([Method isEqualToString:@"followUpInvitations"]) {
                 
-
+                if ([eStatus isEqual:@0] &&   [jStatus isEqual:@1]) {
+                    obj_EmployeeApplyForJob.applicationSent = @"You accepted an invitation";
+                }
+                else if ([eStatus isEqual:@5] &&   [jStatus isEqual:@1]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
+                    obj_EmployeeApplyForJob.wait = @"wait";
+                    
+                }
+                else if ([eStatus isEqual:@4] &&   [jStatus isEqual:@1]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
+                    obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
+                    obj_EmployeeApplyForJob.result = @"selected";
+                    
+                }
+                else if ([eStatus isEqual:@2] &&   [jStatus isEqual:@0]) {
+                    obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
+                    obj_EmployeeApplyForJob.applicationFeedback = @"You were rejected!";
+                    obj_EmployeeApplyForJob.result = @"rejected";
+                }
             }
-            else if ([eStatus isEqual:@4] &&   [jStatus isEqual:@0]) {
-                obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-                 obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
-                obj_EmployeeApplyForJob.result = @"selected";
-
-            }
-            else if ([eStatus isEqual:@2] &&   [jStatus isEqual:@0]) {
-                obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-                obj_EmployeeApplyForJob.applicationFeedback = @"You were rejected!";
-                obj_EmployeeApplyForJob.result = @"rejected";
-
-            }
-        }
-     if ([Method isEqualToString:@"followUpInvitations"]) {
-         
-         if ([eStatus isEqual:@0] &&   [jStatus isEqual:@1]) {
-             obj_EmployeeApplyForJob.applicationSent = @"You accepted an invitation";
-         }
-         else if ([eStatus isEqual:@5] &&   [jStatus isEqual:@1]) {
-             obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
-             obj_EmployeeApplyForJob.wait = @"wait";
-
-         }
-         else if ([eStatus isEqual:@4] &&   [jStatus isEqual:@1]) {
-             obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
-             obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
-             obj_EmployeeApplyForJob.result = @"selected";
-
-         }
-         else if ([eStatus isEqual:@2] &&   [jStatus isEqual:@0]) {
-           obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager aware of your application";
-             obj_EmployeeApplyForJob.applicationFeedback = @"You were rejected!";
-             obj_EmployeeApplyForJob.result = @"rejected";
-         }
-     }
-      
-        UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_EmployeeApplyForJob];
-        
-        obj_nav.definesPresentationContext = YES;
-        
-        obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        
-        [self presentViewController:obj_nav animated:YES completion:nil];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+            
+            UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_EmployeeApplyForJob];
+            
+            obj_nav.definesPresentationContext = YES;
+            
+            obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            
+            [self presentViewController:obj_nav animated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 @end

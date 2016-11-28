@@ -43,15 +43,20 @@
 
 #pragma mark - packageListing -
 -(void)packageListing{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    _packageCredit = [[NSMutableArray alloc]init];
-    [_param setObject:@"packageListing" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        _packageCredit = [[responseObject valueForKey:@"data"]valueForKey:@"amount"];
-        _tfBalance.text = [_packageCredit objectAtIndex:0];
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-    }];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        _packageCredit = [[NSMutableArray alloc]init];
+        [_param setObject:@"packageListing" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            _packageCredit = [[responseObject valueForKey:@"data"]valueForKey:@"amount"];
+            _tfBalance.text = [_packageCredit objectAtIndex:0];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        }];
+
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
@@ -106,16 +111,21 @@ numberOfRowsInComponent:(NSInteger)component{
 
 #pragma mark - IBActions -
 - (IBAction)AddBalanceClicked:(id)sender{
-    PayPalPayment *payment = [[PayPalPayment alloc] init];
-    payment.amount = [[NSDecimalNumber alloc] initWithString:_tfBalance.text];
-    payment.currencyCode = @"USD";
-    payment.shortDescription = @"PeopleNect";
-    payment.items = nil;
-    payment.paymentDetails = nil;
-    PayPalPaymentViewController *paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment
-                                                                                                configuration:self.payPalConfig
-                                                                                                     delegate:self];
-    [self presentViewController:paymentViewController animated:YES completion:nil];
+    
+    if ([GlobalMethods InternetAvailability]) {
+        PayPalPayment *payment = [[PayPalPayment alloc] init];
+        payment.amount = [[NSDecimalNumber alloc] initWithString:_tfBalance.text];
+        payment.currencyCode = @"USD";
+        payment.shortDescription = @"PeopleNect";
+        payment.items = nil;
+        payment.paymentDetails = nil;
+        PayPalPaymentViewController *paymentViewController = [[PayPalPaymentViewController alloc] initWithPayment:payment
+                                                                                                    configuration:self.payPalConfig
+                                                                                                         delegate:self];
+        [self presentViewController:paymentViewController animated:YES completion:nil];
+    }else{
+    [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
@@ -158,17 +168,22 @@ numberOfRowsInComponent:(NSInteger)component{
 
 #pragma mark - addBalance -
 -(void)addbalance:(NSString *)paymentid{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"addBalanceFromPayPal" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    [_param setObject:paymentid forKey:@"paymentId"];
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        [self presentViewController:[GlobalMethods AlertWithTitle:[responseObject valueForKey:@"message"] Message:[NSString stringWithFormat:@"You have added %@ $",[responseObject valueForKey:@"amount"]] AlertMessage:@"OK"] animated:YES completion:nil];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
-}
+    
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"addBalanceFromPayPal" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        [_param setObject:paymentid forKey:@"paymentId"];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            [self presentViewController:[GlobalMethods AlertWithTitle:[responseObject valueForKey:@"message"] Message:[NSString stringWithFormat:@"You have added %@ $",[responseObject valueForKey:@"amount"]] AlertMessage:@"OK"] animated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
+   }
 @end

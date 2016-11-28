@@ -131,48 +131,54 @@
         _Price = kAppDel.obj_responseEmployeeUserDetail.Employee_hourly_compensation;
     }
     
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    NSData* imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
-    if (imageData==nil)
-    {
-         imageData =  UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
-    }
-    [self returnImage:[UIImage imageWithData:imageData]];
-    
-    [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:_strCategoryId subCategoryId:_strSubCategoryId experience:_Exp rate:_Price description:_profileDescriptionTV.text password:_tfPassword.text zipcode:_zipcode.text streetName:_streetName.text number:_streetNumber.text country_code:_tfCountryCode.text] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
-    {
-          [formData appendPartWithFileData:dataProfileImg name:@"profile_pic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-    {
-        [kAppDel.progressHud hideAnimated:YES];
-       
-        kAppDel.obj_responseEmployeeUserDetail = [[responseEmployeeUserDetail alloc]initWithDictionary:responseObject];
-        
-        
-    if ([[responseObject valueForKey:@"status"] isEqual:@1]) {
-        
-        if (kAppDel.EmployeeProfileImage==nil) {
-            kAppDel.EmployeeProfileImage = _EmployeeProfileImage.image;
-            
+        NSData* imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
+        if (imageData==nil)
+        {
+            imageData =  UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
         }
-            [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-        }
-        /*
-       employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
+        [self returnImage:[UIImage imageWithData:imageData]];
         
-        
-        [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        */
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-    {
-        [kAppDel.progressHud hideAnimated:YES];
+        [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:_strCategoryId subCategoryId:_strSubCategoryId experience:_Exp rate:_Price description:_profileDescriptionTV.text password:_tfPassword.text zipcode:_zipcode.text streetName:_streetName.text number:_streetNumber.text country_code:_tfCountryCode.text] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
+         {
+             [formData appendPartWithFileData:dataProfileImg name:@"profile_pic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+             
+         } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+             kAppDel.obj_responseEmployeeUserDetail = [[responseEmployeeUserDetail alloc]initWithDictionary:responseObject];
+             
+             
+             if ([[responseObject valueForKey:@"status"] isEqual:@1]) {
+                 
+                 if (kAppDel.EmployeeProfileImage==nil) {
+                     kAppDel.EmployeeProfileImage = _EmployeeProfileImage.image;
+                     
+                 }
+                 [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+             }
+             /*
+              employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
+              
+              
+              [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
+              [[NSUserDefaults standardUserDefaults] synchronize];
+              */
+             
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+         }];
 
-    }];
- }
+        
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
+}
 
 #pragma mark - Textfield Delegates
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField

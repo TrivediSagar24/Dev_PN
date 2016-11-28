@@ -15,6 +15,7 @@
     NSString *userType;
     NSInteger indexOfChat;
     NSMutableDictionary *EmployeeDetails;
+    NSString *employeeProfileImage;
 }
 @end
 
@@ -26,18 +27,16 @@
     userType = @"1";
     
     self.ProfileView.clipsToBounds = YES;
-      _ProfileBtn.hidden = YES;
+    _ProfileBtn.hidden = YES;
     
     self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(80)/2;
    
     if (_isfromOpenJobSelected == YES) {
-       
         _invitedJobView.hidden = YES;
         _postedJobBtn.hidden = YES;
         
+        [self openJobSelectedinvitedLastScreen];
         
-    [_profileImage sd_setImageWithURL: [NSURL URLWithString:[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"]]placeholderImage:[UIImage imageNamed:@"profile"]];
-    
     }else{
         
         NSData *EmployeeList= [[NSUserDefaults standardUserDefaults] objectForKey:@"EmployeeList"];
@@ -45,12 +44,13 @@
         if (EmployeeList!=nil) {
             kAppDel.obj_responseEmployeesList = [NSKeyedUnarchiver unarchiveObjectWithData:EmployeeList];
         }
-        
         EmployeeDetails = [[NSMutableDictionary alloc]init];
         
         if ([[kAppDel.obj_responseEmployeesList.employeeAvailabilityStatus objectAtIndex:_employeeSelected] isEqual:@"1"]) {
         }
-        [_profileImage sd_setImageWithURL: [NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]]placeholderImage:[UIImage imageNamed:@"profile"]];
+      
+        [self InvitedMenuLastScreen];
+
     }
     
    self.automaticallyAdjustsScrollViewInsets = NO;
@@ -87,14 +87,12 @@
 
     if (_isfromOpenJobSelected == YES) {
        
-        self.employeeId = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"userId"];
-        
+        [self openJobSelectedinvitedLastScreen];
+
         self.employeeExpYears = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"experience"];
         
         self.employeeRatings = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"userRating"];
 
-        self.employeeCategory = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"categoryName"];
-        
         self.employeeDistance = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"distance"];
         
         NSRange range = [_employeeDistance rangeOfString:@"."];
@@ -104,11 +102,9 @@
         self.employeeDescription = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"profileDescription"];
         
         Cell.lblEmployeeName.text =[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"userName"];
-        self.employeeName =  Cell.lblEmployeeName.text ;
         Cell.lblEmployeeCategory.text = [NSString stringWithFormat:@"%@ - %@ /",self.employeeCategory,self.employeeExpYears];
         
-        [_profileImage sd_setImageWithURL: [NSURL URLWithString:[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"]]placeholderImage:[UIImage imageNamed:@"profile"]];
-        
+
         NSString *str=[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"subCategoryName"];
 
         
@@ -125,6 +121,8 @@
             [EmployeeDetails setValue:Cell.lblEmployeeName.text forKey:@"DisplyName"];
             
             [EmployeeDetails setValue:[NSURL URLWithString:[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"]]forKey:@"ProfilePic"];
+           
+            employeeProfileImage = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"];
             
             [EmployeeDetails setValue:  self.employeeCategory forKey:@"employeeCategoryName"];
             
@@ -149,15 +147,15 @@
         }
         
     }else{
-    
-        self.employeeId = [kAppDel.obj_responseEmployeesList.employeeId objectAtIndex:_employeeSelected];
         
+        [self InvitedMenuLastScreen];
+
         self.employeeExpYears = [kAppDel.obj_responseEmployeesList.employeeExpYears objectAtIndex:_employeeSelected];
         
         self.employeeRatings = [kAppDel.obj_responseEmployeesList.employeeRating objectAtIndex:_employeeSelected];
         
         self.employeeCategory = [kAppDel.obj_responseEmployeesList.employeeCategoryName objectAtIndex:_employeeSelected];
-        
+
         self.employeeDistance = [kAppDel.obj_responseEmployeesList.employeeDistance objectAtIndex:_employeeSelected];
         
         NSRange range = [_employeeDistance rangeOfString:@"."];
@@ -168,15 +166,13 @@
         
         Cell.lblEmployeeName.text =[kAppDel.obj_responseEmployeesList.employeeName objectAtIndex:_employeeSelected];
         
-        
         Cell.lblEmployeeCategory.text = [NSString stringWithFormat:@"%@ - %@ /",self.employeeCategory,self.employeeExpYears];
-        
-        [_ProfileBtn sd_setImageWithURL:[NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"profile"]];
         
         [_profileImage sd_setImageWithURL: [NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]]placeholderImage:[UIImage imageNamed:@"profile"]];
         
-        NSString *str=[kAppDel.obj_responseEmployeesList.employeeSubactegoryName objectAtIndex:_employeeSelected];
         
+        NSString *str=[kAppDel.obj_responseEmployeesList.employeeSubactegoryName objectAtIndex:_employeeSelected];
+
         kAppDel.subCategoryFromInvited = [[NSMutableArray alloc] initWithArray:[str componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]]];
         
         
@@ -190,7 +186,7 @@
             [EmployeeDetails setValue:[kAppDel.obj_responseEmployeesList.employeeName objectAtIndex:_employeeSelected] forKey:@"DisplyName"];
             
             [EmployeeDetails setValue:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]forKey:@"ProfilePic"];
-            
+
             [EmployeeDetails setValue:  [kAppDel.obj_responseEmployeesList.employeeCategoryName objectAtIndex:_employeeSelected]forKey:@"employeeCategoryName"];
             
             [_chatBtn setImage:[UIImage imageNamed:@"chatBlue"] forState:UIControlStateNormal];
@@ -215,6 +211,9 @@
         }
         
     }
+    
+    _employeeSelected =  _employeeSelected+indexPath.item;
+
 return Cell;
 }
 
@@ -258,7 +257,7 @@ return Cell;
         
     NSIndexPath *indexPath = [self.obj_CollectionView indexPathForCell:cell];
         
-        _employeeSelected = indexPath.item;
+        _employeeSelected =  _employeeSelected+indexPath.item;
         
         [UIView setAnimationsEnabled:NO];
         
@@ -272,18 +271,20 @@ return Cell;
         
         if (_isfromOpenJobSelected == YES) {
             
-            
-            
+            [self openJobSelectedinvitedLastScreen];
+
             if ([[[_invitedJobListArray objectAtIndex:_employeeSelected] valueForKey:@"availability"] isEqual:@"1"]) {
                 _chatBtn.enabled = YES;
                 
                 indexOfChat = indexPath.row;
-                
+
                 [EmployeeDetails setValue:self.employeeId forKey:@"EmployeeUserID"];
                 
                 [EmployeeDetails setValue: self.employeeName forKey:@"DisplyName"];
                 
                 [EmployeeDetails setValue:[NSURL URLWithString:[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"]]forKey:@"ProfilePic"];
+                
+                employeeProfileImage = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"];
                 
                 [EmployeeDetails setValue:  self.employeeCategory forKey:@"employeeCategoryName"];
                 
@@ -299,6 +300,9 @@ return Cell;
             }
 
         }else{
+            
+            [self InvitedMenuLastScreen];
+
             if ([[kAppDel.obj_responseEmployeesList.employeeAvailabilityStatus objectAtIndex:indexPath.row] isEqual:@"1"]) {
                 
                 _chatBtn.enabled = YES;
@@ -310,7 +314,6 @@ return Cell;
                 [EmployeeDetails setValue:[kAppDel.obj_responseEmployeesList.employeeName objectAtIndex:indexPath.row] forKey:@"DisplyName"];
                 
                 [EmployeeDetails setValue:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:indexPath.row]forKey:@"ProfilePic"];
-                
                 
                 [EmployeeDetails setValue:  [kAppDel.obj_responseEmployeesList.employeeCategoryName objectAtIndex:indexPath.row]forKey:@"employeeCategoryName"];
                 
@@ -358,6 +361,11 @@ return Cell;
 - (IBAction)invitedForNewJobClicked:(id)sender {
     EmployerLastDetailsCtr *obj_EmployerLastDetailsCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLastDetailsCtr"];
     obj_EmployerLastDetailsCtr.isFrominVitedScreen = YES;
+    obj_EmployerLastDetailsCtr.employeeName = self.employeeName;
+    obj_EmployerLastDetailsCtr.employeeID = self.employeeId;
+    obj_EmployerLastDetailsCtr.categoryId = self.categoryID;
+    obj_EmployerLastDetailsCtr.subCategoryId = self.subCategoryID;
+    obj_EmployerLastDetailsCtr.employeeProfielImage = employeeProfileImage;
     [self.navigationController pushViewController:obj_EmployerLastDetailsCtr animated:YES];
 }
 
@@ -366,7 +374,6 @@ return Cell;
     inviteForPostedJob *obj_inviteForPostedJob =[self.storyboard instantiateViewControllerWithIdentifier:@"inviteForPostedJob"];
     
     obj_inviteForPostedJob.EmployeeName = self.employeeName;
-    
     
     UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_inviteForPostedJob];
     
@@ -389,7 +396,6 @@ return Cell;
         
         _employeeSelected = nextItem.row;
        
-        
         [UIView setAnimationsEnabled:NO];
         
         [_obj_CollectionView performBatchUpdates:^{
@@ -412,21 +418,43 @@ return Cell;
     NSIndexPath *currentItem = [visibleItems objectAtIndex:0];
     
     NSIndexPath *nextItem = [NSIndexPath indexPathForItem:currentItem.item + 1 inSection:currentItem.section];
-    
-    if ([kAppDel.obj_responseEmployeesList.employeeCategoryName count]-1>=nextItem.item) {
-        
-        _employeeSelected = nextItem.item;
-        
-        [UIView setAnimationsEnabled:NO];
-        
-        [_obj_CollectionView performBatchUpdates:^{
+    if (_isfromOpenJobSelected == YES) {
+        if ([_invitedJobListArray count]-1>=nextItem.item) {
             
-            [_obj_CollectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:_employeeSelected inSection:0]]];
+            _employeeSelected = nextItem.item;
             
-        } completion:^(BOOL finished) {
-            [UIView setAnimationsEnabled:YES];
-        }];
-         [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+            [UIView setAnimationsEnabled:NO];
+            
+            [_obj_CollectionView performBatchUpdates:^{
+                
+                [_obj_CollectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:_employeeSelected inSection:0]]];
+                
+            } completion:^(BOOL finished) {
+                [UIView setAnimationsEnabled:YES];
+            }];
+            
+            [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        }
+        
+        
+    }else{
+        if ([kAppDel.obj_responseEmployeesList.employeeCategoryName count]-1>=nextItem.item) {
+            
+            _employeeSelected = nextItem.item;
+            
+            [UIView setAnimationsEnabled:NO];
+            
+            [_obj_CollectionView performBatchUpdates:^{
+                
+                [_obj_CollectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:_employeeSelected inSection:0]]];
+                
+            } completion:^(BOOL finished) {
+                [UIView setAnimationsEnabled:YES];
+            }];
+            
+            [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
+        }
+        
     }
 }
 
@@ -470,4 +498,34 @@ return Cell;
     }];
 }
 
+
+-(void)InvitedMenuLastScreen{
+    
+    [_profileImage sd_setImageWithURL: [NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]]placeholderImage:[UIImage imageNamed:@"profile"]];
+
+    employeeProfileImage = [kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected];
+    
+    self.employeeId = [kAppDel.obj_responseEmployeesList.employeeId objectAtIndex:_employeeSelected];
+    
+    self.employeeName = [kAppDel.obj_responseEmployeesList.employeeName objectAtIndex:_employeeSelected];
+    
+    self.categoryID = [kAppDel.obj_responseEmployeesList.employeeCategoryId objectAtIndex:_employeeSelected];
+    
+    self.subCategoryID = [kAppDel.obj_responseEmployeesList.employeeSubcategoryId objectAtIndex:_employeeSelected];
+}
+
+-(void)openJobSelectedinvitedLastScreen{
+    
+     [_profileImage sd_setImageWithURL: [NSURL URLWithString:[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"]]placeholderImage:[UIImage imageNamed:@"profile"]];
+    
+    employeeProfileImage = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"proifilePicUrl"];
+    
+    self.employeeId = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"userId"];
+    
+    self.employeeName = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"userName"];
+    
+    self.categoryID = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"category_id"];
+    
+    self.subCategoryID = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"sub_category_id"];;
+}
 @end

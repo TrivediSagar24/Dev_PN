@@ -17,7 +17,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+  
     [self openJobs];
+    
     self.openJobTableView.rowHeight = UITableViewAutomaticDimension;
     self.openJobTableView.estimatedRowHeight = 44.0;
     
@@ -170,26 +173,31 @@
     return obj;
 }
 
- #pragma mark - openJobs -
+
+#pragma mark - openJobs -
  -(void)openJobs{
-     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-     _currentJob = [[NSMutableArray alloc]init];
-     _guestJob = [[NSMutableArray alloc]init];
-     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
- [_param setObject:@"openJobs" forKey:@"methodName"];
- [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
- [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
- [kAppDel.progressHud hideAnimated:YES];
-     
- _currentJob = [[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"];
-_guestJob = [[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"];
-     
-     _openJobTableView.delegate = self;
-     _openJobTableView.dataSource = self;
- [_openJobTableView reloadData];
- } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
- [kAppDel.progressHud hideAnimated:YES];
- }];
+     if ([GlobalMethods InternetAvailability]) {
+         NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+         _currentJob = [[NSMutableArray alloc]init];
+         _guestJob = [[NSMutableArray alloc]init];
+         kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+         [_param setObject:@"openJobs" forKey:@"methodName"];
+         [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+         [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+             _currentJob = [[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"];
+             _guestJob = [[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"];
+             
+             _openJobTableView.delegate = self;
+             _openJobTableView.dataSource = self;
+             [_openJobTableView reloadData];
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             [kAppDel.progressHud hideAnimated:YES];
+         }];
+     }else{
+         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+     }
  }
 
 
@@ -202,6 +210,7 @@ _guestJob = [[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"];
 - (BOOL)slideNavigationControllerShouldDisplayRightMenu{
     return NO;
 }
+
 
 #pragma mark - Date Formatter -
 -(NSString *)dateToFormatedDate:(NSString *)dateStr

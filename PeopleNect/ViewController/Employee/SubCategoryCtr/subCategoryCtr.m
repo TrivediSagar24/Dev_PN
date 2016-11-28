@@ -122,59 +122,64 @@ if (_iscomingFromSettingCtr==YES)
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     
-    kAppDel.progressHud =[GlobalMethods ShowProgressHud:self.view];
-    
-    [dict setObject:@"subCategoryList" forKey:@"methodName"];
-    [dict setObject:CategoryUserId forKey:@"categoryId"];
-   [dict setObject:userId forKey:@"userId"];
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-     {
-         [kAppDel.progressHud hideAnimated:YES];
-         
-        if ([[responseObject valueForKey:@"status"] isEqual:@1])
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud =[GlobalMethods ShowProgressHud:self.view];
+        
+        [dict setObject:@"subCategoryList" forKey:@"methodName"];
+        [dict setObject:CategoryUserId forKey:@"categoryId"];
+        [dict setObject:userId forKey:@"userId"];
+        [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
          {
-             if ([[responseObject valueForKey:@"message"] isEqualToString:@"No Sub Category Found"]){
-             }
-             else{
-             [_mutDictSubCategoryList setObject:[[responseObject valueForKey:@"subCategoryList"] valueForKey:@"subCategoryName"] forKey:@"subCategoryName"];
-                 
-             [_mutDictSubCategoryList setObject:[[responseObject valueForKey:@"subCategoryList"] valueForKey:@"subCategoryId"] forKey:@"subCategoryId"];
-                 
-            for (int i = 0; i<[[_mutDictSubCategoryList valueForKey:@"subCategoryId"]count]; i++){
-                     [selectedIndexPath addObject:@"0"];
+             [kAppDel.progressHud hideAnimated:YES];
+             
+             if ([[responseObject valueForKey:@"status"] isEqual:@1])
+             {
+                 if ([[responseObject valueForKey:@"message"] isEqualToString:@"No Sub Category Found"]){
                  }
-                 
-                 BOOL contain = [[NSSet setWithArray: selectedItems] isSubsetOfSet: [NSSet setWithArray: [_mutDictSubCategoryList valueForKey:@"subCategoryId"]]];
-
-                 
-                 if (contain==TRUE) {
-                     if (checkedSetting ==1) {
-                         for (int i = 0 ; i<selectedItems.count; i++) {
+                 else{
+                     [_mutDictSubCategoryList setObject:[[responseObject valueForKey:@"subCategoryList"] valueForKey:@"subCategoryName"] forKey:@"subCategoryName"];
+                     
+                     [_mutDictSubCategoryList setObject:[[responseObject valueForKey:@"subCategoryList"] valueForKey:@"subCategoryId"] forKey:@"subCategoryId"];
+                     
+                     for (int i = 0; i<[[_mutDictSubCategoryList valueForKey:@"subCategoryId"]count]; i++){
+                         [selectedIndexPath addObject:@"0"];
+                     }
+                     
+                     BOOL contain = [[NSSet setWithArray: selectedItems] isSubsetOfSet: [NSSet setWithArray: [_mutDictSubCategoryList valueForKey:@"subCategoryId"]]];
+                     
+                     
+                     if (contain==TRUE) {
+                         if (checkedSetting ==1) {
+                             for (int i = 0 ; i<selectedItems.count; i++) {
+                                 
+                                 NSUInteger index = [[_mutDictSubCategoryList valueForKey:@"subCategoryId"] indexOfObject:[selectedItems objectAtIndex:i]];
+                                 
+                                 [selectedIndexPath replaceObjectAtIndex:index withObject:@"1"];
+                                 
+                                 [selectedSubCategoryArray addObject:[[_mutDictSubCategoryList valueForKey:@"subCategoryId"]objectAtIndex:index]];
+                                 
+                                 [_SubCategoryName addObject:[[_mutDictSubCategoryList valueForKey:@"subCategoryName"]objectAtIndex:index]];
+                             }
                              
-                NSUInteger index = [[_mutDictSubCategoryList valueForKey:@"subCategoryId"] indexOfObject:[selectedItems objectAtIndex:i]];
-                             
-                [selectedIndexPath replaceObjectAtIndex:index withObject:@"1"];
-                             
-                [selectedSubCategoryArray addObject:[[_mutDictSubCategoryList valueForKey:@"subCategoryId"]objectAtIndex:index]];
-                             
-                [_SubCategoryName addObject:[[_mutDictSubCategoryList valueForKey:@"subCategoryName"]objectAtIndex:index]];
                          }
                          
+                     }else{
+                         
                      }
-                 
-                 }else{
-                     
                  }
-            }
-         }
-         self.subCategoryCollectionView.delegate = self;
-         self.subCategoryCollectionView.dataSource = self;
-         
-     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-     {
-         [kAppDel.progressHud hideAnimated:YES];
+             }
+             self.subCategoryCollectionView.delegate = self;
+             self.subCategoryCollectionView.dataSource = self;
+             
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+         }];
 
-     }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 

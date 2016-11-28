@@ -8,8 +8,7 @@
 
 #import "repostJobEmployerCtr.h"
 
-@interface repostJobEmployerCtr ()
-{
+@interface repostJobEmployerCtr (){
     NSMutableArray *closeJobArray;
     UIImageView *profileImageView;
     
@@ -105,6 +104,15 @@
     Cell.repostLbl.hidden = YES;
     Cell.closeBtn.hidden = YES;
     
+        Cell.borderLabel.hidden = NO;
+
+        if ([closeJobArray count]==0) {
+            Cell.borderLabel.hidden = YES;
+        }
+        if (indexPath.row == closeJobArray.count+1) {
+            Cell.borderLabel.hidden = YES;
+        }
+        
     Cell.jobTitle.text = [[closeJobArray valueForKey:@"jobTitle"]objectAtIndex:indexPath.row-1];
         
     Cell.priceLbl.text = [NSString stringWithFormat:@"$ %@/h",[[closeJobArray valueForKey:@"rate"] objectAtIndex:indexPath.row-1]];
@@ -126,35 +134,47 @@
         [[NSUserDefaults standardUserDefaults]synchronize];
         
         EmployerLastDetailsCtr *obj_EmployerLastDetailsCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLastDetailsCtr"];
-        obj_EmployerLastDetailsCtr.EmployerDetailPost = [closeJobArray objectAtIndex:indexPath.row-1];
+        
+        obj_EmployerLastDetailsCtr.jobId = [[closeJobArray objectAtIndex:indexPath.row-1]valueForKey:@"jobId"];
+       
+        obj_EmployerLastDetailsCtr.repostProfileURL = [[closeJobArray objectAtIndex:indexPath.row-1]valueForKey:@"pictureUrl"];
+
         [self.navigationController pushViewController:obj_EmployerLastDetailsCtr animated:YES];
     }
 }
 
 
 #pragma mark - CloseJob -
--(void)closeJob
-{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-  kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    closeJobArray = [[NSMutableArray alloc]init];
-    
-    [_param setObject:@"closedJobs" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        closeJobArray = [responseObject valueForKey:@"data"];
-        _respostTableView.delegate = self;
-        _respostTableView.dataSource = self;
-        [_respostTableView reloadData];
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        _respostTableView.delegate = self;
-        _respostTableView.dataSource = self;
-        [_respostTableView reloadData];
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
-
+-(void)closeJob{
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        closeJobArray = [[NSMutableArray alloc]init];
+        
+        [_param setObject:@"closedJobs" forKey:@"methodName"];
+        
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
+            closeJobArray = [responseObject valueForKey:@"data"];
+            if (closeJobArray.count==0) {
+                [[NSUserDefaults standardUserDefaults ]setObject:@"repost" forKey:@"PostJob"];
+                [[NSUserDefaults standardUserDefaults]synchronize];
+                CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
+                [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
+            }
+            _respostTableView.delegate = self;
+            _respostTableView.dataSource = self;
+            [_respostTableView reloadData];
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            _respostTableView.delegate = self;
+            _respostTableView.dataSource = self;
+            [_respostTableView reloadData];
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 @end

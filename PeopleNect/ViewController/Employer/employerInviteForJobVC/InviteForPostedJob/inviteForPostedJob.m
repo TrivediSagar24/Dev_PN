@@ -83,39 +83,44 @@
 #pragma mark - openJobs -
 -(void)openJobs{
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"openJobs" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        
-        NSLog(@"response object %@",responseObject);
-        
-        if ([[[responseObject valueForKey:@"data"]valueForKey:@"currentJobs"] count]>0) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"openJobs" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            [kAppDel.progressHud hideAnimated:YES];
             
-            [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"] valueForKey:@"jobTitle"] forKey:@"job"];
+            NSLog(@"response object %@",responseObject);
             
-            [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"] valueForKey:@"rate"] forKey:@"price"];
-        }
-      
-        
-         if ([[[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"] count]>0) {
+            if ([[[responseObject valueForKey:@"data"]valueForKey:@"currentJobs"] count]>0) {
+                
+                [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"] valueForKey:@"jobTitle"] forKey:@"job"];
+                
+                [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"] valueForKey:@"rate"] forKey:@"price"];
+            }
             
-             [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"jobsForGuest"] valueForKey:@"jobTitle"] forKey:@"job"];
-             
-             
-             [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"jobsForGuest"] valueForKey:@"rate"] forKey:@"price"];
-         }
-       
-        _postedJobTableView.delegate = self;
-        _postedJobTableView.dataSource = self;
-        
-        [_postedJobTableView reloadData];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+            
+            if ([[[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"] count]>0) {
+                
+                [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"jobsForGuest"] valueForKey:@"jobTitle"] forKey:@"job"];
+                
+                
+                [_allJobs setObject:[[[responseObject valueForKey:@"data"] valueForKey:@"jobsForGuest"] valueForKey:@"rate"] forKey:@"price"];
+            }
+            
+            _postedJobTableView.delegate = self;
+            _postedJobTableView.dataSource = self;
+            
+            [_postedJobTableView reloadData];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
+
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
 }
 
 @end

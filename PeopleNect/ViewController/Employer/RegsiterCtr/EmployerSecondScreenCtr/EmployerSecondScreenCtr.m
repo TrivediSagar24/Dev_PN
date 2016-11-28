@@ -37,15 +37,13 @@
 }
 
 
--(void)viewWillDisappear:(BOOL)animated
-{
+-(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     self.navigationController.navigationBar.hidden = NO;
 }
 
 
--(void)viewDidLayoutSubviews
-{
+-(void)viewDidLayoutSubviews{
      _heightForContainerView.constant = self.view.frame.size.height;
 }
 
@@ -80,7 +78,6 @@
             [self stateWebService];
         }
     }
-    
     if(textField == _tfState){
         [SubViewCtr sharedInstance].obj_PickerView.delegate = self;
         [SubViewCtr sharedInstance].obj_PickerView.dataSource = self;
@@ -97,8 +94,7 @@
         self.stateId = [NSString stringWithFormat:@"%@",[[arrayStateId objectAtIndex:0]objectAtIndex:0] ];
             [self cityWebServiceWithStateId:self.stateId];
         }
-        else
-        {
+        else{
             [self stateWebService];
         }
     }
@@ -153,42 +149,47 @@
     }
         if(imgData.length>0 && _tfCompanyName.text.length>0 && _tfCity.text.length>0  && _tfState.text.length>0 &&_tfZipCode.text.length >0){
      
-            kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-            
-            NSData* imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
-            
-            [self returnImage:[UIImage imageWithData:imageData]];
-            
-            [kAFClient POST:MAIN_URL parameters: [GlobalMethods UpdateEmployerWithID:EmployerUserID cityID:_cityId companyName:_tfCompanyName.text Name:kAppDel.obj_responseDataOC.employerName Phone:kAppDel.obj_responseDataOC.employerPhoneNumber StateID:_stateId Surname:kAppDel.obj_responseDataOC.employerSurname zipCode:_tfZipCode.text countryCode:kAppDel.obj_responseDataOC.employerCountryCode Streetname:@"" Password:[[NSUserDefaults standardUserDefaults] objectForKey:@"EmployerPassword"] Adress1:_tfNumber.text Address2:_tfComplement.text countryID:_countryId] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-                 [formData appendPartWithFileData:dataProfileImg name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+            if ([GlobalMethods InternetAvailability]) {
                 
-            } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
                 
-                [kAppDel.progressHud hideAnimated:YES];
+                NSData* imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
                 
-                if([[responseObject valueForKey:@"status"] isEqual:@1]){
-                kAppDel.obj_responseDataOC  = [[responseDataOC alloc] initWithDictionary:responseObject ];
-                    
-                NSData *registerDataObject = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseDataOC];
-                    
-                [[NSUserDefaults standardUserDefaults] setObject:registerDataObject forKey:@"employerRegister"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-                    
-                    [[NSUserDefaults standardUserDefaults] setObject:@"Register" forKey:@"Update"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
-
-                    
-                MenuCtr *obj_MenuCtr  = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
-                [self.navigationController pushViewController:obj_MenuCtr animated:YES];
-                }
+                [self returnImage:[UIImage imageWithData:imageData]];
                 
-                else{
+                [kAFClient POST:MAIN_URL parameters: [GlobalMethods UpdateEmployerWithID:EmployerUserID cityID:_cityId companyName:_tfCompanyName.text Name:kAppDel.obj_responseDataOC.employerName Phone:kAppDel.obj_responseDataOC.employerPhoneNumber StateID:_stateId Surname:kAppDel.obj_responseDataOC.employerSurname zipCode:_tfZipCode.text countryCode:kAppDel.obj_responseDataOC.employerCountryCode Streetname:@"" Password:[[NSUserDefaults standardUserDefaults] objectForKey:@"EmployerPassword"] Adress1:_tfNumber.text Address2:_tfComplement.text countryID:_countryId] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                    [formData appendPartWithFileData:dataProfileImg name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
                     
-                    [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[NSString stringWithFormat:@"%@",[responseObject valueForKey:@"message"]] AlertMessage:@"OK"]animated:YES completion:nil];
-                }
-            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                 [kAppDel.progressHud hideAnimated:YES];
-            }];
+                } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    
+                    [kAppDel.progressHud hideAnimated:YES];
+                    
+                    if([[responseObject valueForKey:@"status"] isEqual:@1]){
+                        kAppDel.obj_responseDataOC  = [[responseDataOC alloc] initWithDictionary:responseObject ];
+                        
+                        NSData *registerDataObject = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseDataOC];
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:registerDataObject forKey:@"employerRegister"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:@"Register" forKey:@"Update"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
+                        
+                        
+                        MenuCtr *obj_MenuCtr  = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
+                        [self.navigationController pushViewController:obj_MenuCtr animated:YES];
+                    }
+                    
+                    else{
+                        
+                        [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[NSString stringWithFormat:@"%@",[responseObject valueForKey:@"message"]] AlertMessage:@"OK"]animated:YES completion:nil];
+                    }
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    [kAppDel.progressHud hideAnimated:YES];
+                }];
+            }else{
+                [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+            }
         }
 }
 
@@ -209,21 +210,20 @@
                             }]];
     
     [actionSheet addAction:[UIAlertAction actionWithTitle:@"Camera" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
-                            {
+            {
                                 
-                                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-                                {
-                                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+            {
+                imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
                                     
-                                    [self presentViewController:imagePicker animated:YES completion:nil];
+                [self presentViewController:imagePicker animated:YES completion:nil];
                                     
-                                }
-                                else
-                                {
-                                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Camera Missing" Message:@"It seems that no camera is attached to this device" AlertMessage:@"OK"]animated:YES completion:nil];
-                                }
+                }else
+                {
+                [self presentViewController:[GlobalMethods AlertWithTitle:@"Camera Missing" Message:@"It seems that no camera is attached to this device" AlertMessage:@"OK"]animated:YES completion:nil];
+                        }
                                 
-                            }]];
+            }]];
     
         [actionSheet addAction:[UIAlertAction actionWithTitle:@"Gallery" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
                             {
@@ -256,36 +256,47 @@
 
 #pragma mark - WebServices
 -(void)stateWebService {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     
-    [dict setObject:@"stateList" forKey:@"methodName"];
-    [dict setObject:_countryId forKey:@"countryId"];
-    
-    arrayState =[[NSMutableArray alloc] init];
-    arrayStateId = [[NSMutableArray alloc] init];
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject){
-         [arrayState addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"stateName"]];
-         [arrayStateId addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"stateId"]];
-     }
-        failure:^(NSURLSessionDataTask   *task, NSError  * error) {
-            [kAppDel.progressHud hideAnimated:YES];
-    }];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+        
+        [dict setObject:@"stateList" forKey:@"methodName"];
+        [dict setObject:_countryId forKey:@"countryId"];
+        
+        arrayState =[[NSMutableArray alloc] init];
+        arrayStateId = [[NSMutableArray alloc] init];
+        [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject){
+            [arrayState addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"stateName"]];
+            [arrayStateId addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"stateId"]];
+        }
+                failure:^(NSURLSessionDataTask   *task, NSError  * error) {
+                    [kAppDel.progressHud hideAnimated:YES];
+                }];
+        
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 
 -(void)cityWebServiceWithStateId:(NSString *)stateId{
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-    [dict setObject:@"cityList" forKey:@"methodName"];
-    [dict setObject:stateId forKey:@"stateId"];
-    arrayCity =[[NSMutableArray alloc] init];
-    arrayCityId = [[NSMutableArray alloc] init];
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject){
-                [arrayCity addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"cityName"]];
-                [arrayCityId addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"cityId"]];
-            }
-        failure:^(NSURLSessionDataTask   *task, NSError  * error) {
-                [kAppDel.progressHud hideAnimated:YES];
-            }];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+        [dict setObject:@"cityList" forKey:@"methodName"];
+        [dict setObject:stateId forKey:@"stateId"];
+        arrayCity =[[NSMutableArray alloc] init];
+        arrayCityId = [[NSMutableArray alloc] init];
+        [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject){
+            [arrayCity addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"cityName"]];
+            [arrayCityId addObject:[[responseObject valueForKey:@"data" ]valueForKey:@"cityId"]];
+        }
+                failure:^(NSURLSessionDataTask   *task, NSError  * error) {
+                    [kAppDel.progressHud hideAnimated:YES];
+                }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+
+    }
 }
 
 

@@ -1374,42 +1374,46 @@ CGRect sliderFrame;
 #pragma mark - User Detail -
 -(void)EmployeeuserDetail
 {
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
-    [_param setObject:@"userDetails" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject){
-         [kAppDel.progressHud hideAnimated:YES];
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
         
+        [_param setObject:@"userDetails" forKey:@"methodName"];
         
-         kAppDel.obj_responseEmployeeUserDetail = [[responseEmployeeUserDetail alloc]initWithDictionary:responseObject];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
         
-         /*-------Archiving the data----*/
-        
-         employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
-         
-         [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
-         [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        
-        NSData *LoginEmployee = [[NSUserDefaults standardUserDefaults]objectForKey:@"employeeUserDetail"];
-        if (LoginEmployee!=nil) {
-            kAppDel.obj_responseEmployeeUserDetail = [NSKeyedUnarchiver unarchiveObjectWithData:LoginEmployee];
-            kAppDel.EmployeeProfileImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:kAppDel.obj_responseEmployeeUserDetail.Employee_jobseeker_profile_pic]]];
-            _lblJobCategoryInfo.text = [NSString stringWithFormat:@"%lu jobs in %@",(unsigned long)[_totalJobs count],kAppDel.obj_responseEmployeeUserDetail.Employee_category_name];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject){
+            [kAppDel.progressHud hideAnimated:YES];
             
-            [[[SlideNavigationController sharedInstance ]profileImage]setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
-        }
-       
-     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-     {
-         [kAppDel.progressHud hideAnimated:YES];
-         
-     }];
+            
+            kAppDel.obj_responseEmployeeUserDetail = [[responseEmployeeUserDetail alloc]initWithDictionary:responseObject];
+            
+            /*-------Archiving the data----*/
+            
+            employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            
+            NSData *LoginEmployee = [[NSUserDefaults standardUserDefaults]objectForKey:@"employeeUserDetail"];
+            if (LoginEmployee!=nil) {
+                kAppDel.obj_responseEmployeeUserDetail = [NSKeyedUnarchiver unarchiveObjectWithData:LoginEmployee];
+                kAppDel.EmployeeProfileImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:kAppDel.obj_responseEmployeeUserDetail.Employee_jobseeker_profile_pic]]];
+                _lblJobCategoryInfo.text = [NSString stringWithFormat:@"%lu jobs in %@",(unsigned long)[_totalJobs count],kAppDel.obj_responseEmployeeUserDetail.Employee_category_name];
+                
+                [[[SlideNavigationController sharedInstance ]profileImage]setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+         }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 -(CGFloat)widthForLabel:(UILabel *)label withText:(NSString *)text
@@ -1461,57 +1465,63 @@ CGRect sliderFrame;
          [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"jobseeker_id"];
         [_param setObject:jobId forKey:@"job_id"];
     }
-   
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-        [kAppDel.progressHud hideAnimated:YES];
-        
-        NSString *eStatus = [[responseObject valueForKey:@"data"]valueForKey:@"employerStatus"];
-        NSString *jStatus = [[responseObject valueForKey:@"data"]valueForKey:@"jobseekerStatus"];
-       
-        EmployeeApplyForJob *obj_EmployeeApplyForJob = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployeeApplyForJob"];
-        
-    obj_EmployeeApplyForJob.companyName = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"companyName"];
-
-    obj_EmployeeApplyForJob.jobTitle = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
-        
-        obj_EmployeeApplyForJob.applicationSent = @"Application Sent";
-        obj_EmployeeApplyForJob.applicationWaiting = @"Waiting for hiring manager to check your application";
-        obj_EmployeeApplyForJob.applicationFeedback = @"Waiting feedback";
-        
-        if ([eStatus isEqual:@0] && [jStatus isEqual:@0]) {
-        }
-        else if ([eStatus isEqual:@5] && [jStatus isEqual:@0]) {
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             
-             obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-            obj_EmployeeApplyForJob.wait = @"wait";
-        }
-        else if ([eStatus isEqual:@4] && [jStatus isEqual:@0]) {
-            obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-            obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
+            [kAppDel.progressHud hideAnimated:YES];
             
-            obj_EmployeeApplyForJob.result = @"selected";
-        }
-        else if ([eStatus isEqual:@2] && [jStatus isEqual:@0]) {
-            obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
-            obj_EmployeeApplyForJob.applicationFeedback = @"You were relected!";
-            obj_EmployeeApplyForJob.result = @"rejected";
-        }
-       
-        UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_EmployeeApplyForJob];
+            NSString *eStatus = [[responseObject valueForKey:@"data"]valueForKey:@"employerStatus"];
+            NSString *jStatus = [[responseObject valueForKey:@"data"]valueForKey:@"jobseekerStatus"];
+            
+            EmployeeApplyForJob *obj_EmployeeApplyForJob = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployeeApplyForJob"];
+            
+            obj_EmployeeApplyForJob.companyName = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"companyName"];
+            
+            obj_EmployeeApplyForJob.jobTitle = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
+            
+            obj_EmployeeApplyForJob.applicationSent = @"Application Sent";
+            obj_EmployeeApplyForJob.applicationWaiting = @"Waiting for hiring manager to check your application";
+            obj_EmployeeApplyForJob.applicationFeedback = @"Waiting feedback";
+            
+            if ([eStatus isEqual:@0] && [jStatus isEqual:@0]) {
+            }
+            else if ([eStatus isEqual:@5] && [jStatus isEqual:@0]) {
+                
+                obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                obj_EmployeeApplyForJob.wait = @"wait";
+            }
+            else if ([eStatus isEqual:@4] && [jStatus isEqual:@0]) {
+                obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                obj_EmployeeApplyForJob.applicationFeedback = @"You were selected!";
+                
+                obj_EmployeeApplyForJob.result = @"selected";
+            }
+            else if ([eStatus isEqual:@2] && [jStatus isEqual:@0]) {
+                obj_EmployeeApplyForJob.applicationWaiting = @"Hiring manager received your application";
+                obj_EmployeeApplyForJob.applicationFeedback = @"You were relected!";
+                obj_EmployeeApplyForJob.result = @"rejected";
+            }
+            
+            UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_EmployeeApplyForJob];
+            
+            obj_nav.definesPresentationContext = YES;
+            
+            obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            
+            [self presentViewController:obj_nav animated:YES completion:nil];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
         
-        obj_nav.definesPresentationContext = YES;
-        
-        obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        
-        [self presentViewController:obj_nav animated:YES completion:nil];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
+
+
 -(void)initialWeek{
     startTimeFrames = [[NSMutableArray alloc]init];
     endTimeFrames = [[NSMutableArray alloc]init];

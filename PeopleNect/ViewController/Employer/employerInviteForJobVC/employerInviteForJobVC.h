@@ -22,6 +22,8 @@
 @property (strong,nonatomic) NSString *employeeName;
 @property (strong,nonatomic) NSString *employeeImage;
 @property (strong,nonatomic) NSString *employeeCategory;
+@property (strong,nonatomic) NSString *categoryID;
+@property (strong,nonatomic) NSString *subCategoryID;
 @property (strong,nonatomic) NSString *employeeExpYears;
 @property (strong,nonatomic) NSString *employeeDistance;
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;

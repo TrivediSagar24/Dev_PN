@@ -226,57 +226,65 @@ else if (theTextField == _tfSurname){
     }else{
         imageData = UIImageJPEGRepresentation(kAppDel.EmployerProfileImage, 1.0);
     }
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-   
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
-    [_param setObject:@"updateEmployersDetails" forKey:@"methodName"];
-    
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    
-     [_param setObject:_tfName.text forKey:@"name"];
-    
-    [_param setObject:_tfSurname.text forKey:@"surname"];
-    
-     [_param setObject:_tfPhoneNumber.text forKey:@"phone"];
-    
-      [_param setObject:_tfCompanyName.text forKey:@"company_name"];
-    
-    [_param setObject:_tfCountryCode.text forKey:@"countryId"];
-    
-    [_param setObject:_tfZipCode.text forKey:@"zip"];
-   
-    [_param setObject:_tfState.text forKey:@"stateId"];
-   
-    [_param setObject:_tfCity.text  forKey:@"cityId"];
-    
- 
-    [_param setObject:_tfCountryCode.text forKey:@"country_code"];
-   
-    [_param setObject:_tfStreetName.text forKey:@"street_name"];
-    
-    [_param setObject:_tfStreetNumber.text forKey:@"address1"];
-    [_param setObject:_tfComplement.text forKey:@"address2"];
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        
+        [_param setObject:@"updateEmployersDetails" forKey:@"methodName"];
+        
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+        
+        [_param setObject:_tfName.text forKey:@"name"];
+        
+        [_param setObject:_tfSurname.text forKey:@"surname"];
+        
+        [_param setObject:_tfPhoneNumber.text forKey:@"phone"];
+        
+        [_param setObject:_tfCompanyName.text forKey:@"company_name"];
+        
+        [_param setObject:_tfCountryCode.text forKey:@"countryId"];
+        
+        [_param setObject:_tfZipCode.text forKey:@"zip"];
+        
+        [_param setObject:_tfState.text forKey:@"stateId"];
+        
+        [_param setObject:_tfCity.text  forKey:@"cityId"];
+        
+        
+        [_param setObject:_tfCountryCode.text forKey:@"country_code"];
+        
+        [_param setObject:_tfStreetName.text forKey:@"street_name"];
+        
+        [_param setObject:_tfStreetNumber.text forKey:@"address1"];
+        [_param setObject:_tfComplement.text forKey:@"address2"];
+        
+        [_param setObject:_tfPassword.text forKey:@"password"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+            [formData appendPartWithFileData:imageData name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+            
+        } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        }];
+        
+        
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
 
-    [_param setObject:_tfPassword.text forKey:@"password"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-         [formData appendPartWithFileData:imageData name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
-        
-    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        
-        [kAppDel.progressHud hideAnimated:YES];
-        
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        [kAppDel.progressHud hideAnimated:YES];
-
-    }];
-    
-    
+    }
 }
+
+
 #pragma mark - ImagePicker Delegates.
 
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -325,28 +333,35 @@ else if (theTextField == _tfSurname){
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     [_param setObject:@"employersDetails" forKey:@"methodName"];
     [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-       
-        [kAppDel.progressHud hideAnimated:YES];
+   
+    if ([GlobalMethods InternetAvailability]) {
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+            kAppDel.obj_EmployerDetails = [[EmployerDetails alloc] initWithDictionary:responseObject];
+            
+            Details = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_EmployerDetails];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:Details  forKey:@"employerDetails"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            if (Details!=nil) {
+                Details = [[NSUserDefaults standardUserDefaults] objectForKey:@"employerDetails"];
+                kAppDel.obj_EmployerDetails = [NSKeyedUnarchiver unarchiveObjectWithData:Details];
+            }
+            
+            [self Setdata];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
         
-        kAppDel.obj_EmployerDetails = [[EmployerDetails alloc] initWithDictionary:responseObject];
-        
-        Details = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_EmployerDetails];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
 
-        [[NSUserDefaults standardUserDefaults] setObject:Details  forKey:@"employerDetails"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        if (Details!=nil) {
-            Details = [[NSUserDefaults standardUserDefaults] objectForKey:@"employerDetails"];
-           kAppDel.obj_EmployerDetails = [NSKeyedUnarchiver unarchiveObjectWithData:Details];
-        }
-
-        [self Setdata];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+    }
 }
 
 -(void)Setdata{

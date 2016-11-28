@@ -123,61 +123,68 @@
 
 #pragma mark - JobdetailWebService -
 -(void)jobDetail{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-    [_param setObject:@"jobDetailbyId" forKey:@"methodName"];
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"jobSeekerId"];
-    [_param setObject:_jobId forKey:@"jobId"];
     
-//    [_param setObject:@"10" forKey:@"jobSeekerId"];
-//    [_param setObject:@"12" forKey:@"jobId"];
-    
-    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    if ([GlobalMethods InternetAvailability]) {
+        NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+        [_param setObject:@"jobDetailbyId" forKey:@"methodName"];
+        [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"jobSeekerId"];
+        [_param setObject:_jobId forKey:@"jobId"];
         
-        self.view.alpha = 1.0;
+        //    [_param setObject:@"10" forKey:@"jobSeekerId"];
+        //    [_param setObject:@"12" forKey:@"jobId"];
+        
+        [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            self.view.alpha = 1.0;
+            
+            _totalHourLbl.text = [NSString stringWithFormat:@"Total hours %@",[[responseObject valueForKey:@"data"]valueForKey:@"totalHour"]];
+            
+            _priceHourLbl.text = [NSString stringWithFormat:@"$%@/h",[[responseObject valueForKey:@"data"]valueForKey:@"hourlyRate"]];
+            
+            _dateTimeLbl.text = [NSString stringWithFormat:@"%@ at %@",[[responseObject valueForKey:@"data"]valueForKey:@"start_date"],[[responseObject valueForKey:@"data"]valueForKey:@"start_hour"]];
+            
+            _jobTitleLbl.text = [[responseObject valueForKey:@"data"]valueForKey:@"jobTitle"];
+            
+            _bottomJobPriceLbl.text =[NSString stringWithFormat:@"%@/h",[[responseObject valueForKey:@"data"]valueForKey:@"hourlyRate"]];
+            
+            _companyName.text = [[responseObject valueForKey:@"data"]valueForKey:@"company_name"];
+            
+            NSString *distance = [[responseObject valueForKey:@"data"]valueForKey:@"distance"] ;
+            
+            double distanceValues = [distance doubleValue];
+            
+            _distanceLbl.text = [NSString stringWithFormat:@"%.02fkm",distanceValues];
+            
+            _bottomDateLbl.text = [[responseObject valueForKey:@"data"]valueForKey:@"start_date"];
+            
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            
+            [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+            
+            start = [dateFormatter dateFromString: _bottomDateLbl.text];
+            
+            end = [dateFormatter dateFromString:[[responseObject valueForKey:@"data"]valueForKey:@"end_date"]];
+            
+            _bottomRatingLbl.text = _ratings;
+            
+            _jobDescriptionLbl.text = _jobDescription;
+            
+            _bottomAddressLbl.text = _bottomAddress;
+            
+            _location = CLLocationCoordinate2DMake([[[responseObject valueForKey:@"data"]valueForKey:@"JobLat"]doubleValue],[[[responseObject valueForKey:@"data"]valueForKey:@"JobLng"]doubleValue]);
+            
+            
+            [kAppDel.progressHud hideAnimated:YES];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [kAppDel.progressHud hideAnimated:YES];
+        }];
 
-        _totalHourLbl.text = [NSString stringWithFormat:@"Total hours %@",[[responseObject valueForKey:@"data"]valueForKey:@"totalHour"]];
-        
-        _priceHourLbl.text = [NSString stringWithFormat:@"$%@/h",[[responseObject valueForKey:@"data"]valueForKey:@"hourlyRate"]];
-        
-        _dateTimeLbl.text = [NSString stringWithFormat:@"%@ at %@",[[responseObject valueForKey:@"data"]valueForKey:@"start_date"],[[responseObject valueForKey:@"data"]valueForKey:@"start_hour"]];
-        
-        _jobTitleLbl.text = [[responseObject valueForKey:@"data"]valueForKey:@"jobTitle"];
-        
-        _bottomJobPriceLbl.text =[NSString stringWithFormat:@"%@/h",[[responseObject valueForKey:@"data"]valueForKey:@"hourlyRate"]];
-        
-        _companyName.text = [[responseObject valueForKey:@"data"]valueForKey:@"company_name"];
-        
-        NSString *distance = [[responseObject valueForKey:@"data"]valueForKey:@"distance"] ;
-                              
-        double distanceValues = [distance doubleValue];
-        
-        _distanceLbl.text = [NSString stringWithFormat:@"%.02fkm",distanceValues];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
 
-        _bottomDateLbl.text = [[responseObject valueForKey:@"data"]valueForKey:@"start_date"];
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        
-        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-    
-        start = [dateFormatter dateFromString: _bottomDateLbl.text];
-        
-        end = [dateFormatter dateFromString:[[responseObject valueForKey:@"data"]valueForKey:@"end_date"]];
-        
-        _bottomRatingLbl.text = _ratings;
-        
-        _jobDescriptionLbl.text = _jobDescription;
-        
-        _bottomAddressLbl.text = _bottomAddress;
-        
-        _location = CLLocationCoordinate2DMake([[[responseObject valueForKey:@"data"]valueForKey:@"JobLat"]doubleValue],[[[responseObject valueForKey:@"data"]valueForKey:@"JobLng"]doubleValue]);
-        
-        
-        [kAppDel.progressHud hideAnimated:YES];
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [kAppDel.progressHud hideAnimated:YES];
-    }];
+    }
 }
 
 @end

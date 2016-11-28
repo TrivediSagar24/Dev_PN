@@ -35,8 +35,8 @@
     [self allEmployeesList];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
@@ -44,8 +44,8 @@
     self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"Gray_right_arrow_" ];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
+
+-(void)viewDidAppear:(BOOL)animated{
     _heightForAvailableTable.constant = (self.view.frame.size.height*318)/568;
     
     heightforTableView = _availableTableView.frame.origin.y + (self.view.frame.size.height*268)/568;
@@ -60,7 +60,7 @@
     UIButton *invitedBtn = [[UIButton alloc]initWithFrame:CGRectMake(X, Y, width, height)];
     
     invitedBtn.backgroundColor = [UIColor colorWithRed:6.0/255.0 green:40.0/255.0 blue:75.0/255.0 alpha:1.0];
-    [invitedBtn setTitle:@"Invite" forState:UIControlStateNormal];
+[invitedBtn setTitle:@"Invite" forState:UIControlStateNormal];
     
     [invitedBtn addTarget:self action:@selector(inviteCandidate:) forControlEvents:UIControlEventTouchDown];
     
@@ -103,6 +103,7 @@
     if (all==YES) {
         
         if (_allEmployeeArray.count>0) {
+           
             NSString *Name = [[_allEmployeeArray valueForKey:@"first_name"]objectAtIndex:indexPath.row];
             
             NSString *lastName = [[_allEmployeeArray valueForKey:@"last_name"]objectAtIndex:indexPath.row];
@@ -139,9 +140,9 @@
             
         inviteCandidatesCell.addSelected.tag = indexPath.row;
             
-            [inviteCandidatesCell.addSelected addTarget:self action:@selector(allEmployeeAddClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [inviteCandidatesCell.addSelected addTarget:self action:@selector(allEmployeeAddClicked:) forControlEvents:UIControlEventTouchUpInside];
             
-             if ([[selectedAllUser objectAtIndex:indexPath.row]isEqualToString:@"1"]) {
+        if ([[selectedAllUser objectAtIndex:indexPath.row]isEqualToString:@"1"]) {
                  [inviteCandidatesCell.addSelected setImage:[UIImage imageNamed:@"arrow_"] forState:UIControlStateNormal];
              }
             if ([[selectedAllUser objectAtIndex:indexPath.row]isEqualToString:@"0"]) {
@@ -247,11 +248,10 @@
 
 
 -(void)allEmployeeAddClicked:(UIButton*)sender{
-    if (invitedSelection.count==0) {
-            BottomView.hidden = YES;
-            _heightForAvailableTable.constant= (self.view.frame.size.height*318)/568;
-        }
+   
+    
     if([[selectedAllUser objectAtIndex:sender.tag] isEqualToString:@"0"]){
+        
     [selectedAllUser replaceObjectAtIndex:sender.tag withObject:@"1"];
     [invitedSelection addObject:[[_allEmployeeArray valueForKey:@"jobseekerId"]objectAtIndex:sender.tag]];
     BottomView.hidden = NO;
@@ -262,16 +262,18 @@
     [selectedAllUser replaceObjectAtIndex:sender.tag withObject:@"0"];
     [invitedSelection removeObject:[[_allEmployeeArray valueForKey:@"jobseekerId"]objectAtIndex:sender.tag]];
        InvitedTotalPrice = InvitedTotalPrice- _jobInvitationPrice;
+       
+       if (invitedSelection.count==0) {
+           BottomView.hidden = YES;
+           _heightForAvailableTable.constant= (self.view.frame.size.height*318)/568;
+       }
     }
     [_availableTableView reloadData];
 }
 
 
 -(void)hotEmployeeClicked:(UIButton*)sender{
-    if (hotInvited.count==0) {
-        BottomView.hidden = YES;
-        _heightForAvailableTable.constant= (self.view.frame.size.height*318)/568;
-    }
+   
     if([[selectedFavaouriteUser objectAtIndex:sender.tag] isEqualToString:@"0"]){
         [selectedFavaouriteUser replaceObjectAtIndex:sender.tag withObject:@"1"];
         [hotInvited addObject:[[_hotEmployeeArray valueForKey:@"jobseekerId"]objectAtIndex:sender.tag]];
@@ -283,6 +285,11 @@
         [selectedFavaouriteUser replaceObjectAtIndex:sender.tag withObject:@"0"];
          [hotInvited removeObject:[[_hotEmployeeArray valueForKey:@"jobseekerId"]objectAtIndex:sender.tag]];
         InvitedTotalPrice = InvitedTotalPrice -_jobInvitationFavouritePrice;
+        
+        if (hotInvited.count==0) {
+            BottomView.hidden = YES;
+            _heightForAvailableTable.constant= (self.view.frame.size.height*318)/568;
+        }
     }
     [_availableTableView reloadData];
 }

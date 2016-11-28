@@ -151,31 +151,37 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
 
 -(void)categoryId
 {
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
     
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-    
-    [dict setObject:@"categoryList" forKey:@"methodName"];
-    
-    [dict setObject:userId forKey:@"userId"];
-    
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-    {
-        [kAppDel.progressHud hideAnimated:YES];
+    if ([GlobalMethods InternetAvailability]) {
         
-        kAppDel.obj_EmployeeCategory = [[EmployeeCategory alloc]initWithDictionary:responseObject];
-                
-        _collectionCategory.delegate = self;
+        kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
-        _collectionCategory.dataSource = self;
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         
+        [dict setObject:@"categoryList" forKey:@"methodName"];
         
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-    {
-        NSLog(@"Error %@",error);
-        [kAppDel.progressHud hideAnimated:YES];
+        [dict setObject:userId forKey:@"userId"];
+        
+        [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+             kAppDel.obj_EmployeeCategory = [[EmployeeCategory alloc]initWithDictionary:responseObject];
+             
+             _collectionCategory.delegate = self;
+             
+             _collectionCategory.dataSource = self;
+             
+             
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             [kAppDel.progressHud hideAnimated:YES];
+             
+         }];
 
-    }];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
 }
 
 #pragma  mark - IBAction
@@ -242,7 +248,7 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"repost"]) {
         for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
         {
-            if ([viewControllrObj isKindOfClass:[repostJobEmployerCtr class]])
+        if ([viewControllrObj isKindOfClass:[MenuCtr class]])
             {
                 [self.navigationController popToViewController:viewControllrObj animated:YES];
             }

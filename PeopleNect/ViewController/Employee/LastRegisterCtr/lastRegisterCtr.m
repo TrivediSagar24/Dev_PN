@@ -88,61 +88,66 @@
     if (registerflag==YES)
     {
         
-     kAppDel.progressHud =   [GlobalMethods ShowProgressHud:self.view];
-    
-    NSMutableDictionary *param = [[NSMutableDictionary alloc]init];
-    
-    [param setObject:@"saveUserDetails" forKey:@"methodName"];
-
-    [param setObject: [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
-    
-    [param setObject:_categoryId forKey:@"categoryId"];
-        
-    [param setObject:_strsubCategoryId forKey:@"subCategoryId"];
-        
-    [param setObject:_tfExpYear.text forKey:@"experience"];
-        
-    [param setObject:_tfHourlyCompensate.text forKey:@"rate"];
-        
-    [param setObject:_tviewDescribe.text forKey:@"description"];
-        
-    NSData* imageData = UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
-        
-[self returnImage:[UIImage imageWithData:imageData]];
-        
-    [kAFClient POST:MAIN_URL parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
-     {
-         [formData appendPartWithFileData:dataProfileImg name:@"profilePic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
-         
-     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-     {
-         kAppDel.obj_FinalRegisteredEmployee
-         = [[FinalRegisteredEmployee alloc] initWithDictionary:responseObject];
-         /*-------Archiving the data----*/
-         
-         NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_FinalRegisteredEmployee];
-         
-         /*----Setting user default data------*/
-         
-         [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"FinalRegisteredEmployee"];
-        
-         [[NSUserDefaults standardUserDefaults] synchronize];
-         
-         [kAppDel.progressHud hideAnimated:YES];
-         UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Registration completed" message:@"Your registration has been completed successfully" preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
-        {
-//            [GlobalMethods SlideNavigationRootViewForEmployee];
-//            [GlobalMethods SlideNavigationLeftMenu];
-        employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
-        [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
-     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-     {
-         [kAppDel.progressHud hideAnimated:YES];
-
-     }];
+        if ([GlobalMethods InternetAvailability]) {
+            kAppDel.progressHud =   [GlobalMethods ShowProgressHud:self.view];
+            
+            NSMutableDictionary *param = [[NSMutableDictionary alloc]init];
+            
+            [param setObject:@"saveUserDetails" forKey:@"methodName"];
+            
+            [param setObject: [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] forKey:@"userId"];
+            
+            [param setObject:_categoryId forKey:@"categoryId"];
+            
+            [param setObject:_strsubCategoryId forKey:@"subCategoryId"];
+            
+            [param setObject:_tfExpYear.text forKey:@"experience"];
+            
+            [param setObject:_tfHourlyCompensate.text forKey:@"rate"];
+            
+            [param setObject:_tviewDescribe.text forKey:@"description"];
+            
+            NSData* imageData = UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
+            
+            [self returnImage:[UIImage imageWithData:imageData]];
+            
+            [kAFClient POST:MAIN_URL parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
+             {
+                 [formData appendPartWithFileData:dataProfileImg name:@"profilePic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+                 
+             } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+             {
+                 kAppDel.obj_FinalRegisteredEmployee
+                 = [[FinalRegisteredEmployee alloc] initWithDictionary:responseObject];
+                 /*-------Archiving the data----*/
+                 
+                 NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_FinalRegisteredEmployee];
+                 
+                 /*----Setting user default data------*/
+                 
+                 [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"FinalRegisteredEmployee"];
+                 
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+                 
+                 [kAppDel.progressHud hideAnimated:YES];
+                 UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Registration completed" message:@"Your registration has been completed successfully" preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                        {
+                            //            [GlobalMethods SlideNavigationRootViewForEmployee];
+                                       //            [GlobalMethods SlideNavigationLeftMenu];
+            employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
+                [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
+            }]];
+                 [self presentViewController:alert animated:YES completion:nil];
+             } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+             {
+                 [kAppDel.progressHud hideAnimated:YES];
+                 
+             }];
+            
+        }else{
+            [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+        }
     }
 }
 - (IBAction)btnCameraClicked:(id)sender
