@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     userType = @"1";
- Timer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(chatHistory)userInfo: nil repeats:NO];
+//Timer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(chatHistory)userInfo: nil repeats:NO];
 }
 
 
@@ -32,6 +32,8 @@
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0];
     self.navigationController.navigationBar.translucent = NO;
      self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"arrow-left"];
+    
+    [self chatHistory];
 }
 
 
@@ -67,6 +69,7 @@
     employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
     
     obj_employeeMainChat.arrayHistory = [_chatHistoryArray objectAtIndex:indexPath.row];
+    obj_employeeMainChat.isfromChatList = YES;
     
     [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
 }

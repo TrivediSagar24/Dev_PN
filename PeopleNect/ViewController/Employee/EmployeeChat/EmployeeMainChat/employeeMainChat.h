@@ -33,8 +33,9 @@ UITextViewDelegate,JSQMessagesComposerTextViewPasteDelegate>
 @property(nonatomic,strong) UILabel * userName;
 @property(nonatomic,strong) UILabel * userCompanyName;
 @property(nonatomic,strong) NSMutableArray *arrayHistory;
+@property(nonatomic,strong) NSMutableArray *messageDetails;
 @property(nonatomic,strong) NSMutableDictionary *FromEmployerInvite;
-
+@property(nonatomic) BOOL isfromChatList;
 
 
 

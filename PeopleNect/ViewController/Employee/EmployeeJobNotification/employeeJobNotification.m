@@ -124,7 +124,7 @@ CGRect sliderFrame;
     
     if ([[defaults objectForKey:@"Location"] isEqualToString:@"changeLocation"]) {
         
-       // currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
+        currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
     }
 }
 
@@ -284,7 +284,7 @@ CGRect sliderFrame;
 //    
 //    Cell.lblEndTime.text = [endTime stringByReplacingOccurrencesOfString:@":00" withString:@""];
     
-    NSLog(@"Start time end time %@ %@",startTime, endTime);
+    //NSLog(@"Start time end time %@ %@",startTime, endTime);
 
     
   [self saveUserAvailability];
@@ -333,6 +333,7 @@ CGRect sliderFrame;
     [[NSUserDefaults standardUserDefaults ]setObject:@"Employee" forKey:@"Chat"];
     
     [[NSUserDefaults standardUserDefaults]synchronize];
+   
     employeeChat *obj_employeeChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeChat"];
     [self.navigationController pushViewController:obj_employeeChat animated:YES];
 }
@@ -586,7 +587,7 @@ CGRect sliderFrame;
     {
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     }
-    NSLog(@"Did Select");
+    //NSLog(@"Did Select");
 }
 
 
@@ -1346,12 +1347,21 @@ CGRect sliderFrame;
     CGFloat lowerValue = round(_rangeSlider.lowerValue * 100) / 100;
     CGFloat upperValue = round(_rangeSlider.upperValue * 100) / 100;
     
-    StatTimelbl.text = [NSString stringWithFormat:@"%.2f ",lowerValue];
     
-    endTimelbl.text = [NSString stringWithFormat:@"%.2f ",upperValue];
+//    StatTimelbl.text = [NSString stringWithFormat:@"%.2f ",lowerValue];
+//    
+//    endTimelbl.text = [NSString stringWithFormat:@"%.2f ",upperValue];
+//
+//    startTime = [NSString stringWithFormat:@"%.2f",lowerValue];
+//    endTime = [NSString stringWithFormat:@"%.2f",upperValue];
+    
+    StatTimelbl.text = [self minHourConversionFromString:[NSString stringWithFormat:@"%.2f ",lowerValue]];
+    endTimelbl.text = [self minHourConversionFromString:[NSString stringWithFormat:@"%.2f ",upperValue]];
 
-    startTime = [NSString stringWithFormat:@"%.2f",lowerValue];
-    endTime = [NSString stringWithFormat:@"%.2f",upperValue];
+    startTime = [self minHourConversionFromString:[NSString stringWithFormat:@"%.2f ",lowerValue]];
+    endTime = [self minHourConversionFromString:[NSString stringWithFormat:@"%.2f ",upperValue]];
+    
+    
     
     if (_rangeSlider.lowerTouchPointValue.x>sliderFrame.origin.x) {
         
@@ -1370,6 +1380,27 @@ CGRect sliderFrame;
     }
 }
 
+
+-(NSString *)minHourConversionFromString :(NSString *)Value{
+   
+    NSString *Min =Value;
+    
+    NSRange range = [Min rangeOfString:@"."];
+    
+    NSString *hour = [Min substringToIndex:range.location];
+    
+   int HOUR = [hour intValue];
+    
+    Min = [Min substringFromIndex:range.location+1];
+    
+   int min = [Min intValue];
+    
+    if (min>=60) {
+        min = min-60;
+        HOUR = HOUR+1;
+    }
+    return [NSString stringWithFormat:@"%d:%d",HOUR,min];
+}
 
 #pragma mark - User Detail -
 -(void)EmployeeuserDetail

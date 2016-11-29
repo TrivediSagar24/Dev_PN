@@ -36,7 +36,7 @@ static CLLocationCoordinate2D currentLocation;
     
     EmployeeDetails = [[NSMutableArray alloc]init];
 
-    //[self showCurrentLocation];
+//[self showCurrentLocation];
     
     if ([GlobalMethods InternetAvailability]) {
         [self businessCategoryList];
@@ -487,7 +487,7 @@ static CLLocationCoordinate2D currentLocation;
     
     [rightView addSubview:_transaction];
     [rightView addSubview:_chatSelected];
-    [rightView addSubview:_chatBadge];
+    //[rightView addSubview:_chatBadge];
     
     return [[UIBarButtonItem alloc]initWithCustomView:rightView];
 }

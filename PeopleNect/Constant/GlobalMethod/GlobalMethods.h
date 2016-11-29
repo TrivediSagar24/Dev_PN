@@ -38,7 +38,7 @@
 
 +(BOOL)InternetAvailability;
 
-
++(NSMutableArray *)SortArray : (NSMutableArray *)arrOriginal;
 
 
 +(void)dataTaskCancel;

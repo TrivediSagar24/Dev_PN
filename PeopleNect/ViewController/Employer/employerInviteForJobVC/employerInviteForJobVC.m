@@ -31,11 +31,16 @@
     
     self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(80)/2;
    
+    EmployeeDetails = [[NSMutableDictionary alloc]init];
+
+    
     if (_isfromOpenJobSelected == YES) {
         _invitedJobView.hidden = YES;
         _postedJobBtn.hidden = YES;
         
         [self openJobSelectedinvitedLastScreen];
+        
+        
         
     }else{
         
@@ -44,14 +49,21 @@
         if (EmployeeList!=nil) {
             kAppDel.obj_responseEmployeesList = [NSKeyedUnarchiver unarchiveObjectWithData:EmployeeList];
         }
-        EmployeeDetails = [[NSMutableDictionary alloc]init];
         
         if ([[kAppDel.obj_responseEmployeesList.employeeAvailabilityStatus objectAtIndex:_employeeSelected] isEqual:@"1"]) {
         }
       
         [self InvitedMenuLastScreen];
-
     }
+    
+    [EmployeeDetails setValue:self.employeeId forKey:@"EmployeeUserID"];
+    
+    [EmployeeDetails setValue:self.employeeName forKey:@"DisplyName"];
+    
+    [EmployeeDetails setValue:employeeProfileImage forKey:@"ProfilePic"];
+    
+    [EmployeeDetails setValue:  self.employeeCategory forKey:@"employeeCategoryName"];
+    
     
    self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -115,6 +127,8 @@
             _chatBtn.enabled = YES;
             
             indexOfChat = indexPath.row;
+            
+            [EmployeeDetails removeAllObjects];
             
             [EmployeeDetails setValue:self.employeeId forKey:@"EmployeeUserID"];
             
@@ -180,6 +194,8 @@
             _chatBtn.enabled = YES;
             
             indexOfChat = indexPath.row;
+            
+            [EmployeeDetails removeAllObjects];
             
             [EmployeeDetails setValue:[kAppDel.obj_responseEmployeesList.employeeId objectAtIndex:_employeeSelected] forKey:@"EmployeeUserID"];
             
@@ -257,7 +273,12 @@ return Cell;
         
     NSIndexPath *indexPath = [self.obj_CollectionView indexPathForCell:cell];
         
-        _employeeSelected =  _employeeSelected+indexPath.item;
+        _employeeSelected =  indexPath.item;
+        
+        NSLog(@"employee selected %ld",(long)_employeeSelected);
+        
+        NSLog(@"index path %ld",(long)indexPath.item);
+
         
         [UIView setAnimationsEnabled:NO];
         
@@ -341,7 +362,9 @@ return Cell;
 
 - (IBAction)onClickChat:(id)sender {
         if (_chatBtn.enabled ==YES) {
-            [self chatHistory];
+           
+             //[self chatHistory];
+            [self receiveMessageWebservice];
     }
 }
 
@@ -418,7 +441,16 @@ return Cell;
     NSIndexPath *currentItem = [visibleItems objectAtIndex:0];
     
     NSIndexPath *nextItem = [NSIndexPath indexPathForItem:currentItem.item + 1 inSection:currentItem.section];
+    
+    
     if (_isfromOpenJobSelected == YES) {
+        
+        
+        NSLog(@"_invitedJobListArray %lu",(unsigned long)[_invitedJobListArray count]);
+
+        
+        NSLog(@"nextItem.item %lu",(unsigned long)nextItem.item );
+
         if ([_invitedJobListArray count]-1>=nextItem.item) {
             
             _employeeSelected = nextItem.item;
@@ -435,7 +467,6 @@ return Cell;
             
             [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
         }
-        
         
     }else{
         if ([kAppDel.obj_responseEmployeesList.employeeCategoryName count]-1>=nextItem.item) {
@@ -458,6 +489,46 @@ return Cell;
     }
 }
 
+
+-(void)receiveMessageWebservice
+{
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    
+    [_param setObject:@"receiverMessage" forKey:@"methodName"];
+
+    
+    [_param setObject:self.employeeId forKey:@"sender_id"];
+   
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"receiver_id"];
+    
+    [_param setObject:@"0" forKey:@"flag"];
+    
+    [_param setObject:@"0" forKey:@"latest_msg_id"];
+    
+    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSLog(@"response object %@",responseObject);
+
+        employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
+        
+        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
+        
+        Sort = [[responseObject valueForKey:@"data"]mutableCopy];
+        
+        Sort = [GlobalMethods SortArray:Sort];
+        
+        NSLog(@"Sorted %@",Sort);
+        
+        obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
+        
+        obj_employeeMainChat.messageDetails = Sort;
+        
+        [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+}
 
 
 
@@ -512,6 +583,7 @@ return Cell;
     self.categoryID = [kAppDel.obj_responseEmployeesList.employeeCategoryId objectAtIndex:_employeeSelected];
     
     self.subCategoryID = [kAppDel.obj_responseEmployeesList.employeeSubcategoryId objectAtIndex:_employeeSelected];
+    
 }
 
 -(void)openJobSelectedinvitedLastScreen{

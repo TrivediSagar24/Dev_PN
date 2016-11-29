@@ -18,7 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-  
+    _openJobTableView.delegate = self;
+    _openJobTableView.dataSource = self;
+    
     [self openJobs];
     
     self.openJobTableView.rowHeight = UITableViewAutomaticDimension;
@@ -189,8 +191,6 @@
              _currentJob = [[responseObject valueForKey:@"data"] valueForKey:@"currentJobs"];
              _guestJob = [[responseObject valueForKey:@"data"]valueForKey:@"jobsForGuest"];
              
-             _openJobTableView.delegate = self;
-             _openJobTableView.dataSource = self;
              [_openJobTableView reloadData];
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
              [kAppDel.progressHud hideAnimated:YES];

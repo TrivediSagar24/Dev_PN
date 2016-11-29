@@ -17,7 +17,8 @@
     JSQMessage *messageforchat,*loadMoreMessage;
     NSMutableArray *data,*loadmessage,*allUserId;
     NSString *messag ,*dialogId,*imageName,*userType;
-    NSTimer  *Timer ;
+    NSTimer  *Timer;
+    NSString *latestMessageId;
 }
 
 @end
@@ -37,13 +38,19 @@
     
     data = [[NSMutableArray alloc]init];
 
-    self.senderId = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"];
+    self.senderId = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] ;
     
     if (_arrayHistory.count==0) {
+        
         self.senderDisplayName = [_FromEmployerInvite valueForKey:@"DisplyName"];
     }else{
-    self.senderDisplayName =  [_arrayHistory valueForKey:@"SenderName"];
+    
+        self.senderDisplayName =  [_arrayHistory valueForKey:@"SenderName"];
     }
+    
+    NSLog(@"arry history %@",_arrayHistory);
+    
+    latestMessageId = @"0";
     
     UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectZero];
     [rightButton setImage:[UIImage imageNamed:@"sent_btn"] forState:UIControlStateNormal];
@@ -67,7 +74,6 @@
     
     if (![NSUserDefaults outgoingAvatarSetting]) {
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
-        
     }
     
     
@@ -75,13 +81,43 @@
     
     [JSQMessagesCollectionViewCell registerMenuAction:@selector(delete:)];
     
-    [self receiveMessageWebservice];
     
+    if ([_messageDetails count]>0) {
+        
+        for (int i = 0; i<[_messageDetails count]; i++)
+        {
+            NSString *date = [[_messageDetails valueForKey:@"Date"] objectAtIndex:i];
+            NSString *time = [[_messageDetails valueForKey:@"Time"] objectAtIndex:i];
+            
+            date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+            
+            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+            
+            [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            
+            NSDate *Date = [dateFormat dateFromString:date];
+            
+            loadMoreMessage = [[JSQMessage alloc]initWithSenderId:[[_messageDetails valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[_messageDetails valueForKey:@"Message"] objectAtIndex:i]];
+            
+            [loadmessage addObject:loadMoreMessage];
+        }
+        
+        [data addObjectsFromArray:loadmessage];
+    }
+    
+    if (_isfromChatList==YES) {
+        
+       [self receiveMessageWebservice];
+        
+       // Timer = [NSTimer scheduledTimerWithTimeInterval: 0.9 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        
+    }else{
+     Timer = [NSTimer scheduledTimerWithTimeInterval: 0.9 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+    }
     
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
@@ -283,7 +319,15 @@
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
     
+    
     JSQMessage *msg = [data objectAtIndex:indexPath.item];
+//    
+//    if ([msg.senderId isEqualToString:self.senderId])
+//    {
+//        return nil;
+//    }
+    
+    NSLog(@"Print Msg : %@",msg);
     
     if (!msg.isMediaMessage)
     {
@@ -534,24 +578,21 @@
     });
 }
 
+/*
 -(void)receiveMessageWebservice
 {
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"sender_id"];
+    [_param setObject:self.senderId forKey:@"sender_id"];
     
-    if (_arrayHistory.count==0) {
-        [_param setObject:[_FromEmployerInvite valueForKey:@"EmployeeUserID"] forKey:@"receiver_id"];
-    }
-    else{
-        [_param setObject:[_arrayHistory valueForKey:@"SenderId"] forKey:@"receiver_id"];
-    }
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"receiver_id"];
  
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
     
      [_param setObject:@"1" forKey:@"flag"];
     
     [_param setObject:@"0" forKey:@"latest_msg_id"];
+    
 [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
     
     for (int i = 0; i<[[responseObject valueForKey:@"data"]count]; i++)
@@ -583,38 +624,116 @@
 }];
 }
 
+ */
+
+-(void)receiveMessageWebservice
+{
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    
+    [_param setObject:@"receiverMessage" forKey:@"methodName"];
+    
+    if (_FromEmployerInvite.count==0) {
+        [_param setObject:[_arrayHistory valueForKey:@"SenderId"] forKey:@"sender_id"];
+
+    }else{
+        [_param setObject:[_FromEmployerInvite valueForKey:@"EmployeeUserID"] forKey:@"sender_id"];
+    }
+    
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"receiver_id"];
+    
+    [_param setObject:@"1" forKey:@"flag"];
+    
+    [_param setObject:latestMessageId forKey:@"latest_msg_id"];
+    
+    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        
+        NSLog(@"receiveMessageWebservice %@",responseObject);
+        
+        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
+        
+    Sort = [[responseObject valueForKey:@"data"]mutableCopy];
+        
+    Sort = [GlobalMethods SortArray:Sort];
+        
+        NSLog(@"sort value %@",Sort);
+        
+        if (Sort.count>0) {
+            
+            for (int i = 0; i<[Sort count]; i++)
+            {
+                NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+                NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                
+                date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                
+                NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                
+                [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                
+                NSDate *Date = [dateFormat dateFromString:date];
+                
+                JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                
+                [loadmessage addObject:loadMoreMessageObj];
+            }
+            
+            [data addObjectsFromArray:loadmessage];
+            
+           // [self receiveMessagePressed];
+
+            [self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+        }
+        
+//        JSQMessage *messageReceived =
+//        
+//        [[JSQMessage alloc] initWithSenderId:[NSString stringWithFormat:@"%lu",(unsigned long)message.senderID]
+//                           senderDisplayName:@"UNKNOWN"
+//                                        date:message.dateSent
+//                                        text:message.text];
+//        
+//        
+//        [data addObject:messageReceived];
+
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+}
+
 #pragma mark - Send Message -
 
 -(void)sendMessage:(NSString*)Message{
-//    {"sender_id":"","receiver_id":"","msg":"","token":"","methodName":"sendMessage","userType":"0/1(0=Jobseeker,1=Employer)"}
-    
+
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
     [_param setObject:@"sendMessage" forKey:@"methodName"];
     
     [_param setObject:userType forKey:@"userType"];
     
-    [_param setObject:self.senderId forKey:@"sender_id"];
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"sender_id"];
     
-    if (_arrayHistory.count==0) {
-        [_param setObject:[_FromEmployerInvite valueForKey:@"EmployeeUserID"] forKey:@"receiver_id"];
-    }
-    else{
+    
+    if (_isfromChatList == YES) {
         [_param setObject:[_arrayHistory valueForKey:@"SenderId"] forKey:@"receiver_id"];
-        
+    }else{
+        [_param setObject:[_FromEmployerInvite valueForKey:@"EmployeeUserID"] forKey:@"receiver_id"];
+
     }
+
     [_param setObject:Message forKey:@"msg"];
     
-    if (_arrayHistory.count==0) {
-        [_param setObject:@"1" forKey:@"token"];
+    [_param setObject:@"" forKey:@"token"];
 
-    }else{
-    [_param setObject:[_arrayHistory valueForKey:@"token"] forKey:@"token"];
-    }
     NSLog(@"param %@",_param);
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+       
+        latestMessageId = [[responseObject valueForKey:@"data"]valueForKey:@"id"];
+        
+        NSLog(@"latest message id %@",latestMessageId);
+        
         NSLog(@"response sent Object %@",responseObject);
+        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"error %@",error);
         
@@ -651,23 +770,31 @@
     
     _ProfieImage = [[UIImageView alloc]initWithFrame:CGRectMake(30, 0, 36 , 36)];
     
-    NSString *imageString;
+    //NSString *imageString;
+    
     if (_arrayHistory.count==0) {
-        imageString = [_FromEmployerInvite valueForKey:@"ProfilePic"];
+       
+        //imageString = [_FromEmployerInvite valueForKey:@"ProfilePic"];
     }
     else{
-        imageString = [_arrayHistory valueForKey:@"SenderPic"];
+        //imageString = [_arrayHistory valueForKey:@"SenderPic"];
     }
     
-    _ProfieImage.image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:imageString]]];
+//    NSLog(@"imageString %@",imageString);
+    
+//    [_ProfieImage sd_setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"profile"]] ;
+    
+    _ProfieImage.image = [UIImage imageNamed:@"profile"];
+    
     
     _ProfieImage.layer.cornerRadius = _ProfieImage.frame.size.height/2;
-    _ProfieImage.layer.masksToBounds = YES;
     
+    _ProfieImage.layer.masksToBounds = YES;
     
     _userName = [[UILabel alloc]initWithFrame:CGRectMake(75, 0, 150, 20)];
     [_userName setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0f]];
     _userName.textColor = [UIColor whiteColor];
+    
     if (_arrayHistory.count==0) {
         _userName.text = [_FromEmployerInvite valueForKey:@"DisplyName"];
     }else{
