@@ -24,7 +24,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     userType = @"1";
+    
+    NSLog(@"category %@",_invitedJobView);
     
     self.ProfileView.clipsToBounds = YES;
     _ProfileBtn.hidden = YES;
@@ -32,15 +35,12 @@
     self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(80)/2;
    
     EmployeeDetails = [[NSMutableDictionary alloc]init];
-
     
     if (_isfromOpenJobSelected == YES) {
         _invitedJobView.hidden = YES;
         _postedJobBtn.hidden = YES;
         
         [self openJobSelectedinvitedLastScreen];
-        
-        
         
     }else{
         
@@ -100,6 +100,9 @@
     if (_isfromOpenJobSelected == YES) {
        
         [self openJobSelectedinvitedLastScreen];
+
+        
+        self.employeeCategory = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"experience"];
 
         self.employeeExpYears = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"experience"];
         
@@ -228,7 +231,7 @@
         
     }
     
-    _employeeSelected =  _employeeSelected+indexPath.item;
+ //_employeeSelected =  _employeeSelected+indexPath.item;
 
 return Cell;
 }
@@ -275,10 +278,6 @@ return Cell;
         
         _employeeSelected =  indexPath.item;
         
-        NSLog(@"employee selected %ld",(long)_employeeSelected);
-        
-        NSLog(@"index path %ld",(long)indexPath.item);
-
         
         [UIView setAnimationsEnabled:NO];
         
@@ -417,7 +416,10 @@ return Cell;
     
     if (nextItem.row>=0) {
         
-        _employeeSelected = nextItem.row;
+        //_employeeSelected = nextItem.row;
+        if (_employeeSelected>0) {
+            _employeeSelected = _employeeSelected-1;
+        }
        
         [UIView setAnimationsEnabled:NO];
         
@@ -445,15 +447,13 @@ return Cell;
     
     if (_isfromOpenJobSelected == YES) {
         
-        
-        NSLog(@"_invitedJobListArray %lu",(unsigned long)[_invitedJobListArray count]);
-
-        
-        NSLog(@"nextItem.item %lu",(unsigned long)nextItem.item );
 
         if ([_invitedJobListArray count]-1>=nextItem.item) {
             
-            _employeeSelected = nextItem.item;
+            //_employeeSelected = nextItem.item;
+            
+            _employeeSelected = _employeeSelected+1;
+
             
             [UIView setAnimationsEnabled:NO];
             
@@ -471,7 +471,8 @@ return Cell;
     }else{
         if ([kAppDel.obj_responseEmployeesList.employeeCategoryName count]-1>=nextItem.item) {
             
-            _employeeSelected = nextItem.item;
+            _employeeSelected = _employeeSelected+1;
+
             
             [UIView setAnimationsEnabled:NO];
             
@@ -507,8 +508,6 @@ return Cell;
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
-        NSLog(@"response object %@",responseObject);
-
         employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
         
         NSMutableArray *Sort  = [[NSMutableArray alloc]init];

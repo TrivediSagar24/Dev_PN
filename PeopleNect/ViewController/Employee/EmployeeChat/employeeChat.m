@@ -11,7 +11,7 @@
 @interface employeeChat ()
 {
     NSTimer *Timer;
-    NSString *userType;
+    NSString *userType,*EmployeeUserID,*employerUser;
 }
 @end
 
@@ -19,8 +19,12 @@
 #pragma mark - View LifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    userType = @"1";
+    
+
 //Timer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(chatHistory)userInfo: nil repeats:NO];
+    _chatHistoryTableView.delegate = self;
+    _chatHistoryTableView.dataSource = self;
+    
 }
 
 
@@ -32,8 +36,23 @@
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0];
     self.navigationController.navigationBar.translucent = NO;
      self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"arrow-left"];
+   
+    EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
+    
+    employerUser = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"];
+    
+    if (EmployeeUserID!=nil) {
+        userType = @"0";
+    }
+    if (employerUser!=nil) {
+        userType = @"1";
+    }
     
     [self chatHistory];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [kAppDel.progressHud hideAnimated:YES];
 }
 
 
@@ -67,8 +86,10 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
+    NSLog(@"index path row %ld",(long)indexPath.row);
     
     obj_employeeMainChat.arrayHistory = [_chatHistoryArray objectAtIndex:indexPath.row];
+    
     obj_employeeMainChat.isfromChatList = YES;
     
     [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
@@ -112,23 +133,23 @@
     
     [_param setObject:@"chatHistory" forKey:@"methodName"];
     
-    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"recieverId"];
-    
+    if ([userType isEqualToString:@"0"]) {
+        [_param setObject:EmployeeUserID forKey:@"recieverId"];
+    }else{
+        [_param setObject:employerUser forKey:@"recieverId"];
+
+    }
     [_param setObject:userType forKey:@"userType"];
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         [kAppDel.progressHud hideAnimated:YES];
+        
     _chatHistoryArray = [responseObject valueForKey:@"data"];
-        
-//        NSLog(@"Response OBject  %@ and count %ld",_chatHistoryArray,_chatHistoryArray.count);
-        
-        _chatHistoryTableView.delegate = self;
-        _chatHistoryTableView.dataSource = self;
+       
         [_chatHistoryTableView reloadData];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"error %@",error);
         [kAppDel.progressHud hideAnimated:YES];
 
     }];
