@@ -10438,6 +10438,7 @@
                     <connections>
                         <outlet property="btnAdd" destination="YvQ-mI-6E5" id="Cl3-Z0-oSb"/>
                         <outlet property="categoryScrollView" destination="0el-UF-RHc" id="9R4-rv-ceB"/>
+                        <outlet property="changeLocationbtn" destination="CH7-rb-vpt" id="9dk-qa-utA"/>
                         <outlet property="heightOfMapView" destination="Y3n-da-zWs" id="mTa-DK-cFx"/>
                         <outlet property="heightOfMiddleView" destination="LQA-Yk-a06" id="kBW-Cl-yoY"/>
                         <outlet property="heightOfTableView" destination="fKO-Po-x3p" id="sh8-YH-Kft"/>

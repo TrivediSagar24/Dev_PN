@@ -253,10 +253,11 @@ BOOL employerLogin, employeeLogin;
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void(^)())completionHandler
 {
-    //handle the actions
     if ([identifier isEqualToString:@"declineAction"]){
+        
     }
     else if ([identifier isEqualToString:@"answerAction"]){
+        
     }
 }
 #endif
@@ -264,6 +265,22 @@ BOOL employerLogin, employeeLogin;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     self.device_Token = [[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+   
+    NSLog(@"DEVICE_TOKEN :: %@", deviceToken);
+    
+    const unsigned *tokenBytes = [deviceToken bytes];
+   
+    NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+                          ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                          ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                          ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    
+    NSString *apnDeviceToken = hexToken;
+    
+    kAppDel.apnDeviceToken = apnDeviceToken;
+    
+    NSLog(@"APN_DEVICE_TOKEN :: %@", apnDeviceToken);
+    
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -272,6 +289,12 @@ BOOL employerLogin, employeeLogin;
 }
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    NSLog(@"user info %@",userInfo);
+    
+//    for(NSString *key in [userInfo allKeys]) {
+//        
+//         [self.window.rootViewController presentViewController:[GlobalMethods AlertWithTitle:@"userInfo" Message:[userInfo objectForKey:key] AlertMessage:@"OK"] animated:YES completion:nil];
+//    }
 }
 
 

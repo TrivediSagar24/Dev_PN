@@ -129,6 +129,15 @@
                  
                  [[NSUserDefaults standardUserDefaults] synchronize];
                  
+                /* Update Device Token With User Type  */
+                 
+                 [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"0" DeviceToken:kAppDel.apnDeviceToken userId:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"]] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                     NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+                 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                     
+                 }];
+            /* Update Device Token With User Type  */
+                 
                  [kAppDel.progressHud hideAnimated:YES];
                  UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Registration completed" message:@"Your registration has been completed successfully" preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)

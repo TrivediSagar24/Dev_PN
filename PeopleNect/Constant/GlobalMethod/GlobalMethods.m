@@ -182,6 +182,16 @@ NSMutableDictionary  *_params = [[NSMutableDictionary alloc]init];
 }
 
 
++(NSDictionary *)updateDeviceTokenWithUserType:(NSString *)UserType DeviceToken:(NSString *)DeviceToken userId:(NSString *)userId{
+  
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    [_param setObject:@"updateDeviceToken" forKey:@"methodName"];
+    [_param setObject:UserType forKey:@"userType"];
+    [_param setObject:DeviceToken forKey:@"deviceToken"];
+    [_param setObject:userId forKey:@"userId"];
+    return _param;
+}
+
 +(void)dataTaskCancel
 {
     for (NSURLSessionDataTask *dataTaskObj in kAFClient.dataTasks)

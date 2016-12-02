@@ -40,9 +40,9 @@ CGRect sliderFrame;
     
     _mapView.indoorEnabled = NO;
 
-        //[self showCurrentLocation];
+    [self showCurrentLocation];
 
-    currentLocation = CLLocationCoordinate2DMake(23.0813, 72.5269);
+   // currentLocation = CLLocationCoordinate2DMake(23.0813, 72.5269);
     
     _TurnOnLable.hidden = YES;
     
@@ -120,11 +120,15 @@ CGRect sliderFrame;
 
 
 - (void)defaultsChanged:(NSNotification *)notification {
+  
     NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
     
     if ([[defaults objectForKey:@"Location"] isEqualToString:@"changeLocation"]) {
         
-        currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
+        if ([[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] != nil) {
+            
+            currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
+        }
     }
 }
 
@@ -984,8 +988,8 @@ CGRect sliderFrame;
         
         if (currentLocation.latitude == changeLocation.latitude && currentLocation.longitude== changeLocation.longitude ) {
             
-            
             if (kAppDel.changeCount==1) {
+               
                 currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
                 
                 markerUserLocation.map = nil;
@@ -1025,7 +1029,6 @@ CGRect sliderFrame;
             [self UserLocationMarker:currentLocation];
 
         }
-        
     }
 }
 

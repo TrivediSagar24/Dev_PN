@@ -116,11 +116,12 @@
              {
                  kAppDel.obj_reponseGmailFacebookLogin
                  = [[reponseGmailFacebookLogin alloc] initWithDictionary:responseObject];
+            
                  /*-------Archiving the data----*/
                  
                  NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_reponseGmailFacebookLogin];
                  
-                 /*-------Setting user default data-----------*/
+        /*----Setting user default data-----------*/
                  
                  [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employeeRegisterSocial"];
                  
@@ -137,13 +138,16 @@
                                                          instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
                      
                      [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
-                     employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
+                     
+                
+                     
+            employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
                      [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
-                 }
+                }
                  
-                 [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
+                [[NSUserDefaults standardUserDefaults] setObject:_tfPassword.text forKey:@"EmployeePassword"];
                  
-                 [[NSUserDefaults standardUserDefaults] synchronize];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                  
                  [kAppDel.progressHud hideAnimated:YES];
                  
@@ -158,11 +162,27 @@
                      NSString *imageString = [[responseObject valueForKey:@"data"]valueForKey:@"jobseeker_profile_pic"];
                      
                      kAppDel.EmployeeProfileImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageString]]];
-                     NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
+                    
+                     NSString * userId = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
                      
-                     [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
+                     [[NSUserDefaults standardUserDefaults] setObject:userId forKey:@"EmployeeUserId"];
                      
                      [[NSUserDefaults standardUserDefaults] synchronize];
+           
+            /* Update Device Token With User Type  */
+     
+                /*
+                 
+                [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"0" DeviceToken:kAppDel.apnDeviceToken userId:userId] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+                     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                         
+                     }];
+                      
+                */
+                     
+            /* Update Device Token With User Type  */
+
                  }
                  else
                  {
@@ -225,9 +245,20 @@
          
           kAppDel.EmployeeStreetName = [[responseObject valueForKey:@"data"]valueForKey:@"streetName"];
 
-         NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
-         [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
+         NSString * userId = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
+         
+         [[NSUserDefaults standardUserDefaults] setObject:userId forKey:@"EmployeeUserId"];
+         
          [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        /* Update Device Token With User Type  */
+         [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"0" DeviceToken:kAppDel.apnDeviceToken userId:userId] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             
+         }];
+         
+         /* Update Device Token With User Type  */
          
         if ([[[responseObject valueForKey:@"data"]valueForKey:@"streetName"]length]>0)
        {
@@ -339,9 +370,19 @@
             
             kAppDel.EmployeeStreetName = [[responseObject valueForKey:@"data"]valueForKey:@"streetName"];
             
-    NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
-    [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployeeUserId"];
+    NSString * userId = [[responseObject objectForKey:@"data"]valueForKey:@"userId"];
+    [[NSUserDefaults standardUserDefaults] setObject:userId forKey:@"EmployeeUserId"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+            
+        /* Update Device Token With User Type  */
+            
+        [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"0" DeviceToken:kAppDel.apnDeviceToken userId:userId] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                
+            }];
+            
+        /* Update Device Token With User Type  */
             
     if ([[[responseObject valueForKey:@"data"]valueForKey:@"streetName"]length]>0)
     {

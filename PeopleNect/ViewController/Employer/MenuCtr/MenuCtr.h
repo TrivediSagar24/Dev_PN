@@ -45,6 +45,7 @@
 @property(strong,nonatomic)  JSCustomBadge *chatBadge;
 @property (strong, nonatomic) IBOutlet UIScrollView *categoryScrollView;
 
+@property (strong, nonatomic) IBOutlet UIButton *changeLocationbtn;
 
 
 - (IBAction)changeLocationClicked:(id)sender;

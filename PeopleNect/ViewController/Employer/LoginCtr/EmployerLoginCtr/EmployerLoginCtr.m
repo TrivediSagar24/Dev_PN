@@ -153,7 +153,22 @@
                         
                 [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
                         
-                        
+                
+                
+        /* Update Device Token With User Type  */
+                
+                /*
+                [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"1" DeviceToken:kAppDel.apnDeviceToken userId:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"]] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                    NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                    
+                }];
+                 
+                 */
+        /* Update Device Token With User Type  */
+
+                
+                
                 MenuCtr *obj_MenuCtr  = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
                 [self.navigationController pushViewController:obj_MenuCtr animated:YES];
                         

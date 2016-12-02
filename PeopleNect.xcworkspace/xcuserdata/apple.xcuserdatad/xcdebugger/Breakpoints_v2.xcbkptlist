@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
-            timestampString = "502090068.983942"
+            timestampString = "502372286.781512"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "625"
-            endingLineNumber = "625"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
             landmarkName = "-ApplyForJob:"
             landmarkType = "5">
          </BreakpointContent>
@@ -426,6 +426,38 @@
             startingLineNumber = "432"
             endingLineNumber = "432"
             landmarkName = "-composerTextView:shouldPasteWithSender:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employer/employerInviteForJobVC/employerInviteForJobVC.m"
+            timestampString = "502376102.093507"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employer/employerInviteForJobVC/employerInviteForJobVC.m"
+            timestampString = "502376253.782486"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "441"
+            endingLineNumber = "441"
+            landmarkName = "-onClickBtnRight:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

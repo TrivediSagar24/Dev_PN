@@ -36,7 +36,7 @@ static CLLocationCoordinate2D currentLocation;
     
     EmployeeDetails = [[NSMutableArray alloc]init];
 
-//[self showCurrentLocation];
+    //[self showCurrentLocation];
     
     if ([GlobalMethods InternetAvailability]) {
         [self businessCategoryList];
@@ -74,7 +74,26 @@ static CLLocationCoordinate2D currentLocation;
     [_obj_MainTableView addGestureRecognizer:swipeRightSide];
     [_obj_MainTableView addGestureRecognizer:swipeLeftSide];
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(EmployerLocationChanged:)
+                                                 name:NSUserDefaultsDidChangeNotification
+                                               object:nil];
+    _changeLocationbtn.hidden = YES;
 }
+
+
+- (void)EmployerLocationChanged:(NSNotification *)notification {
+    
+    NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
+    
+    if ([[defaults objectForKey:@"Location"] isEqualToString:@"EmployerLocation"]) {
+        
+//        currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
+        
+    }
+}
+
 
 
 

@@ -124,9 +124,17 @@
     [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%f",selectedLocation.longitude] forKey:@"changeLong"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 
-    [[NSUserDefaults standardUserDefaults] setObject:@"changeLocation"   forKey:@"Location"];
     
-    [[NSUserDefaults standardUserDefaults] synchronize];
+       if ([[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] != nil) {
+           [[NSUserDefaults standardUserDefaults] setObject:@"changeLocation"   forKey:@"Location"];
+           
+           [[NSUserDefaults standardUserDefaults] synchronize];
+       }else{
+          
+           [[NSUserDefaults standardUserDefaults] setObject:@"EmployerLocation"   forKey:@"Location"];
+           
+           [[NSUserDefaults standardUserDefaults] synchronize];
+       }
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -152,13 +160,25 @@
         if (![context save:&error]) {
             NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
         }
-        [[NSUserDefaults standardUserDefaults] setObject:@"changeLocation"forKey:@"Location"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+       
+        if ([[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] != nil) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"changeLocation"   forKey:@"Location"];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }else{
+            
+            [[NSUserDefaults standardUserDefaults] setObject:@"EmployerLocation"   forKey:@"Location"];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
 
+        
         [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%f",Location.latitude] forKey:@"changeLat"];
         [[NSUserDefaults standardUserDefaults] synchronize];
 
         [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%f",Location.longitude] forKey:@"changeLong"];
+        
         
         [[NSUserDefaults standardUserDefaults] synchronize];
         kAppDel.changeCount = 1;

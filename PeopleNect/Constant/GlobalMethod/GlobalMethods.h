@@ -40,6 +40,7 @@
 
 +(NSMutableArray *)SortArray : (NSMutableArray *)arrOriginal;
 
++(NSDictionary*)updateDeviceTokenWithUserType:(NSString *)UserType DeviceToken:(NSString*)DeviceToken userId:(NSString*)userId;
 
 +(void)dataTaskCancel;
 @end

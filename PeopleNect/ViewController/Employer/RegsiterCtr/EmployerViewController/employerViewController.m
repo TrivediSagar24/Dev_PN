@@ -242,14 +242,30 @@ numberOfRowsInComponent:(NSInteger)component{
                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Error!" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"]animated:YES completion:nil];
                 }
                 else{
+      
         NSString * str = [[responseObject objectForKey:@"data"]valueForKey:@"employerId"];
+                    
         [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"EmployerUserID"];
+                    
         [[NSUserDefaults standardUserDefaults] synchronize];
                     
         kAppDel.obj_responseDataOC  = [[responseDataOC alloc] initWithDictionary:responseObject ];
+                    
         NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseDataOC ];
+                    
         [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"employerRegister"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+                    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+                
+        /* Update Device Token With User Type  */
+             
+                  
+            [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"1" DeviceToken:kAppDel.apnDeviceToken userId:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"]] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
+                } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            }];
+                    
+        /* Update Device Token With User Type  */
                     
         EmployerSecondScreenCtr *objEmployerSecondScreenCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerSecondScreenCtr"];
                     
