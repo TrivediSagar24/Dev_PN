@@ -26,6 +26,7 @@
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
     if ([GlobalMethods InternetAvailability]) {
         [self transactionHistory];
+        [self jobPostingPriceAndBalance];
     }
     else{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
@@ -52,8 +53,10 @@
     Amount = [Amount stringByReplacingOccurrencesOfString:@".00" withString:@""];
     
     Amount = [NSString stringWithFormat:@"$%@",Amount];
+   
     Cell.priceLbl.text = Amount;
     
+   
     NSString *dateString=[[_transactionHistoryArray valueForKey:@"create_date"] objectAtIndex:indexPath.row];
 
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -62,6 +65,7 @@
     
     NSDate *formattedDate = [dateFormatter dateFromString:dateString];
     [dateFormatter setDateFormat:@"dd/MM"];
+   
     NSString *formattedDateString = [dateFormatter stringFromDate:formattedDate];
     
     Cell.dateLbl.text = formattedDateString;
@@ -74,11 +78,14 @@
     }
     
     if ([[[_transactionHistoryArray valueForKey:@"action"] objectAtIndex:indexPath.row] isEqualToString:@"0"]) {
-        Cell.circularLbl.backgroundColor = [UIColor redColor];
-        Cell.lineLbl.backgroundColor =[UIColor redColor];
-        Cell.dateLbl.textColor = [UIColor redColor];
+        //Cell.circularLbl.backgroundColor = [UIColor redColor];
+        //Cell.lineLbl.backgroundColor =[UIColor redColor];
+       // Cell.dateLbl.textColor = [UIColor redColor];
         Cell.priceLbl.textColor = [UIColor redColor];
-        Cell.invitedLbl.textColor = [UIColor redColor];
+        
+        Cell.priceLbl.text = [NSString stringWithFormat:@"-%@",Amount];
+
+        //Cell.invitedLbl.textColor = [UIColor redColor];
     }
     if ([[[_transactionHistoryArray valueForKey:@"action"] objectAtIndex:indexPath.row] isEqualToString:@"1"]) {
         Cell.circularLbl.backgroundColor = [UIColor colorWithRed:23.0/255.0 green:75.0/255.0 blue:124.0/255.0 alpha:1];
@@ -129,6 +136,23 @@
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [kAppDel.progressHud hideAnimated:YES];
+    }];
+}
+#pragma mark - Web Services -
+-(void)jobPostingPriceAndBalance
+{
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
+    [_param setObject:@"jobPostingPriceAndBalance" forKey:@"methodName"];
+    [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"employerId"];
+    [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        kAppDel.obj_jobPostingPriceBalance
+        = [[jobPostingPriceBalance alloc] initWithDictionary:responseObject];
+        /*------Archiving the data----*/
+        NSData *registerData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_jobPostingPriceBalance];
+        /*------Setting user default data-----*/
+        [[NSUserDefaults standardUserDefaults] setObject:registerData forKey:@"jobPostingPriceBalance"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
     }];
 }
 

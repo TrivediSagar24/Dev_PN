@@ -474,7 +474,10 @@ static SlideNavigationController *singletonInstance;
             loginData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employerLogin"];
             if (loginData!=nil) {
                kAppDel.obj_responseDataOC = [NSKeyedUnarchiver unarchiveObjectWithData:loginData];
-                 kAppDel.EmployerProfileImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:kAppDel.obj_responseDataOC.employerProfilePic]]];
+                
+                if (kAppDel.EmployerProfileImage==nil) {
+                    kAppDel.EmployerProfileImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:kAppDel.obj_responseDataOC.employerProfilePic]]];
+                }
             }
         }
         else{

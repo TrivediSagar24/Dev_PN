@@ -15,6 +15,7 @@
     UIImageView *profileImageView;
     NSArray *json;
     CLLocationCoordinate2D Location;
+    NSData *dataProfileImg;
 }
 @end
 
@@ -219,13 +220,14 @@ else if (theTextField == _tfSurname){
 
 
 - (IBAction)SaveClicked:(id)sender {
-    NSData* imageData;
     
-    if (chosenImage!=nil) {
-      imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
-    }else{
-        imageData = UIImageJPEGRepresentation(kAppDel.EmployerProfileImage, 1.0);
+    NSData* imageData = UIImageJPEGRepresentation(kAppDel.EmployerProfileImage, 1.0);
+    
+    if (imageData==nil) {
+        imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"profile"], 1.0);
     }
+    
+    [self returnImage:[UIImage imageWithData:imageData]];
     
     if ([GlobalMethods InternetAvailability]) {
         kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
@@ -263,13 +265,15 @@ else if (theTextField == _tfSurname){
         [_param setObject:_tfPassword.text forKey:@"password"];
         
         [kAFClient POST:MAIN_URL parameters:_param constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-            [formData appendPartWithFileData:imageData name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
+            
+            [formData appendPartWithFileData:dataProfileImg name:@"profilepic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
             
         } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             
+            NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: [[responseObject valueForKey:@"data"] valueForKey:@"profilePic"]]];
+            kAppDel.EmployerProfileImage = [UIImage imageWithData: imageData];
             
             [kAppDel.progressHud hideAnimated:YES];
-            
             
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             
@@ -284,16 +288,20 @@ else if (theTextField == _tfSurname){
     }
 }
 
+#pragma Mark - Image
+-(NSData*)returnImage :(UIImage *)img
+{
+    dataProfileImg = UIImageJPEGRepresentation(img, 1.0);
+    return dataProfileImg;
+}
 
 #pragma mark - ImagePicker Delegates.
 
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     chosenImage = info[UIImagePickerControllerEditedImage];
-    
-//    [self.btnCamera setImage:chosenImage forState:UIControlStateNormal];
     kAppDel.EmployerProfileImage = chosenImage;
-    
+
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 

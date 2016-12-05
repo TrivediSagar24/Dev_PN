@@ -27,7 +27,6 @@
     
     userType = @"1";
     
-    NSLog(@"category %@",_invitedJobView);
     
     self.ProfileView.clipsToBounds = YES;
     _ProfileBtn.hidden = YES;
@@ -363,7 +362,13 @@ return Cell;
         if (_chatBtn.enabled ==YES) {
            
              //[self chatHistory];
-            [self receiveMessageWebservice];
+            //[self receiveMessageWebservice];
+            
+            employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
+            
+            obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
+            
+            [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
     }
 }
 
@@ -510,17 +515,7 @@ return Cell;
         
         employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
         
-        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
-        
-        Sort = [[responseObject valueForKey:@"data"]mutableCopy];
-        
-        Sort = [GlobalMethods SortArray:Sort];
-        
-        NSLog(@"Sorted %@",Sort);
-        
         obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
-        
-        obj_employeeMainChat.messageDetails = Sort;
         
         [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
         

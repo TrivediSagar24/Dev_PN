@@ -36,7 +36,7 @@ CGRect sliderFrame;
     
     [self initialWeek];
     
-        markerUserLocation = [[GMSMarker alloc]init];
+    markerUserLocation = [[GMSMarker alloc]init];
     
     _mapView.indoorEnabled = NO;
 

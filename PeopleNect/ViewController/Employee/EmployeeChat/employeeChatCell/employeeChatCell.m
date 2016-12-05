@@ -26,7 +26,7 @@
     _profilePic.layer.cornerRadius = _profilePic.frame.size.height/2;
     _profilePic.layer.masksToBounds = YES;
     
-    _checkedImg.hidden = YES;
+//    _checkedImg.hidden = YES;
     
 }
 @end

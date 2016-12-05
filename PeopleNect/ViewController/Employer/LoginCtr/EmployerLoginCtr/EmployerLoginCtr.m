@@ -131,7 +131,6 @@
                     
                     kAppDel.obj_responseDataOC = [[responseDataOC alloc] initWithDictionary:responseObject];
                     
-                    
                     NSData *loginObject = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseDataOC];
                     
                     [[NSUserDefaults standardUserDefaults] setObject:loginObject  forKey:@"employerLogin"];

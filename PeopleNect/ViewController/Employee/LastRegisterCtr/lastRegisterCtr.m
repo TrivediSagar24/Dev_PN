@@ -83,8 +83,6 @@
             }
         }
 }
-    
-    
     if (registerflag==YES)
     {
         
@@ -107,7 +105,6 @@
             
             [param setObject:_tviewDescribe.text forKey:@"description"];
             
-            NSData* imageData = UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
             
             [self returnImage:[UIImage imageWithData:imageData]];
             
@@ -139,15 +136,22 @@
             /* Update Device Token With User Type  */
                  
                  [kAppDel.progressHud hideAnimated:YES];
+                 
                  UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Registration completed" message:@"Your registration has been completed successfully" preferredStyle:UIAlertControllerStyleAlert];
+                 
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
                         {
-                            //            [GlobalMethods SlideNavigationRootViewForEmployee];
-                                       //            [GlobalMethods SlideNavigationLeftMenu];
+                    employeeSlideNavigation *leftMenu =[self.storyboard
+                                                                instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+                            
+                    [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
+                            
             employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
+                            
                 [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
             }]];
                  [self presentViewController:alert animated:YES completion:nil];
+                 
              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
              {
                  [kAppDel.progressHud hideAnimated:YES];

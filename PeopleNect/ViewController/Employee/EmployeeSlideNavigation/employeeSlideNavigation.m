@@ -485,6 +485,8 @@ static int employerCount = 0;
 }
 #pragma mark - EmployerSlide -
 -(void)EmployerSlideDidLoad{
+    
+
     EmployerSettings = @[@"Balance", @"Job History", @"Settings",@"Invite Friends"];
     _lblUserCategory.hidden = YES;
     _lblUserExperience.hidden = YES;
@@ -645,6 +647,7 @@ static int employerCount = 0;
 
 #pragma mark - Employer data -
 -(void)unarchivingData{
+    
     if([[[NSUserDefaults standardUserDefaults] objectForKey:@"Update"]isEqualToString:@"Login"])
     {
         NSData *loginData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employerLogin"];

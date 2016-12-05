@@ -94,7 +94,7 @@
     
     [JSQMessagesCollectionViewCell registerMenuAction:@selector(delete:)];
     
-
+/*
     if ([_messageDetails count]>0) {
         
         for (int i = 0; i<[_messageDetails count]; i++)
@@ -117,6 +117,7 @@
         
         [data addObjectsFromArray:loadmessage];
     }
+ */
     
     if (_isfromChatList==YES) {
         
@@ -124,17 +125,23 @@
         
         // as it work perfect when i keep 1 second.
         //response time is 0.201
-        Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        
+        //Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        
+        [self receiveMessageWebservice];
         
     }else{
         
-     Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+     //Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        [self receiveMessageWebservice];
+
     }
     
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     count=0;
+    [GlobalMethods dataTaskCancel];
     [kAppDel.progressHud hideAnimated:YES];
 }
 
@@ -199,9 +206,8 @@
     messageforchat = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:senderDisplayName date:date text:text];
     
     [self sendMessage:text];
+    [data addObject:messageforchat];
 
-    
-    
 }
 
 
@@ -595,7 +601,6 @@
                 else {
                     NSLog(@"%s error: unrecognized media item", __PRETTY_FUNCTION__);
                 }
-                
             });
         }
         
@@ -645,12 +650,12 @@
         Sort = [GlobalMethods SortArray:Sort];
         
        // NSLog(@"receive message %@",[responseObject valueForKey:@"data"]);
-        NSLog(@"Sorted data %@",Sort);
+       // NSLog(@"Sorted data %@",Sort);
 
         if (Sort.count>0) {
             latestMessageId = [[Sort valueForKey:@"id"]objectAtIndex:[Sort count]-1];
             
-            NSLog(@"latestMessageId in receive web service %@",latestMessageId);
+           // NSLog(@"latestMessageId in receive web service %@",latestMessageId);
         }
         
         if (count==0) {
@@ -686,8 +691,6 @@
             if (Sort.count>0) {
                 
                 
-                NSLog(@"Added sort %@",Sort);
-                
                 for (int i = 0; i<[Sort count]; i++)
                 {
                     
@@ -711,14 +714,10 @@
                 
                 [data addObjectsFromArray:loadmessage];
                 
-                for (int j = 0; j<data.count; j++) {
-                    JSQMessage *loadMoreMessageObj = [data objectAtIndex:j];
-                NSLog(@"message  and id display name %@ %@ %@" ,loadMoreMessageObj.text,loadMoreMessageObj.senderId,loadMoreMessageObj.senderDisplayName);
-                }
                 
                [self receiveMessagePressed];
                 
-                //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+            //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
                 
             }
         }
@@ -726,20 +725,13 @@
         
         count++;
 
-        
-//        JSQMessage *messageReceived =
-//        
-//        [[JSQMessage alloc] initWithSenderId:[NSString stringWithFormat:@"%lu",(unsigned long)message.senderID]
-//                           senderDisplayName:@"UNKNOWN"
-//                                        date:message.dateSent
-//                                        text:message.text];
-//        
-//        
-//        [data addObject:messageReceived];
+    
+        [self receiveMessageWebservice];
 
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
+        [self receiveMessageWebservice];
+
     }];
 }
 
@@ -776,7 +768,6 @@
        
         latestMessageId = [[responseObject valueForKey:@"data"]valueForKey:@"id"];
         
-        [data addObject:messageforchat];
         
         [JSQSystemSoundPlayer jsq_playMessageSentSound];
         [self finishSendingMessageAnimated:YES];

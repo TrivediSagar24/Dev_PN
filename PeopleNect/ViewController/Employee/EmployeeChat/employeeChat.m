@@ -72,6 +72,12 @@
     Time = [Time substringToIndex:[Time length] - 3];
     }
     
+    Cell.checkedImg.hidden = YES;
+
+    if ([[[_chatHistoryArray valueForKey:@"Status"]objectAtIndex:indexPath.row] isEqualToString:@"0"]) {
+        
+        Cell.checkedImg.hidden = NO;
+    }
     Cell.chatTime.text = Time;
     
     Cell.userName.text = [[_chatHistoryArray valueForKey:@"SenderName"]objectAtIndex:indexPath.row];
@@ -79,7 +85,8 @@
     Cell.userDesc.text = [[_chatHistoryArray valueForKey:@"Message"]objectAtIndex:indexPath.row];
     
     NSString *url_Img = [[_chatHistoryArray valueForKey:@"SenderPic"]objectAtIndex:indexPath.row];
-[Cell.profilePic sd_setImageWithURL: [NSURL URLWithString:url_Img]placeholderImage:[UIImage imageNamed:@"plceholder"]];
+    [Cell.profilePic sd_setImageWithURL: [NSURL URLWithString:url_Img]placeholderImage:[UIImage imageNamed:@"plceholder"]];
+    
     return Cell;
 }
 
@@ -147,6 +154,8 @@
         
     _chatHistoryArray = [responseObject valueForKey:@"data"];
        
+    NSLog(@"_chatHistoryArray %@",_chatHistoryArray);
+
         [_chatHistoryTableView reloadData];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {

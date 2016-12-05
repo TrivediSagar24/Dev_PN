@@ -537,8 +537,18 @@ if (_tfJobTitle.text.length==0) {
                             [self presentViewController:[GlobalMethods AlertWithTitle:@"Please enter Valid Time" Message:[NSString stringWithFormat:@" you can enter time upto %@ hour",totalHourMessage] AlertMessage:@"OK"] animated:YES completion:nil];
                         }
                         else{
-                            if (_isFrominVitedScreen==YES){
+                        if (_isFrominVitedScreen==YES){
+                        if (kAppDel.obj_jobPostingPriceBalance.jobPostingPrice <=kAppDel.obj_jobPostingPriceBalance.balance) {
                                 [self postJobById];
+                            }
+                        else{
+                                noBalance *noBalance = [self.storyboard instantiateViewControllerWithIdentifier:@"noBalance"];
+                                UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:noBalance];
+                                obj_nav.definesPresentationContext = YES;
+                                obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+                                [self presentViewController:obj_nav animated:YES completion:nil];
+                            }
+                            
                             }
                     else{
                                 
@@ -677,8 +687,8 @@ if (_tfJobTitle.text.length==0) {
         [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             [kAppDel.progressHud hideAnimated:YES];
             
-            [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
-            
+            [self AlertAction:[responseObject valueForKey:@"message"]];
+
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             [kAppDel.progressHud hideAnimated:YES];
         }];
@@ -761,7 +771,7 @@ if (_tfJobTitle.text.length==0) {
             
             [kAppDel.progressHud hideAnimated:YES];
             
-            [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
+            [self AlertAction:[responseObject valueForKey:@"message"]];
             
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             
@@ -793,7 +803,21 @@ if (_tfJobTitle.text.length==0) {
     }
 }
 
-
+#pragma mark - AlertAction -
+-(void)AlertAction:(NSString*)Message{
+    
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"" message:Message preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
+                      {
+                        
+                          MenuCtr *obj_MenuCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"MenuCtr"];
+                          
+                          [self.navigationController pushViewController:obj_MenuCtr animated:YES];
+                      }]];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
 #pragma mark - Initial -
 -(void)Initial{
     obj_EndDatePicker  = [[UIDatePicker alloc] initWithFrame:CGRectMake(0,44,[UIScreen mainScreen].bounds.size.width, 253)];

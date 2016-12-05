@@ -371,9 +371,12 @@ if (section==2){
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
     AccordionHeaderView *obj = [tableView dequeueReusableHeaderFooterViewWithIdentifier:kAccordionHeaderViewReuseIdentifier];
+    
     obj.OpenJobLbl.hidden = YES;
     obj.openJobImage.hidden = YES;
     obj.headerlabel.text = [_CandidateArrayOptions objectAtIndex:section];
+    
+    obj.rightArrowImg.image = [UIImage imageNamed:@"arrow_right"];
     
     if (section==0) {
          obj.totalValueLbl.text = [NSString stringWithFormat:@"(%lu)",(unsigned long)_hiredArray.count];
@@ -427,11 +430,13 @@ if (section==2){
 #pragma mark - <FZAccordionTableViewDelegate> -
 
 - (void)tableView:(FZAccordionTableView *)tableView willOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
-    
+
 }
 
 - (void)tableView:(FZAccordionTableView *)tableView didOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
     
+    AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
+    customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_right"];
 }
 
 - (void)tableView:(FZAccordionTableView *)tableView willCloseSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
@@ -440,6 +445,8 @@ if (section==2){
 
 - (void)tableView:(FZAccordionTableView *)tableView didCloseSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
     
+    AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
+    customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_right"];
 }
 
 

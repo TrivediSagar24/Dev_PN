@@ -230,7 +230,8 @@ numberOfRowsInComponent:(NSInteger)component{
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         NSString *countryCode = _tfCountryCode.text;
-    countryCode = [countryCode stringByReplacingOccurrencesOfString:@"+" withString:@""];
+   
+        countryCode = [countryCode stringByReplacingOccurrencesOfString:@"+" withString:@""];
         
         if ([GlobalMethods InternetAvailability]) {
             
