@@ -105,6 +105,14 @@
     
     if (indexPath.section==0) {
          workhistoryCell *workCell = [tableView dequeueReusableCellWithIdentifier:@"workhistoryCell" forIndexPath:indexPath];
+        
+//        workCell.reviewLbl.hidden = YES;
+//        workCell.starView.hidden = YES;
+//        
+//        UILabel *BorderLabel = [[UILabel alloc]initWithFrame:CGRectMake(workCell.contentView.frame.origin.x, workCell.contentView.frame.size.height-10, workCell.frame.size.width, 1)];
+//        BorderLabel.backgroundColor = [UIColor blackColor];
+//        [workCell.contentView addSubview:BorderLabel];
+        
         return workCell;
     }
     if (indexPath.section==1) {

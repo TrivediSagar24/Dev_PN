@@ -126,14 +126,15 @@
         // as it work perfect when i keep 1 second.
         //response time is 0.201
         
-        //Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
         
         [self receiveMessageWebservice];
         
     }else{
         
-     //Timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
-        [self receiveMessageWebservice];
+     Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        
+        //[self receiveMessageWebservice];
 
     }
     
@@ -726,11 +727,11 @@
         count++;
 
     
-        [self receiveMessageWebservice];
+        //[self receiveMessageWebservice];
 
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        [self receiveMessageWebservice];
+       // [self receiveMessageWebservice];
 
     }];
 }
