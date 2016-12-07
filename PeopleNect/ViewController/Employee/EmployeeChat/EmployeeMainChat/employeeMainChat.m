@@ -13,15 +13,15 @@
 #import "NSUserDefaults+DemoSettings.h"
 
 
-
 @interface employeeMainChat ()
 {
-    JSQMessage *messageforchat,*loadMoreMessage;
+    JSQMessage *messageforchat,*loadMessageFromInvite,*loadMessageFromChat;
     NSMutableArray *data,*loadmessage,*allUserId;
     NSString *messag ,*dialogId,*imageName,*userType,*EmployeeUserID,*employerUser;
     NSTimer  *Timer;
     NSString *latestMessageId;
      int count;
+    BOOL failure;
 }
 
 @end
@@ -94,7 +94,7 @@
     
     [JSQMessagesCollectionViewCell registerMenuAction:@selector(delete:)];
     
-/*
+
     if ([_messageDetails count]>0) {
         
         for (int i = 0; i<[_messageDetails count]; i++)
@@ -110,14 +110,16 @@
             
             NSDate *Date = [dateFormat dateFromString:date];
             
-            loadMoreMessage = [[JSQMessage alloc]initWithSenderId:[[_messageDetails valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[_messageDetails valueForKey:@"Message"] objectAtIndex:i]];
+            loadMessageFromInvite = [[JSQMessage alloc]initWithSenderId:[[_messageDetails valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[_messageDetails valueForKey:@"Message"] objectAtIndex:i]];
             
-            [loadmessage addObject:loadMoreMessage];
+            [loadmessage addObject:loadMessageFromInvite];
         }
         
         [data addObjectsFromArray:loadmessage];
+       
+        latestMessageId = [[_messageDetails valueForKey:@"id"]objectAtIndex:[_messageDetails count]-1];
     }
- */
+ 
     
     if (_isfromChatList==YES) {
         
@@ -126,23 +128,43 @@
         // as it work perfect when i keep 1 second.
         //response time is 0.201
         
-        Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+       
+        //Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
         
         [self receiveMessageWebservice];
         
     }else{
+        NSLog(@"Else part ");
         
-     Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+    // Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
         
-        //[self receiveMessageWebservice];
+        
+        NSLog(@"latestMessageId %@",latestMessageId);
+        
+        [self receiveMessageWebservice];
 
     }
     
 }
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    count=0;
-    [GlobalMethods dataTaskCancel];
+    
+    failure = YES;
+    
+    //count=0;
+    
+    //[GlobalMethods dataTaskCancel];
+    
+    for (NSURLSessionDataTask *dataTaskObj in kAFClient.dataTasks)
+    {
+        [kAppDel.progressHud hideAnimated:YES];
+        
+        [dataTaskObj suspend];
+        [dataTaskObj cancel];
+        //NSLog(@"Task cancelled %@",dataTaskObj);
+    }
+    
     [kAppDel.progressHud hideAnimated:YES];
 }
 
@@ -165,6 +187,15 @@
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                     target:self action:@selector(closePressed:)];
     }
+//    for (NSURLSessionDataTask *dataTaskObj in kAFClient.dataTasks)
+//    {
+//        [kAppDel.progressHud hideAnimated:YES];
+//        
+//        [dataTaskObj resume];
+//        
+//        NSLog(@"Task resume %@",dataTaskObj);
+//    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -207,6 +238,7 @@
     messageforchat = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:senderDisplayName date:date text:text];
     
     [self sendMessage:text];
+    
     [data addObject:messageforchat];
 
 }
@@ -435,6 +467,8 @@
         
         JSQPhotoMediaItem *item = [[JSQPhotoMediaItem alloc] initWithImage:[UIPasteboard generalPasteboard].image];
         
+        NSLog(@"composerTextView shouldPasteWithSender");
+        
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.senderId
                                                  senderDisplayName:self.senderDisplayName
                                                               date:[NSDate date]
@@ -449,6 +483,9 @@
 #pragma mark - receiveMessage -
 - (void)receiveMessagePressed
 {
+    NSLog(@"errnkdfndj !!!!!!!!");
+    NSLog(@"data under receiveMessagePressed  bd %@ ",data);
+    
     self.showTypingIndicator = !self.showTypingIndicator;
     
     [self scrollToBottomAnimated:YES];
@@ -613,6 +650,10 @@
 {
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
+    
+    NSLog(@"receiveMessageWebservice %d",count);
+
+    
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
     
     if (_FromEmployerInvite.count==0) {
@@ -644,6 +685,8 @@
         
         //[kAppDel.progressHud hideAnimated:YES];
 
+        NSLog(@"respone receive %@",responseObject);
+        
         NSMutableArray *Sort  = [[NSMutableArray alloc]init];
         
         Sort = [[responseObject valueForKey:@"data"]mutableCopy];
@@ -659,7 +702,90 @@
            // NSLog(@"latestMessageId in receive web service %@",latestMessageId);
         }
         
-        if (count==0) {
+        if (_isfromChatList==YES) {
+            
+            if (count==0) {
+                
+                if (Sort.count>0) {
+                    
+                    for (int i = 0; i<[Sort count]; i++)
+                    {
+                        NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+                        NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                        
+                        date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                        
+                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        
+                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                        
+                        NSDate *Date = [dateFormat dateFromString:date];
+                        
+                        JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                        
+                        [loadmessage addObject:loadMoreMessageObj];
+                    }
+                    
+                    [data addObjectsFromArray:loadmessage];
+                    
+                    // NSLog(@"data for count == %d %@",count,data);
+                    
+                    //[self receiveMessagePressed];
+                    
+                    NSLog(@"Count ==0 %d",count);
+                    
+                    [self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                }
+                
+            }
+            else{
+                if (Sort.count>0) {
+                    
+                    for (int i = 0; i<[Sort count]; i++)
+                    {
+                        NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+                        NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                        
+                        date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                        
+                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        
+                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                        
+                        NSDate *Date = [dateFormat dateFromString:date];
+                        
+                        JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                        
+                        [loadmessage addObject:loadMoreMessageObj];
+                    }
+                    
+                    
+                    [data addObjectsFromArray:loadmessage];
+                    
+                    NSLog(@"data %@",data);
+                    
+                    //                NSLog(@"data for count == %d %@",count,data);
+                    
+                    // [self receiveMessagePressed];
+                    
+                    //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                    
+                    
+                    self.showTypingIndicator = !self.showTypingIndicator;
+                    
+                    [self scrollToBottomAnimated:YES];
+                    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+                    
+                    [self finishReceivingMessageAnimated:NO];
+                    
+                }
+            }
+
+        }
+        else{
+            
+            NSLog(@"Else part of recer response ");
+
             
             if (Sort.count>0) {
                 
@@ -681,57 +807,38 @@
                     [loadmessage addObject:loadMoreMessageObj];
                 }
                 
-                [data addObjectsFromArray:loadmessage];
-                
-                 //[self receiveMessagePressed];
-                
-                [self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
-
-            }
-        }else{
-            if (Sort.count>0) {
-                
-                
-                for (int i = 0; i<[Sort count]; i++)
-                {
-                    
-                    
-                    NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
-                    NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
-                    
-                    date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
-                    
-                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                    
-                    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                    
-                    NSDate *Date = [dateFormat dateFromString:date];
-                    
-                    JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
-                    
-                    [loadmessage addObject:loadMoreMessageObj];
-                }
-                
                 
                 [data addObjectsFromArray:loadmessage];
                 
+                NSLog(@"data %@",data);
                 
-               [self receiveMessagePressed];
+                //                NSLog(@"data for count == %d %@",count,data);
                 
-            //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                // [self receiveMessagePressed];
                 
+                //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                
+                
+                self.showTypingIndicator = !self.showTypingIndicator;
+                
+                [self scrollToBottomAnimated:YES];
+                [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+                
+                [self finishReceivingMessageAnimated:NO];
             }
         }
-        
         
         count++;
 
     
-        //[self receiveMessageWebservice];
+        [self receiveMessageWebservice];
 
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-       // [self receiveMessageWebservice];
+        if (failure==NO) {
+            [self receiveMessageWebservice];
+            NSLog(@"failure");
+        }
 
     }];
 }

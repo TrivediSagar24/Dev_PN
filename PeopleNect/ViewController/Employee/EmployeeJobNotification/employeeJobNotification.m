@@ -115,7 +115,9 @@ CGRect sliderFrame;
                                                object:nil];
 //    
 //    [[[SlideNavigationController sharedInstance ]profileImage]setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
-    
+  
+    [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
+
 }
 
 

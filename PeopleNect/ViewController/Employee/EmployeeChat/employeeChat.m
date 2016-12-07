@@ -19,7 +19,7 @@
 #pragma mark - View LifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    _chatHistoryArray = [[NSMutableArray alloc]init];
 
 //Timer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(chatHistory)userInfo: nil repeats:NO];
     _chatHistoryTableView.delegate = self;
@@ -49,6 +49,8 @@
     }
     
     [self chatHistory];
+    [kAppDel.progressHud hideAnimated:YES];
+
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -93,7 +95,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
-    NSLog(@"index path row %ld",(long)indexPath.row);
+   // NSLog(@"index path row %ld",(long)indexPath.row);
     
     obj_employeeMainChat.arrayHistory = [_chatHistoryArray objectAtIndex:indexPath.row];
     
@@ -134,7 +136,6 @@
 {
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
-    _chatHistoryArray = [[NSMutableArray alloc]init];
     
     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
     
@@ -154,7 +155,7 @@
         
     _chatHistoryArray = [responseObject valueForKey:@"data"];
        
-    NSLog(@"_chatHistoryArray %@",_chatHistoryArray);
+   // NSLog(@"_chatHistoryArray %@",_chatHistoryArray);
 
         [_chatHistoryTableView reloadData];
         

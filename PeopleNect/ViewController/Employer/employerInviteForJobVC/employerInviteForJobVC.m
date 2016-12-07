@@ -362,13 +362,14 @@ return Cell;
         if (_chatBtn.enabled ==YES) {
            
              //[self chatHistory];
-            //[self receiveMessageWebservice];
             
-            employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
+            [self receiveMessageWebservice];
             
-            obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
-            
-            [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
+//            employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
+//            
+//            obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
+//            
+//            [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
     }
 }
 
@@ -507,15 +508,24 @@ return Cell;
    
     [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"receiver_id"];
     
-    [_param setObject:@"0" forKey:@"flag"];
+    [_param setObject:@"1" forKey:@"flag"];
     
     [_param setObject:@"0" forKey:@"latest_msg_id"];
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
+        
+        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
+        
+        Sort = [[responseObject valueForKey:@"data"]mutableCopy];
+        
+        Sort = [GlobalMethods SortArray:Sort];
+        
         employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
         
         obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
+        
+        obj_employeeMainChat.messageDetails = Sort;
         
         [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
         
