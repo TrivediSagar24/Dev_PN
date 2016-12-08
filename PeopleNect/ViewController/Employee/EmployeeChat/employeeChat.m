@@ -19,24 +19,22 @@
 #pragma mark - View LifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _chatHistoryArray = [[NSMutableArray alloc]init];
+_chatHistoryArray = [[NSMutableArray alloc]init];
 
 //Timer = [NSTimer scheduledTimerWithTimeInterval: 0.2 target: self selector:@selector(chatHistory)userInfo: nil repeats:NO];
+    
     _chatHistoryTableView.delegate = self;
     _chatHistoryTableView.dataSource = self;
-    
 }
 
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0];
     self.navigationController.navigationBar.translucent = NO;
      self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"arrow-left"];
-   
     EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
     
     employerUser = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"];
@@ -47,11 +45,14 @@
     if (employerUser!=nil) {
         userType = @"1";
     }
-    
-    [self chatHistory];
+    if ([GlobalMethods InternetAvailability]) {
+        [self chatHistory];
+    }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
     [kAppDel.progressHud hideAnimated:YES];
-
 }
+
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [kAppDel.progressHud hideAnimated:YES];
@@ -59,13 +60,12 @@
 
 
 #pragma mark - TableView DataSource -
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return _chatHistoryArray.count;
-    
 }
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+   
     employeeChatCell *Cell = [tableView dequeueReusableCellWithIdentifier:@"employeeChatCell" forIndexPath:indexPath];
     
     NSString *Time = [[_chatHistoryArray valueForKey:@"Time"]objectAtIndex:indexPath.row];
@@ -92,10 +92,9 @@
     return Cell;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
-   // NSLog(@"index path row %ld",(long)indexPath.row);
     
     obj_employeeMainChat.arrayHistory = [_chatHistoryArray objectAtIndex:indexPath.row];
     
@@ -104,9 +103,9 @@
     [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
 }
 
+
 #pragma mark - Navigation Bar Back Button -
--(void)barBackButton
-{
+-(void)barBackButton{
 //    [GlobalMethods dataTaskCancel];
      if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"Chat"] isEqualToString:@"Employee"])
      {
@@ -130,12 +129,10 @@
     }
 }
 
-#pragma mark - ChatList -
 
--(void)chatHistory
-{
+#pragma mark - ChatList -
+-(void)chatHistory{
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
     
     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
     
@@ -145,7 +142,6 @@
         [_param setObject:EmployeeUserID forKey:@"recieverId"];
     }else{
         [_param setObject:employerUser forKey:@"recieverId"];
-
     }
     [_param setObject:userType forKey:@"userType"];
     
@@ -161,7 +157,6 @@
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [kAppDel.progressHud hideAnimated:YES];
-
     }];
 }
 @end

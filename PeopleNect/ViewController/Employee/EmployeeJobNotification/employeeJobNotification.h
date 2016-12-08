@@ -36,12 +36,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblJobCategoryInfo;
 @property (strong, nonatomic) IBOutlet UIView *TopAvailabilityView;
 @property (strong, nonatomic) IBOutlet UILabel *btnAllBorder;
-@property (strong,nonatomic) NSString *UserCategory;
 @property (strong, nonatomic) IBOutlet UILabel *btnAreaBorder;
-@property (nonatomic, retain) CLLocationManager *locationManager;
-@property(strong,nonatomic) NSMutableArray *totalJobs;
-@property(strong,nonatomic) UIButton *switchSelected;
-@property(strong,nonatomic)UIButton *chatSelected;
 @property (strong, nonatomic) IBOutlet UIView *EmployeeAvailabilityView;
 @property (strong, nonatomic) IBOutlet UIView *FreeView;
 @property (strong, nonatomic) IBOutlet UIView *settinOptionalView;
@@ -63,8 +58,14 @@
 @property (strong, nonatomic) IBOutlet UILabel *startTimeOnelbl;
 @property (strong, nonatomic) IBOutlet UILabel *endTimeTwlvLbl;
 @property (strong, nonatomic) IBOutlet UIButton *changeLocationBtn;
-@property(strong,nonatomic)  JSCustomBadge *chatBadge;
 @property (strong, nonatomic) IBOutlet UILabel *availableLbl;
+
+@property (strong,nonatomic) NSString *UserCategory;
+@property (nonatomic, retain) CLLocationManager *locationManager;
+@property(strong,nonatomic) NSMutableArray *totalJobs;
+@property(strong,nonatomic) UIButton *switchSelected;
+@property(strong,nonatomic)UIButton *chatSelected;
+@property(strong,nonatomic)  JSCustomBadge *chatBadge;
 
 - (IBAction)btnAllClikced:(id)sender;
 - (IBAction)btnInMyAreaClicked:(id)sender;

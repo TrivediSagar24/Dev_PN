@@ -117,7 +117,6 @@ CGRect sliderFrame;
 //    [[[SlideNavigationController sharedInstance ]profileImage]setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
   
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
-
 }
 
 
@@ -127,19 +126,59 @@ CGRect sliderFrame;
     
     if ([[defaults objectForKey:@"Location"] isEqualToString:@"changeLocation"]) {
         
-        if ([[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] != nil) {
+    if ([[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] != nil) {
             
             currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
         }
     }
-}
+    
+//    [[NSUserDefaults standardUserDefaults ]setObject:@"available" forKey:@"Availability"];
+//    [[NSUserDefaults standardUserDefaults]synchronize];
+    
+    
+    if ([[defaults objectForKey:@"Availability"]isEqualToString:@"available"]){
+        
+        NSLog(@"Availability");
+        
+        BoolSelectedSwitch = [NSString stringWithFormat:@"%i",_switchSelected.selected];
+        
+        if ([BoolSelectedSwitch isEqualToString:@"1"]){
+            self.EmployeeAvailabilityView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+            
+            [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
+            
+            [self.view addSubview:self.EmployeeAvailabilityView];
+            
+            _EmployeeAvailabilityView.hidden = NO;
+            _availableLbl.text = @"I am Available";
+        }else{
+//            BOOL doesContain = [self.view.subviews containsObject:self.EmployeeAvailabilityView];
+//          
+//            if (doesContain==YES) {
+//                [[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
+//            }else{
+//                [self.view addSubview:self.EmployeeAvailabilityView];
+//            }
 
+            NSLog(@"Not Available");
+
+            [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
+            
+            [self.view addSubview:self.EmployeeAvailabilityView];
+            _EmployeeAvailabilityView.hidden = NO;
+            _availableLbl.text = @"I am Unavailable";
+        }
+    }
+}
 
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [GlobalMethods dataTaskCancel];
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
+    
+    [[NSUserDefaults standardUserDefaults ]setObject:@"not available" forKey:@"Availability"];
+    [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
 
@@ -358,8 +397,8 @@ CGRect sliderFrame;
 
 -(void)switchedClicked
 {
-    [[NSUserDefaults standardUserDefaults ]setObject:@"SwitchClicked" forKey:@"Available"];
-    [[NSUserDefaults standardUserDefaults]synchronize];
+//    [[NSUserDefaults standardUserDefaults ]setObject:@"SwitchClicked" forKey:@"Available"];
+//    [[NSUserDefaults standardUserDefaults]synchronize];
     
     _switchSelected.selected = !_switchSelected.selected;
    BoolSelectedSwitch = [NSString stringWithFormat:@"%i",_switchSelected.selected];
@@ -373,14 +412,28 @@ CGRect sliderFrame;
         
         [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
         
-    [self.view addSubview:self.EmployeeAvailabilityView];
+        
+        
+        BOOL doesContain = [self.view.subviews containsObject:self.EmployeeAvailabilityView];
+        
+        if (doesContain==YES) {
+            //[[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
+        }else{
+            [self.view addSubview:self.EmployeeAvailabilityView];
+        }
         
         _EmployeeAvailabilityView.hidden = NO;
         _availableLbl.text = @"I am Available";
     }
     if ([BoolSelectedSwitch isEqualToString:@"0"])
     {
-    [[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
+        BOOL doesContain = [self.view.subviews containsObject:self.EmployeeAvailabilityView];
+        
+        if (doesContain==YES) {
+            //[[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
+        }else{
+            [self.view addSubview:self.EmployeeAvailabilityView];
+        }
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
         _availableLbl.text = @"I am Unavailable";
 

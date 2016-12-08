@@ -24,9 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
     userType = @"1";
-    
     
     self.ProfileView.clipsToBounds = YES;
     _ProfileBtn.hidden = YES;
@@ -62,7 +60,6 @@
     [EmployeeDetails setValue:employeeProfileImage forKey:@"ProfilePic"];
     
     [EmployeeDetails setValue:  self.employeeCategory forKey:@"employeeCategoryName"];
-    
     
    self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -100,7 +97,6 @@
        
         [self openJobSelectedinvitedLastScreen];
 
-        
         self.employeeCategory = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"experience"];
 
         self.employeeExpYears = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"experience"];
@@ -121,9 +117,7 @@
 
         NSString *str=[[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"subCategoryName"];
 
-        
         kAppDel.subCategoryFromInvited = [[NSMutableArray alloc] initWithArray:[str componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]]];
-        
         
         if ([[[_invitedJobListArray objectAtIndex:_employeeSelected] valueForKey:@"availability"] isEqual:@"1"]) {
             _chatBtn.enabled = YES;
@@ -152,7 +146,6 @@
             [_chatBtn setImage:[UIImage imageNamed:@"chatGray"] forState:UIControlStateNormal];
             _chatLabel.textColor = [UIColor colorWithRed:216.0/255.0 green:216.0/255.0 blue:216.0/255.0 alpha:1.0];
         }
-        
         Cell.lblDistance.text = [NSString stringWithFormat:@"%@KM",self.employeeDistance];
         
         Cell.lblDescription.text =  self.employeeDescription;
@@ -185,7 +178,6 @@
         Cell.lblEmployeeCategory.text = [NSString stringWithFormat:@"%@ - %@ /",self.employeeCategory,self.employeeExpYears];
         
         [_profileImage sd_setImageWithURL: [NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]]placeholderImage:[UIImage imageNamed:@"profile"]];
-        
         
         NSString *str=[kAppDel.obj_responseEmployeesList.employeeSubactegoryName objectAtIndex:_employeeSelected];
 
@@ -251,7 +243,7 @@ return Cell;
 
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+   
     return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.height);
 }
 
@@ -268,15 +260,13 @@ return Cell;
 }
 
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
    
     for (UICollectionViewCell *cell in [self.obj_CollectionView visibleCells]) {
         
     NSIndexPath *indexPath = [self.obj_CollectionView indexPathForCell:cell];
         
         _employeeSelected =  indexPath.item;
-        
         
         [UIView setAnimationsEnabled:NO];
         
@@ -363,7 +353,11 @@ return Cell;
            
              //[self chatHistory];
             
-            [self receiveMessageWebservice];
+            if ([GlobalMethods InternetAvailability]) {
+                [self receiveMessageWebservice];
+            }else{
+                [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+            }
             
 //            employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
 //            
@@ -386,6 +380,7 @@ return Cell;
     [self presentViewController:obj_nav animated:YES completion:nil];
 }
 
+
 - (IBAction)invitedForNewJobClicked:(id)sender {
     EmployerLastDetailsCtr *obj_EmployerLastDetailsCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLastDetailsCtr"];
     obj_EmployerLastDetailsCtr.isFrominVitedScreen = YES;
@@ -396,6 +391,7 @@ return Cell;
     obj_EmployerLastDetailsCtr.employeeProfielImage = employeeProfileImage;
     [self.navigationController pushViewController:obj_EmployerLastDetailsCtr animated:YES];
 }
+
 
 - (IBAction)inviteForPostedJobClicked:(id)sender {
     
@@ -441,6 +437,7 @@ return Cell;
         [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
     }
 }
+
 
 - (IBAction)onClickBtnRight:(id)sender {
 
@@ -492,13 +489,12 @@ return Cell;
             
             [_obj_CollectionView scrollToItemAtIndexPath:nextItem atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
         }
-        
     }
 }
 
 
--(void)receiveMessageWebservice
-{
+-(void)receiveMessageWebservice{
+
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
@@ -513,7 +509,6 @@ return Cell;
     [_param setObject:@"0" forKey:@"latest_msg_id"];
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
         
         NSMutableArray *Sort  = [[NSMutableArray alloc]init];
         
@@ -530,10 +525,8 @@ return Cell;
         [self.navigationController pushViewController:obj_employeeMainChat animated:YES];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
     }];
 }
-
 
 
 #pragma mark  - chatHistory -
@@ -569,7 +562,6 @@ return Cell;
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [kAppDel.progressHud hideAnimated:YES];
-        
     }];
 }
 
@@ -577,18 +569,13 @@ return Cell;
 -(void)InvitedMenuLastScreen{
     
     [_profileImage sd_setImageWithURL: [NSURL URLWithString:[kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected]]placeholderImage:[UIImage imageNamed:@"profile"]];
-
     employeeProfileImage = [kAppDel.obj_responseEmployeesList.employeeImage objectAtIndex:_employeeSelected];
-    
     self.employeeId = [kAppDel.obj_responseEmployeesList.employeeId objectAtIndex:_employeeSelected];
-    
     self.employeeName = [kAppDel.obj_responseEmployeesList.employeeName objectAtIndex:_employeeSelected];
-    
     self.categoryID = [kAppDel.obj_responseEmployeesList.employeeCategoryId objectAtIndex:_employeeSelected];
-    
     self.subCategoryID = [kAppDel.obj_responseEmployeesList.employeeSubcategoryId objectAtIndex:_employeeSelected];
-    
 }
+
 
 -(void)openJobSelectedinvitedLastScreen{
     

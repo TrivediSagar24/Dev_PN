@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface employeeChatCell : UITableViewCell
+
 @property (strong, nonatomic) IBOutlet UIImageView *profilePic;
 @property (strong, nonatomic) IBOutlet UILabel *userName;
 @property (strong, nonatomic) IBOutlet UILabel *userDesc;

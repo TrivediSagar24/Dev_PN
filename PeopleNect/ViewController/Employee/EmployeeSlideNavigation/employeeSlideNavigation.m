@@ -327,7 +327,7 @@ static int employerCount = 0;
         }
         if (indexPath.row==4) {
             
-            [[NSUserDefaults standardUserDefaults ]setObject:@"Slider" forKey:@"Available"];
+            [[NSUserDefaults standardUserDefaults ]setObject:@"available" forKey:@"Availability"];
             [[NSUserDefaults standardUserDefaults]synchronize];
             
             employeeJobNotification  *employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier: @"employeeJobNotification"];

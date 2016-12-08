@@ -16,7 +16,7 @@
 @interface employeeMainChat ()
 {
     JSQMessage *messageforchat,*loadMessageFromInvite,*loadMessageFromChat;
-    NSMutableArray *data,*loadmessage,*allUserId;
+    NSMutableArray *data,*loadmessage,*allUserId,*InviteChat;
     NSString *messag ,*dialogId,*imageName,*userType,*EmployeeUserID,*employerUser;
     NSTimer  *Timer;
     NSString *latestMessageId;
@@ -113,7 +113,11 @@
             loadMessageFromInvite = [[JSQMessage alloc]initWithSenderId:[[_messageDetails valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[_messageDetails valueForKey:@"Message"] objectAtIndex:i]];
             
             [loadmessage addObject:loadMessageFromInvite];
-        }
+        
+    }
+      
+        // NSLog(@"loadmessage message %@",loadmessage);
+
         
         [data addObjectsFromArray:loadmessage];
        
@@ -130,22 +134,26 @@
         
        
         //Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
+        if ([GlobalMethods InternetAvailability]) {
+            [self receiveMessageWebservice];
+        }
         
-        [self receiveMessageWebservice];
         
     }else{
-        NSLog(@"Else part ");
+        //NSLog(@"Else part ");
         
     // Timer = [NSTimer scheduledTimerWithTimeInterval: 3.0 target: self selector:@selector(receiveMessageWebservice)userInfo: nil repeats:YES];
         
         
-        NSLog(@"latestMessageId %@",latestMessageId);
+       // NSLog(@"latestMessageId %@",latestMessageId);
         
-        [self receiveMessageWebservice];
-
+        if ([GlobalMethods InternetAvailability]) {
+            [self receiveMessageWebservice];
+        }
     }
-    
 }
+
+
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -167,6 +175,7 @@
     
     [kAppDel.progressHud hideAnimated:YES];
 }
+
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -198,31 +207,27 @@
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+
+- (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
-    
     self.collectionView.collectionViewLayout.springinessEnabled = [NSUserDefaults springinessSetting];
 }
 
 
 #pragma mark - JSQ Menu Actions -
-- (void)customAction:(id)sender
-{
+- (void)customAction:(id)sender{
     //NSLog(@"Custom action received! Sender: %@", sender);
-    
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Custom Action", nil) message:nil preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * action) {}];
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
     
     [alert addAction:defaultAction];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)closePressed:(UIBarButtonItem *)sender
-{
+
+- (void)closePressed:(UIBarButtonItem *)sender{
     [self.delegateModal didDismissJSQDemoViewController:self];
 }
 
@@ -232,28 +237,20 @@
            withMessageText:(NSString *)text
                   senderId:(NSString *)senderId
          senderDisplayName:(NSString *)senderDisplayName
-                      date:(NSDate *)date
-{
-    
+                      date:(NSDate *)date{
     messageforchat = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:senderDisplayName date:date text:text];
-    
     [self sendMessage:text];
-    
     [data addObject:messageforchat];
-
 }
-
 
 
 #pragma mark - CollecitionView DataSource -
-
-- (void)reloadCollecitionView
-{
+- (void)reloadCollecitionView{
     [self.collectionView reloadData];
 }
 
-- (id)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (id)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
     return nil;
 }
 
@@ -264,27 +261,26 @@
 }
 
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView didDeleteMessageAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didDeleteMessageAtIndexPath:(NSIndexPath *)indexPath{
     [data removeObjectAtIndex:indexPath.item];
 }
 
 
-- (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath{
     JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     JSQMessage *msg = [data objectAtIndex:indexPath.item];
-    if ([msg.senderId isEqualToString:self.senderId])
-    {
-     return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:190.0/255.0 green:230.0/255.0 blue:255.0/255.0 alpha:1.0]];
-    }
-    else
-         return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:193.0/255.0 green:193.0/255.0 blue:193.0/255.0 alpha:1.0]];
+
+    if ([msg.senderId isEqualToString:self.senderId]){
+     
+        return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:190.0/255.0 green:230.0/255.0 blue:255.0/255.0 alpha:1.0]];
+    }else
+        
+    return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:193.0/255.0 green:193.0/255.0 blue:193.0/255.0 alpha:1.0]];
 }
 
 
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath{
+    
     JSQMessage *message = [data objectAtIndex:indexPath.item];
     
 //    if (indexPath.item % 3 == 0)
@@ -292,6 +288,7 @@
 //        JSQMessage *messagg = [data objectAtIndex:indexPath.item];
 //        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:messagg.date];
 //    }
+    
     if (indexPath.item == 0) {
         
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
@@ -308,9 +305,8 @@
     return nil;
 }
 
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.item == 0) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
@@ -319,27 +315,29 @@
         JSQMessage *previousMessage = [data objectAtIndex:indexPath.item - 1];
         JSQMessage *message = [data objectAtIndex:indexPath.item];
         
-        if ([message.date timeIntervalSinceDate:previousMessage.date] / 60 > 1) {
-            return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    if ([message.date timeIntervalSinceDate:previousMessage.date] / 60 > 1) {
+        
+    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+        
         }
     }
     
     return 0.0f;
 }
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath{
+   
     JSQMessage *message = [data objectAtIndex:indexPath.item];
-    
     
     if ([message.senderId isEqualToString:self.senderId]) {
         return nil;
     }
     
-    if (indexPath.item - 1 > 0)
-    {
+    if (indexPath.item - 1 > 0){
         JSQMessage *previousMessage = [data objectAtIndex:indexPath.item - 1];
-        if ([[previousMessage senderId] isEqualToString:message.senderId])
-        {
+
+    if ([[previousMessage senderId] isEqualToString:message.senderId]){
             return nil;
         }
     }
@@ -347,65 +345,47 @@
     return [[NSAttributedString alloc] initWithString:self.senderDisplayName];
 }
 
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath{
     return nil;
 }
 
 
-
-- (void)didReceiveMenuWillShowNotification:(NSNotification *)notification
-{
+- (void)didReceiveMenuWillShowNotification:(NSNotification *)notification{
     
     UIMenuController *menu = [notification object];
     menu.menuItems = @[ [[UIMenuItem alloc] initWithTitle:@"Custom Action" action:@selector(customAction:)] ];
     
-    [super didReceiveMenuWillShowNotification:notification];
-
+[super didReceiveMenuWillShowNotification:notification];
 }
 
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return [data count];
 }
 
-- (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
-    
-    
     JSQMessage *msg = [data objectAtIndex:indexPath.item];
-//    
-//    if ([msg.senderId isEqualToString:self.senderId])
-//    {
-//        return nil;
-//    }
     
-//    NSLog(@"Print Msg : %@",msg);
-    
-    if (!msg.isMediaMessage)
-    {
+    if (!msg.isMediaMessage){
         
-        if ([msg.senderId isEqualToString:self.senderId]) {
+    if ([msg.senderId isEqualToString:self.senderId]) {
             cell.textView.textColor = [UIColor colorWithRed:88.0/255.0 green:89.0/255.0 blue:89.0/255.0 alpha:1.0];
-        }
-        else
-        {
+        }else{
+            
             cell.textView.textColor = [UIColor colorWithRed:68.0/255.0 green:68.0/255.0 blue:68.0/255.0 alpha:1.0];
         }
         
-        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
-                                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
-    
     return cell;
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
+
+- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender{
     if (action == @selector(customAction:)) {
         return YES;
     }
@@ -413,8 +393,9 @@
     return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
-{
+
+- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender{
+    
     if (action == @selector(customAction:)) {
         [self customAction:sender];
         return;
@@ -422,6 +403,8 @@
     
     [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
 }
+
+
 /*
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
@@ -435,11 +418,11 @@
 }
  */
 
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath{
     
     JSQMessage *currentMessage = [data objectAtIndex:indexPath.item];
+    
     if ([[currentMessage senderId] isEqualToString:self.senderId]) {
         return 0.0f;
     }
@@ -454,20 +437,17 @@
     return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
 
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath{
     return 0.0f;
 }
 
+
 #pragma mark - Compose Text Message -
-- (BOOL)composerTextView:(JSQMessagesComposerTextView *)textView shouldPasteWithSender:(id)sender
-{
+- (BOOL)composerTextView:(JSQMessagesComposerTextView *)textView shouldPasteWithSender:(id)sender{
     if ([UIPasteboard generalPasteboard].image) {
         
         JSQPhotoMediaItem *item = [[JSQPhotoMediaItem alloc] initWithImage:[UIPasteboard generalPasteboard].image];
-        
-        NSLog(@"composerTextView shouldPasteWithSender");
         
         JSQMessage *message = [[JSQMessage alloc] initWithSenderId:self.senderId
                                                  senderDisplayName:self.senderDisplayName
@@ -480,11 +460,9 @@
     return YES;
 }
 
+
 #pragma mark - receiveMessage -
-- (void)receiveMessagePressed
-{
-    NSLog(@"errnkdfndj !!!!!!!!");
-    NSLog(@"data under receiveMessagePressed  bd %@ ",data);
+- (void)receiveMessagePressed{
     
     self.showTypingIndicator = !self.showTypingIndicator;
     
@@ -646,13 +624,9 @@
 }
 
 
--(void)receiveMessageWebservice
-{
-    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
-    
-    NSLog(@"receiveMessageWebservice %d",count);
 
+-(void)receiveMessageWebservice{
+    NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
     
@@ -685,166 +659,175 @@
         
         //[kAppDel.progressHud hideAnimated:YES];
 
-        NSLog(@"respone receive %@",responseObject);
-        
         NSMutableArray *Sort  = [[NSMutableArray alloc]init];
         
         Sort = [[responseObject valueForKey:@"data"]mutableCopy];
         
         Sort = [GlobalMethods SortArray:Sort];
-        
-       // NSLog(@"receive message %@",[responseObject valueForKey:@"data"]);
-       // NSLog(@"Sorted data %@",Sort);
 
+      
         if (Sort.count>0) {
             latestMessageId = [[Sort valueForKey:@"id"]objectAtIndex:[Sort count]-1];
-            
-           // NSLog(@"latestMessageId in receive web service %@",latestMessageId);
         }
         
-        if (_isfromChatList==YES) {
-            
-            if (count==0) {
-                
-                if (Sort.count>0) {
-                    
-                    for (int i = 0; i<[Sort count]; i++)
-                    {
-                        NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
-                        NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
-                        
-                        date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
-                        
-                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                        
-                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                        
-                        NSDate *Date = [dateFormat dateFromString:date];
-                        
-                        JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
-                        
-                        [loadmessage addObject:loadMoreMessageObj];
-                    }
-                    
-                    [data addObjectsFromArray:loadmessage];
-                    
-                    // NSLog(@"data for count == %d %@",count,data);
-                    
-                    //[self receiveMessagePressed];
-                    
-                    NSLog(@"Count ==0 %d",count);
-                    
-                    [self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
-                }
-                
-            }
-            else{
-                if (Sort.count>0) {
-                    
-                    for (int i = 0; i<[Sort count]; i++)
-                    {
-                        NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
-                        NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
-                        
-                        date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
-                        
-                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                        
-                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                        
-                        NSDate *Date = [dateFormat dateFromString:date];
-                        
-                        JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
-                        
-                        [loadmessage addObject:loadMoreMessageObj];
-                    }
-                    
-                    
-                    [data addObjectsFromArray:loadmessage];
-                    
-                    NSLog(@"data %@",data);
-                    
-                    //                NSLog(@"data for count == %d %@",count,data);
-                    
-                    // [self receiveMessagePressed];
-                    
-                    //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
-                    
-                    
-                    self.showTypingIndicator = !self.showTypingIndicator;
-                    
-                    [self scrollToBottomAnimated:YES];
-                    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-                    
-                    [self finishReceivingMessageAnimated:NO];
-                    
-                }
-            }
+    if (_isfromChatList==YES) {
+       
+        /*
+         This Part is from Chat listing User.
+        */
 
-        }
-        else{
-            
-            NSLog(@"Else part of recer response ");
-
-            
-            if (Sort.count>0) {
-                
-                for (int i = 0; i<[Sort count]; i++)
-                {
-                    NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
-                    NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
-                    
-                    date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
-                    
-                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                    
-                    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                    
-                    NSDate *Date = [dateFormat dateFromString:date];
-                    
-                    JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
-                    
-                    [loadmessage addObject:loadMoreMessageObj];
-                }
-                
-                
-                [data addObjectsFromArray:loadmessage];
-                
-                NSLog(@"data %@",data);
-                
-                //                NSLog(@"data for count == %d %@",count,data);
-                
-                // [self receiveMessagePressed];
-                
-                //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
-                
-                
-                self.showTypingIndicator = !self.showTypingIndicator;
-                
-                [self scrollToBottomAnimated:YES];
-                [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
-                
-                [self finishReceivingMessageAnimated:NO];
-            }
-        }
         
+    if (count==0) {
+                
+    if (Sort.count>0) {
+                    
+    for (int i = 0; i<[Sort count]; i++){
+        
+    NSString *SenderId = [[Sort valueForKey:@"SenderId"]objectAtIndex:i];
+
+    if ([SenderId isEqualToString:self.senderId]) {
+                            
+    }else{
+                            
+    }
+    NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+        
+    NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                            
+    date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                            
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                            
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                            
+    NSDate *Date = [dateFormat dateFromString:date];
+                            
+    JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                            
+    [loadmessage addObject:loadMoreMessageObj];
+        
+    }
+        
+    [data addObjectsFromArray:loadmessage];
+                    
+        //[self receiveMessagePressed];
+                        
+    [self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                    
+        }
+    }else{
+        
+    if (Sort.count>0) {
+                    
+    [loadmessage removeAllObjects];
+
+    for (int i = 0; i<[Sort count]; i++){
+        
+    NSString *SenderId = [[Sort valueForKey:@"SenderId"]objectAtIndex:i];
+                        
+    if ([SenderId isEqualToString:self.senderId]) {
+                            
+    }else{
+                           
+    NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+        
+    NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                            
+        date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                            
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                            
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                            
+    NSDate *Date = [dateFormat dateFromString:date];
+                            
+    JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                            
+    [loadmessage addObject:loadMoreMessageObj];
+        
+    }
+        
+    [data addObjectsFromArray:loadmessage];
+                        
+        // [self receiveMessagePressed];
+                        
+        //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                        
+    self.showTypingIndicator = !self.showTypingIndicator;
+                        
+    [self scrollToBottomAnimated:YES];
+    [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+                        
+    [self finishReceivingMessageAnimated:NO];
+        }
+    }
+}
+       
+    }else{
+        
+        /*
+         This Part is for Direct chat from Invitation Screen
+         */
+        
+        InviteChat = [[NSMutableArray alloc]init];
+            
+    if (Sort.count>0) {
+                
+    for (int i = 0; i<[Sort count]; i++){
+        
+    NSString *SenderId = [[Sort valueForKey:@"SenderId"]objectAtIndex:i];
+                    
+    if ([SenderId isEqualToString:self.senderId]) {
+                        
+    }else{
+                     
+    NSString *date = [[[responseObject valueForKey:@"data"]valueForKey:@"Date"] objectAtIndex:i];
+        
+    NSString *time = [[[responseObject valueForKey:@"data"]valueForKey:@"Time"] objectAtIndex:i];
+                        
+    date = [date stringByAppendingString:[NSString stringWithFormat:@" %@",time]];
+                        
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                        
+    NSDate *Date = [dateFormat dateFromString:date];
+                        
+    JSQMessage *loadMoreMessageObj = [[JSQMessage alloc]initWithSenderId:[[Sort valueForKey:@"SenderId"] objectAtIndex:i] senderDisplayName:@"name" date:Date text:[[Sort valueForKey:@"Message"] objectAtIndex:i]];
+                        
+    //[loadmessage addObject:loadMoreMessageObj];
+                        
+    [InviteChat addObject:loadMoreMessageObj];
+    }
+}
+        
+        [data addObjectsFromArray:InviteChat];
+               
+        // [self receiveMessagePressed];
+                
+        //[self performSelector:@selector(reloadCollecitionView)  withObject:nil afterDelay:0.3];
+                
+        self.showTypingIndicator = !self.showTypingIndicator;
+        
+        [self scrollToBottomAnimated:YES];
+        [JSQSystemSoundPlayer jsq_playMessageReceivedSound];
+                
+        [self finishReceivingMessageAnimated:NO];
+    }
+}
         count++;
-
     
         [self receiveMessageWebservice];
-
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (failure==NO) {
             [self receiveMessageWebservice];
-            NSLog(@"failure");
         }
-
     }];
 }
 
-#pragma mark - Send Message -
 
+#pragma mark - Send Message -
 -(void)sendMessage:(NSString*)Message{
 
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
@@ -870,7 +853,7 @@
     
     [_param setObject:@"" forKey:@"token"];
 
-    //NSLog(@"param for send message %@",_param);
+    NSLog(@"param for send message %@",_param);
     
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
        
@@ -886,29 +869,25 @@
     }];
 }
 
-#pragma mark - Navigation Bar Back Button -
--(void)barBackButton
-{
-    for (UIViewController *viewControllrObj in self.navigationController.viewControllers){
 
-        if (_FromEmployerInvite.count>0) {
-            if ([viewControllrObj isKindOfClass:[employerInviteForJobVC class]])
-            {
-                [self.navigationController popToViewController:viewControllrObj animated:YES];
+#pragma mark - Navigation Bar Back Button -
+-(void)barBackButton{
+    for (UIViewController *viewControllrObj in self.navigationController.viewControllers){
+        
+    if (_FromEmployerInvite.count>0) {
+        if ([viewControllrObj isKindOfClass:[employerInviteForJobVC class]]){
+            [self.navigationController popToViewController:viewControllrObj animated:YES];
             }
-        }
-        else{
-            if ([viewControllrObj isKindOfClass:[employeeChat class]])
-            {
-                [self.navigationController popToViewController:viewControllrObj animated:YES];
+        }else{
+        if ([viewControllrObj isKindOfClass:[employeeChat class]]){
+            [self.navigationController popToViewController:viewControllrObj animated:YES];
             }
         }
     }
 }
 
 
--(UIBarButtonItem *)customNavigationBarButton:(SEL)selector Target:(UIViewController *)targetView
-{
+-(UIBarButtonItem *)customNavigationBarButton:(SEL)selector Target:(UIViewController *)targetView{
     
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 7, 25, 25)];
     [button setImage:[UIImage imageNamed:@"arrow-left"] forState:UIControlStateNormal];
@@ -929,7 +908,6 @@
     [_ProfieImage sd_setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"profile"]] ;
     
 //    _ProfieImage.image = [UIImage imageNamed:@"profile"];
-    
     
     _ProfieImage.layer.cornerRadius = _ProfieImage.frame.size.height/2;
     
@@ -967,9 +945,8 @@
     return [[UIBarButtonItem alloc]initWithCustomView:leftView];
 }
 
--(void)RightBarButtonPressed
-{
-    
+#pragma mark - RightBarButtonPressed -
+-(void)RightBarButtonPressed{
 }
 
 @end

@@ -19,5 +19,4 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *chatHistoryTableView;
 @property(strong,nonatomic) NSMutableArray *chatHistoryArray;
-
 @end

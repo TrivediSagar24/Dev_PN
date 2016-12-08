@@ -19,6 +19,15 @@
 <UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *obj_CollectionView;
+@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
+@property (strong, nonatomic) IBOutlet UIButton *chatBtn;
+@property (strong, nonatomic) IBOutlet UIButton *busyBtn;
+@property (strong, nonatomic) IBOutlet UILabel *chatLabel;
+@property (strong, nonatomic) IBOutlet UIView *ProfileView;
+@property (strong, nonatomic) IBOutlet UIButton *ProfileBtn;
+@property (strong, nonatomic) IBOutlet UIView *invitedJobView;
+@property (strong, nonatomic) IBOutlet UIButton *postedJobBtn;
+
 @property (strong,nonatomic) NSString *employeeName;
 @property (strong,nonatomic) NSString *employeeImage;
 @property (strong,nonatomic) NSString *employeeCategory;
@@ -26,21 +35,14 @@
 @property (strong,nonatomic) NSString *subCategoryID;
 @property (strong,nonatomic) NSString *employeeExpYears;
 @property (strong,nonatomic) NSString *employeeDistance;
-@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 @property (strong,nonatomic) NSString *employeeDescription;
 @property (strong,nonatomic) NSString  *employeeRatings;
-@property (strong, nonatomic) IBOutlet UIButton *chatBtn;
-@property (strong, nonatomic) IBOutlet UIButton *busyBtn;
-@property (strong, nonatomic) IBOutlet UILabel *chatLabel;
 @property (strong, nonatomic) NSString *employeeId;
 @property (nonatomic,assign) NSInteger employeeSelected;
-@property (strong, nonatomic) IBOutlet UIView *ProfileView;
-@property (strong, nonatomic) IBOutlet UIButton *ProfileBtn;
 @property (strong, nonatomic) NSMutableArray *_chatHistoryArray;
 @property(nonatomic)BOOL isfromOpenJobSelected;
-@property (strong, nonatomic) IBOutlet UIView *invitedJobView;
-@property (strong, nonatomic) IBOutlet UIButton *postedJobBtn;
 @property(strong,nonatomic)NSMutableArray *invitedJobListArray;
+
 
 - (IBAction)onClickMenu:(id)sender;
 - (IBAction)onClickChat:(id)sender;
@@ -49,6 +51,5 @@
 - (IBAction)busyBtnClicked:(id)sender;
 - (IBAction)invitedForNewJobClicked:(id)sender;
 - (IBAction)inviteForPostedJobClicked:(id)sender;
-
 
 @end
