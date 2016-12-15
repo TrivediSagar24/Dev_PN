@@ -20,6 +20,8 @@ static int count = 0;
     NSData *dataProfileImg;
     BOOL facebook,google;
     NSData *registerSocial;
+    CLLocationCoordinate2D Location;
+    NSArray *json;
 }
 @end
 
@@ -31,7 +33,9 @@ static int count = 0;
     [super viewDidLoad];
     
     [self googleSignIn];
-    [self countryCodeWebService];
+    [self autoSuggestion];
+
+    //[self countryCodeWebService];
     
    registerSocial= [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeRegisterSocial"];
    
@@ -70,6 +74,8 @@ static int count = 0;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [self autoSuggestionOptionalProperty];
+    
     if (kAppDel.obj_reponseGmailFacebookLogin.Employee_email.length>0)
     {
         _tfName.text = kAppDel.obj_reponseGmailFacebookLogin.Employee_first_name;
@@ -215,6 +221,11 @@ if (emailflag == YES)
             {
                 if (_tfPassword.text.length>0)
                 {
+                    passwordflag = YES;
+
+                    /* Password validation */
+                  
+                    /*
                     NSString *passwordRegex = @"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%?_!^&*]).{8,})";
                     NSPredicate *passwordTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", passwordRegex];
                     [passwordTest evaluateWithObject:_tfPassword.text];
@@ -222,9 +233,10 @@ if (emailflag == YES)
                     {
                         passwordflag = YES;
                     }
-            else{
+                    else{
                 [self presentViewController:[GlobalMethods AlertWithTitle:@"Invalid password" Message:@"Password must contain an alphabet, a special character, a capital alphabet  and a number" AlertMessage:@"OK"]animated:YES completion:nil];
                 }
+            */
             }
         }
 
@@ -251,7 +263,6 @@ if (emailflag == YES)
                     [self updateRegister];
                 }else{
                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
-
                 }
             }
             else
@@ -315,6 +326,21 @@ if (emailflag == YES)
 
 - (IBAction)btnPrivacyClicked:(id)sender
 {
+ 
+    privacyPolicy *obj_privacyPolicy = [self.storyboard instantiateViewControllerWithIdentifier:@"privacyPolicy"];
+    
+    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_privacyPolicy];
+    
+    obj_nav.definesPresentationContext = YES;
+    
+    obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    
+    [self presentViewController:obj_nav animated:YES completion:nil];
+    
+//    UIWebView *privacyPolicy=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    NSString *indexPath = [NSBundle pathForResource:@"index" ofType:@"html" inDirectory:nil];
+//    [privacyPolicy loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:indexPath]]];
+//    [self.view addSubview:myWebView];
 }
 
 
@@ -731,7 +757,6 @@ numberOfRowsInComponent:(NSInteger)component
 
 -(void)countryCodeWebService
 {
-    
     /*----Getting country code---*/
     
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
@@ -777,7 +802,7 @@ numberOfRowsInComponent:(NSInteger)component
     [self returnImage:[UIImage imageWithData:imageData]];
     
     [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]
-        stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:@"" subCategoryId:@"" experience:@"" rate:@"" description:@"" password:@"" zipcode:_tfZipCode.text streetName:_tfStreetName.text number:_tfStreetNumber.text country_code:_tfPhoneCountryCode.text] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
+        stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:@"" subCategoryId:@"" experience:@"" rate:@"" description:@"" password:@"" zipcode:_tfZipCode.text streetName:_tfStreetName.text number:_tfStreetNumber.text country_code:_tfPhoneCountryCode.text lastEmployer:@""] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
      {
          [formData appendPartWithFileData:dataProfileImg name:@"profile_pic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
          
@@ -814,7 +839,7 @@ numberOfRowsInComponent:(NSInteger)component
    
     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
 
-    [_param addEntriesFromDictionary:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:@"" subCategoryId:@"" experience:@"" rate:@"" description:@"" password:_tfPassword.text zipcode:_tfZipCode.text streetName:_tfStreetName.text number:_tfStreetNumber.text country_code:_tfPhoneCountryCode.text]];
+    [_param addEntriesFromDictionary:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:@"" subCategoryId:@"" experience:@"" rate:@"" description:@"" password:_tfPassword.text zipcode:_tfZipCode.text streetName:_tfStreetName.text number:_tfStreetNumber.text country_code:_tfPhoneCountryCode.text lastEmployer:@""]];
     [_param setObject:@"" forKey:@"profile_pic"];
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
@@ -840,4 +865,103 @@ numberOfRowsInComponent:(NSInteger)component
 
     }];
 }
+#pragma mark -autoSuggestion -
+-(void)autoSuggestion{
+    _tfStreetName.placeSearchDelegate = self;
+    _tfStreetName.delegate = self;
+    _tfStreetName.strApiKey = @"AIzaSyB9U-Ssv6A9Tt2keQtZyWMuadHoELYeGlk";
+    _tfStreetName.superViewOfList = self.view;
+    _tfStreetName.autoCompleteShouldHideOnSelection = YES;
+    _tfStreetName.maximumNumberOfAutoCompleteRows = 10;
+    _tfPhoneCountryCode.text = @"+55";
+    _tfPhoneCountryCode.enabled = NO;
+    _tfPhoneCountryCode.textColor = [UIColor grayColor];
+}
+
+-(void)autoSuggestionOptionalProperty{
+    _tfStreetName.autoCompleteRegularFontName =  @"HelveticaNeue-Bold";
+    _tfStreetName.autoCompleteBoldFontName = @"HelveticaNeue";
+    _tfStreetName.autoCompleteTableCornerRadius=0.0;
+    _tfStreetName.autoCompleteRowHeight=35;
+    _tfStreetName.autoCompleteTableCellTextColor=[UIColor colorWithWhite:0.131 alpha:1.000];
+    _tfStreetName.autoCompleteFontSize=14;
+    _tfStreetName.autoCompleteTableBorderWidth=1.0;
+    _tfStreetName.showTextFieldDropShadowWhenAutoCompleteTableIsOpen=YES;
+    _tfStreetName.autoCompleteShouldHideOnSelection=YES;
+    _tfStreetName.autoCompleteShouldHideClosingKeyboard=YES;
+    _tfStreetName.autoCompleteShouldSelectOnExactMatchAutomatically = YES;
+    _tfStreetName.autoCompleteTableFrame = CGRectMake((self.view.frame.size.width-_tfStreetName.frame.size.width)*0.5, _phoneView.frame.origin.y, _tfStreetName.frame.size.width, 300.0);
+}
+
+#pragma mark - Place search Textfield Delegates -
+-(void)placeSearch:(MVPlaceSearchTextField*)textField ResponseForSelectedPlace:(GMSPlace*)responseDict{
+    [self.view endEditing:YES];
+    Location = responseDict.coordinate;
+    NSString *req = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&sensor=true",Location.latitude,Location.longitude];
+    [self usingNsurljsonParsing:req];
+}
+
+-(void)placeSearchWillShowResult:(MVPlaceSearchTextField*)textField{
+    
+}
+-(void)placeSearchWillHideResult:(MVPlaceSearchTextField*)textField{
+    
+}
+-(void)placeSearch:(MVPlaceSearchTextField*)textField ResultCell:(UITableViewCell*)cell withPlaceObject:(PlaceObject*)placeObject atIndex:(NSInteger)index{
+    if(index%2==0){
+        cell.contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    }else{
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+    }
+}
+
+
+-(void)usingNsurljsonParsing:(NSString *)urlAsString
+{
+    NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+    
+    NSString *encodedUrlAsString = [urlAsString stringByAddingPercentEncodingWithAllowedCharacters:set];
+    
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    [[session dataTaskWithURL:[NSURL URLWithString:encodedUrlAsString]
+            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                if (!error){
+                    if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+                        NSError *jsonError;
+                        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                        if (jsonError){
+                        } else{
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                NSArray *StateCity = [[json valueForKey:@"results"]valueForKey:@"address_components"];
+                                
+                                NSMutableDictionary *dict = [StateCity objectAtIndex:0];
+                                
+                                for (int i = 0; i<dict.count; i++) {
+                                    
+                                    NSArray *type = [[dict valueForKey:@"types"]objectAtIndex:i];
+                    if ([type containsObject:@"administrative_area_level_1"]) {
+                       
+                       // _tfState.text =[[dict valueForKey:@"long_name"]objectAtIndex:i];
+                        
+                            }
+                    if ([type containsObject:@"administrative_area_level_2"]) {
+                        //_tfCity.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                                    }
+                                    if ([type containsObject:@"postal_code"]) {
+                                        _tfZipCode.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    }
+                } else{
+                    //NSLog(@"error : %@", error.description);
+                }
+            }] resume];
+}
+
+
 @end

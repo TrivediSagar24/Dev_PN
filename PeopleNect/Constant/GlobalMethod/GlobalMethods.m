@@ -114,7 +114,7 @@
 
 /*------------EmployeeSaveUserDetail----------------*/
 
-+(NSDictionary *)EmployeeSaveUserDetail:(NSString *)userId firstname:(NSString *)firstname lastName:(NSString *)lastName phone:(NSString *)PhoneNo categoryId :(NSString *)categoryId subCategoryId:(NSString *)subCategoryId experience:(NSString *)experience rate:(NSString *)rate description:(NSString *)description password:(NSString *)password zipcode :(NSString *)zipcode streetName :(NSString *)streetName number :(NSString *)number country_code :(NSString *)country_code
++(NSDictionary *)EmployeeSaveUserDetail:(NSString *)userId firstname:(NSString *)firstname lastName:(NSString *)lastName phone:(NSString *)PhoneNo categoryId :(NSString *)categoryId subCategoryId:(NSString *)subCategoryId experience:(NSString *)experience rate:(NSString *)rate description:(NSString *)description password:(NSString *)password zipcode :(NSString *)zipcode streetName :(NSString *)streetName number :(NSString *)number country_code :(NSString *)country_code lastEmployer:(NSString*)lastEmployer
 {
 NSMutableDictionary  *_params = [[NSMutableDictionary alloc]init];
     [_params setObject:@"updateUserDetails"  forKey:@"methodName"];
@@ -132,6 +132,9 @@ NSMutableDictionary  *_params = [[NSMutableDictionary alloc]init];
     [_params setObject:streetName  forKey:@"streetName"];
     [_params setObject:number  forKey:@"number"];
     [_params setObject:country_code forKey:@"country_code"];
+    
+    [_params setObject:lastEmployer forKey:@"lastEmployer"];
+    
     return _params;
 }
 

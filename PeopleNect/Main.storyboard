@@ -177,7 +177,7 @@
             </objects>
             <point key="canvasLocation" x="1638" y="229"/>
         </scene>
-        <!--Employee View Controller-->
+        <!--Place Search Delegate-->
         <scene sceneID="Zne-Us-XxA">
             <objects>
                 <viewController storyboardIdentifier="employeeViewController" autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" id="cf7-eb-aqd" customClass="employeeViewController" sceneMemberID="viewController">
@@ -216,7 +216,6 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="BorderColor">
                                                                                 <color key="value" red="0.59607843137254901" green="0.59607843137254901" blue="0.59607843137254901" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="oY8-c0-eL8"/>
@@ -234,7 +233,6 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="BorderColor">
                                                                                 <color key="value" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="2yX-8V-gR5"/>
@@ -266,7 +264,6 @@
                                                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                         <color key="value" red="0.64313725489999995" green="0.64313725489999995" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
                                                                     <outlet property="delegate" destination="cf7-eb-aqd" id="emG-zA-KqE"/>
@@ -275,7 +272,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lmp-wk-mbo">
                                                                 <rect key="frame" x="0.0" y="130" width="320" height="38"/>
                                                                 <subviews>
-                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="CellNumber" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Sa-bx-YzW" customClass="CustomPlaceHolderTextField">
+                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Mobile" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Sa-bx-YzW" customClass="CustomPlaceHolderTextField">
                                                                         <rect key="frame" x="122" y="0.0" width="173" height="38"/>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -287,7 +284,6 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                                 <color key="value" red="0.64313725489999995" green="0.64313725489999995" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="1Fb-aK-JLY"/>
@@ -306,7 +302,6 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                                 <color key="value" red="0.64313725490196072" green="0.64313725490196072" blue="0.64313725490196072" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="LAh-qJ-PlQ"/>
@@ -325,29 +320,35 @@
                                                                     <constraint firstItem="1Sa-bx-YzW" firstAttribute="height" secondItem="Lmp-wk-mbo" secondAttribute="height" id="xYG-hl-YsG"/>
                                                                 </constraints>
                                                             </view>
-                                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Zip Code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lhS-4E-3yW" customClass="CustomPlaceHolderTextField">
+                                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Street name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lhS-4E-3yW" customClass="MVPlaceSearchTextField">
                                                                 <rect key="frame" x="25" y="185" width="270" height="38"/>
                                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                                                 <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="image" keyPath="leftImage" value="user_icon_"/>
-                                                                    <userDefinedRuntimeAttribute type="color" keyPath="BorderColor">
-                                                                        <color key="value" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                         <color key="value" red="0.64313725489999995" green="0.64313725489999995" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
                                                                     <outlet property="delegate" destination="cf7-eb-aqd" id="LcN-EL-xwf"/>
+                                                                    <outlet property="placeSearchDelegate" destination="cf7-eb-aqd" id="BCr-2w-Q1l"/>
                                                                 </connections>
                                                             </textField>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFN-d3-jXH">
+                                                                <rect key="frame" x="25" y="223" width="270" height="1"/>
+                                                                <color key="backgroundColor" red="0.59607843140000005" green="0.59607843140000005" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="1" id="yck-Ux-Hzt"/>
+                                                                </constraints>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6eB-Vc-yYi">
                                                                 <rect key="frame" x="0.0" y="240" width="320" height="38"/>
                                                                 <subviews>
-                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Street Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dz3-BP-F5V" customClass="CustomPlaceHolderTextField">
+                                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Zip code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dz3-BP-F5V" customClass="CustomPlaceHolderTextField">
                                                                         <rect key="frame" x="25" y="0.0" width="173" height="38"/>
                                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -359,7 +360,7 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                                 <color key="value" red="0.64313725490196072" green="0.64313725490196072" blue="0.64313725490196072" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
+                                                                            <userDefinedRuntimeAttribute type="image" keyPath="leftImage" value="user_icon_"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="7vg-I4-5OI"/>
@@ -377,7 +378,6 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
                                                                                 <color key="value" red="0.64313725489999995" green="0.64313725489999995" blue="0.64313725489999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                             </userDefinedRuntimeAttribute>
-                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="cf7-eb-aqd" id="gAh-hJ-h9k"/>
@@ -409,7 +409,6 @@
                                                                         <color key="value" red="0.64313725490196072" green="0.64313725490196072" blue="0.64313725490196072" alpha="1" colorSpace="calibratedRGB"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="image" keyPath="leftImage" value="password"/>
-                                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="keepBaseline" value="YES"/>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
                                                                     <outlet property="delegate" destination="cf7-eb-aqd" id="Ug4-Bg-Rvc"/>
@@ -418,6 +417,7 @@
                                                         </subviews>
                                                         <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.94901960784313721" alpha="0.0" colorSpace="calibratedRGB"/>
                                                         <constraints>
+                                                            <constraint firstItem="UFN-d3-jXH" firstAttribute="leading" secondItem="lhS-4E-3yW" secondAttribute="leading" id="BzN-UZ-GKv"/>
                                                             <constraint firstItem="F0Q-bA-gHN" firstAttribute="height" secondItem="qf4-io-TJM" secondAttribute="height" id="D9L-tZ-qXp"/>
                                                             <constraint firstItem="WFI-gZ-pIH" firstAttribute="height" secondItem="6eB-Vc-yYi" secondAttribute="height" id="Do1-dR-TCC"/>
                                                             <constraint firstItem="WFI-gZ-pIH" firstAttribute="top" secondItem="6eB-Vc-yYi" secondAttribute="bottom" constant="15" id="FKe-Ia-FHW"/>
@@ -426,11 +426,13 @@
                                                             <constraint firstItem="WFI-gZ-pIH" firstAttribute="leading" secondItem="zH9-eP-bhr" secondAttribute="leading" constant="25" id="O8u-V0-8GN"/>
                                                             <constraint firstItem="lhS-4E-3yW" firstAttribute="height" secondItem="Lmp-wk-mbo" secondAttribute="height" id="ODS-2U-kAz"/>
                                                             <constraint firstItem="Lmp-wk-mbo" firstAttribute="top" secondItem="F0Q-bA-gHN" secondAttribute="bottom" constant="15" id="QgX-Wr-Ldz"/>
+                                                            <constraint firstItem="UFN-d3-jXH" firstAttribute="trailing" secondItem="lhS-4E-3yW" secondAttribute="trailing" id="TQp-KB-bA8"/>
                                                             <constraint firstAttribute="trailing" secondItem="lhS-4E-3yW" secondAttribute="trailing" constant="25" id="aSa-JE-0js"/>
                                                             <constraint firstAttribute="trailing" secondItem="qf4-io-TJM" secondAttribute="trailing" id="b2o-qV-hZ7"/>
                                                             <constraint firstItem="qf4-io-TJM" firstAttribute="height" secondItem="zH9-eP-bhr" secondAttribute="height" multiplier="38:339" id="bbC-Mb-nXb"/>
                                                             <constraint firstItem="F0Q-bA-gHN" firstAttribute="top" secondItem="qf4-io-TJM" secondAttribute="bottom" constant="17" id="ctz-O4-X2T"/>
                                                             <constraint firstAttribute="trailing" secondItem="Lmp-wk-mbo" secondAttribute="trailing" id="dFp-zK-WX9"/>
+                                                            <constraint firstItem="UFN-d3-jXH" firstAttribute="top" secondItem="lhS-4E-3yW" secondAttribute="bottom" id="dLU-bn-fgC"/>
                                                             <constraint firstItem="qf4-io-TJM" firstAttribute="leading" secondItem="zH9-eP-bhr" secondAttribute="leading" id="dns-bD-BNz"/>
                                                             <constraint firstItem="lhS-4E-3yW" firstAttribute="top" secondItem="Lmp-wk-mbo" secondAttribute="bottom" constant="17" id="gpp-Cx-bxB"/>
                                                             <constraint firstItem="Lmp-wk-mbo" firstAttribute="height" secondItem="qf4-io-TJM" secondAttribute="height" id="h03-lQ-57v"/>
@@ -493,7 +495,7 @@
                                                         </constraints>
                                                         <state key="normal">
                                                             <attributedString key="attributedTitle">
-                                                                <fragment content="PRIVICE PROTECTION">
+                                                                <fragment content="PRIVACY POLICY">
                                                                     <attributes>
                                                                         <color key="NSColor" red="0.30196078431372547" green="0.30196078431372547" blue="0.30196078431372547" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <font key="NSFont" size="12" name="HelveticaNeue"/>
@@ -606,7 +608,7 @@
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ou" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PVW-ad-i7N">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PVW-ad-i7N">
                                                                 <rect key="frame" x="150" y="102" width="20" height="10"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                 <color key="textColor" red="0.59215686274509804" green="0.59215686274509804" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
@@ -704,6 +706,7 @@
                         <outlet property="lblGoogle" destination="cr0-Rd-YCM" id="gOS-5U-rXM"/>
                         <outlet property="mainContainer" destination="87g-sm-7l9" id="Gux-zP-6KR"/>
                         <outlet property="middleView" destination="zH9-eP-bhr" id="UbI-ch-gvb"/>
+                        <outlet property="phoneView" destination="Lmp-wk-mbo" id="gyj-1D-hzc"/>
                         <outlet property="registerView" destination="XWM-bg-vfc" id="xvK-ST-TJG"/>
                         <outlet property="scrollObjMain" destination="8d8-9x-bZh" id="Kpv-BM-Nvu"/>
                         <outlet property="tfEmail" destination="F0Q-bA-gHN" id="I5A-Fz-LUb"/>
@@ -711,10 +714,10 @@
                         <outlet property="tfPassword" destination="WFI-gZ-pIH" id="dhr-gs-9aD"/>
                         <outlet property="tfPhoneCountryCode" destination="D3T-GE-9hv" id="iNS-qK-C7t"/>
                         <outlet property="tfPhoneNumber" destination="1Sa-bx-YzW" id="gWn-b6-Sd0"/>
-                        <outlet property="tfStreetName" destination="Dz3-BP-F5V" id="cdJ-F9-1AK"/>
+                        <outlet property="tfStreetName" destination="lhS-4E-3yW" id="1if-rN-FOb"/>
                         <outlet property="tfStreetNumber" destination="WxD-jP-MUZ" id="TTc-a7-Ai8"/>
                         <outlet property="tfSurname" destination="et0-Qd-axt" id="0SY-Y6-6EU"/>
-                        <outlet property="tfZipCode" destination="lhS-4E-3yW" id="nSp-Wd-xon"/>
+                        <outlet property="tfZipCode" destination="Dz3-BP-F5V" id="wPi-TR-SaX"/>
                         <outlet property="topView" destination="WQx-i9-JmE" id="tVt-8Q-d5f"/>
                     </connections>
                 </viewController>
@@ -3794,6 +3797,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0g9-gB-inw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="10992" y="315"/>
+        </scene>
+        <!--Privacy Policy-->
+        <scene sceneID="4Le-Kn-KKs">
+            <objects>
+                <viewController storyboardIdentifier="privacyPolicy" id="JAE-xI-DVG" customClass="privacyPolicy" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dNv-un-6wr"/>
+                        <viewControllerLayoutGuide type="bottom" id="yvm-NF-DmH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="P7j-DY-mf8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GTY-b6-DKm">
+                                <rect key="frame" x="20" y="20" width="280" height="528"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.29733297413793103" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="yvm-NF-DmH" firstAttribute="top" secondItem="GTY-b6-DKm" secondAttribute="bottom" constant="20" id="60Q-A2-qZi"/>
+                            <constraint firstItem="GTY-b6-DKm" firstAttribute="top" secondItem="dNv-un-6wr" secondAttribute="bottom" id="BS2-yh-GR9"/>
+                            <constraint firstItem="GTY-b6-DKm" firstAttribute="leading" secondItem="P7j-DY-mf8" secondAttribute="leading" constant="20" id="MkQ-gM-32G"/>
+                            <constraint firstAttribute="trailing" secondItem="GTY-b6-DKm" secondAttribute="trailing" constant="20" id="nMz-cs-yV6"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="privacyPolicyWebView" destination="GTY-b6-DKm" id="w2x-ll-Ipu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b3Q-mS-WCy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11527" y="377"/>
         </scene>
         <!--Employee Revenues-->
         <scene sceneID="d22-CR-ozT">

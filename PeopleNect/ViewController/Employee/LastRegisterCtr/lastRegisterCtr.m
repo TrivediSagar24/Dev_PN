@@ -53,7 +53,12 @@
 {
     BOOL registerflag;
     registerflag = NO;
+    
      NSData* imageData = UIImageJPEGRepresentation(kAppDel.EmployeeProfileImage, 1.0);
+    
+    if (imageData.length==0) {
+        imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"plceholder"], 1.0);
+    }
     if (imageData.length ==0)
     {
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Profile pic is required" Message:@"Please select your profile pic" AlertMessage:@"OK"]animated:YES completion:nil];
@@ -105,6 +110,7 @@
             
             [param setObject:_tviewDescribe.text forKey:@"description"];
             
+            [param setObject:@"" forKey:@"lastEmployer"];
             
             [self returnImage:[UIImage imageWithData:imageData]];
             
@@ -128,11 +134,14 @@
                  
                 /* Update Device Token With User Type  */
                  
+                 /*
                  [kAFClient POST:MAIN_URL parameters:[GlobalMethods updateDeviceTokenWithUserType:@"0" DeviceToken:kAppDel.apnDeviceToken userId:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"]] progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                      NSLog(@"updateDeviceTokenWithUserType %@",responseObject);
                  } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                      
                  }];
+                  */
+                 
             /* Update Device Token With User Type  */
                  
                  [kAppDel.progressHud hideAnimated:YES];

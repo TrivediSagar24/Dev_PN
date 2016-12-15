@@ -29,7 +29,7 @@
 
 +(NSDictionary*)EmployeeLoginWithEmail :(NSString*)Email Password:(NSString*)Password DeviceId:(NSString *)deviceId;
 
-+(NSDictionary *)EmployeeSaveUserDetail:(NSString *)userId firstname:(NSString *)firstname lastName:(NSString *)lastName phone:(NSString *)PhoneNo categoryId :(NSString *)categoryId subCategoryId:(NSString *)subCategoryId experience:(NSString *)experience rate:(NSString *)rate description:(NSString *)description password:(NSString *)password zipcode :(NSString *)zipcode streetName :(NSString *)streetName number :(NSString *)number country_code :(NSString *)country_code;
++(NSDictionary *)EmployeeSaveUserDetail:(NSString *)userId firstname:(NSString *)firstname lastName:(NSString *)lastName phone:(NSString *)PhoneNo categoryId :(NSString *)categoryId subCategoryId:(NSString *)subCategoryId experience:(NSString *)experience rate:(NSString *)rate description:(NSString *)description password:(NSString *)password zipcode :(NSString *)zipcode streetName :(NSString *)streetName number :(NSString *)number country_code :(NSString *)country_code lastEmployer:(NSString*)lastEmployer;
 
 
 +(NSDictionary *)EmployerRegister:(NSString *)deviceId email:(NSString *)email name:(NSString*)name password:(NSString *)Password phone :(NSString*)phone surname: (NSString *)surname countryCode :(NSString*)CountryCode;

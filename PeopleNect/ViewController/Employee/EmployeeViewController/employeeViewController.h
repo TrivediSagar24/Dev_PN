@@ -13,11 +13,13 @@
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "MVPlaceSearchTextField.h"
+#import "privacyPolicy.h"
 
 @class GPPSignInButton;
 @interface employeeViewController : UIViewController
 
-<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource ,GPPSignInDelegate>
+<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource ,GPPSignInDelegate,PlaceSearchTextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet TPKeyboardAvoidingScrollView *scrollObjMain;
 @property (strong, nonatomic) IBOutlet UIView *mainContainer;
@@ -31,7 +33,8 @@
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfPhoneCountryCode;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfPhoneNumber;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfZipCode;
-@property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfStreetName;
+@property (strong, nonatomic) IBOutlet MVPlaceSearchTextField *tfStreetName;
+
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfStreetNumber;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfPassword;
 @property (nonatomic,strong) IBOutlet NSLayoutConstraint *heightForMainContainer;
@@ -40,6 +43,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *lblGoogle;
 @property (strong, nonatomic) IBOutlet UILabel *lblFacebook;
 @property (strong, nonatomic) IBOutlet UIView *registerView;
+@property (strong, nonatomic) IBOutlet UIView *phoneView;
 
 - (IBAction)btnRegisterClicked:(id)sender;
 - (IBAction)btnPrivacyClicked:(id)sender;

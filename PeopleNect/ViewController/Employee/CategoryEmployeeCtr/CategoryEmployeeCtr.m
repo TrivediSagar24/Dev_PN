@@ -49,8 +49,10 @@
     }
     
     _profileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
-    
     _profileImage.layer.masksToBounds = YES;
+    _profileImage.layer.borderWidth = 1.0;
+    _profileImage.layer.borderColor = [UIColor colorWithRed:220/255 green:220/255 blue:220/255 alpha:1.0].CGColor;
+    
     if (employeeUserId.length==0){
         if (kAppDel.EmployerProfileImage==nil) {
             _profileImage.image = [UIImage imageNamed:@"profile"];
@@ -77,6 +79,10 @@
     else{
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
     }
+    
+    if ([[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]count]>0) {
+        [_collectionCategory reloadData];
+    }
 }
 
 
@@ -101,10 +107,21 @@
     Cell.lblDescription.textAlignment = NSTextAlignmentCenter;
     
     Cell.lblDescription.text = [[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryName"]objectAtIndex:indexPath.row];
+    
     Cell.lblDescription.textColor = [UIColor colorWithRed:105.0/255.0 green:105.0/255.0 blue:105.0/255.0 alpha:1];
+    
     Cell.cellView.backgroundColor = [UIColor whiteColor];
+    
     Cell.borderLbl.backgroundColor = [UIColor colorWithRed:143.0/255.0 green:163.0/255.0 blue:186.0/255.0 alpha:1.0];
-   
+    
+    [Cell.cellView.layer setBorderWidth:0.0f];
+
+    if ([kAppDel.categorySelectionID isEqualToString:[[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]objectAtIndex:indexPath.row]])
+    {
+        [Cell.cellView.layer setBorderColor:[UIColor colorWithRed:143.0/255.0 green:163.0/255.0 blue:186.0/255.0 alpha:1.0].CGColor];
+        [Cell.cellView.layer setBorderWidth:1.5f];
+    }
+    
     /*
 if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]objectAtIndex:indexPath.row]]) {
     
@@ -126,6 +143,8 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
     subCategoryCtr  *obj_subCategoryCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"subCategoryCtr"];
     
     obj_subCategoryCtr.CategoryUserId = [[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]objectAtIndex:indexPath.row];
+    
+    kAppDel.categorySelectionID = [[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]objectAtIndex:indexPath.row];
     
      obj_subCategoryCtr.CategoryName = [[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryName"]objectAtIndex:indexPath.row];
     

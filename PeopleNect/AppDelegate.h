@@ -57,6 +57,8 @@ static NSString * const kClientId = @"285378539209-tfajq8qi1s2pj56g6jpkmio1545it
 @property(strong,nonatomic)jobPostingPriceBalance *obj_jobPostingPriceBalance;
 @property(strong,nonatomic)EmployerDetails *obj_EmployerDetails;
 @property(strong,nonatomic)NSString *apnDeviceToken;
+@property(strong,nonatomic)NSString *categorySelectionID;
+
 @property(strong,nonatomic) NSMutableArray *subCategorymap;
 
 @property(strong,nonatomic) NSMutableArray *subCategoryFromInvited;

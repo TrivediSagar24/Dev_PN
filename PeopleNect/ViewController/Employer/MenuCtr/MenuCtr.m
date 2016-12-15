@@ -103,7 +103,7 @@ static CLLocationCoordinate2D currentLocation;
     _heightOfMiddleView.constant = (self.view.frame.size.height*75)/568;
     _heightOfTableView.constant = self.objScrollView.frame.size.height - self.sectionView.frame.size.height;
 }
-
+ 
 -(void)viewWillDisappear:(BOOL)animated{
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
 }

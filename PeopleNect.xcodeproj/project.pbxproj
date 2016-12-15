@@ -39,6 +39,8 @@
 		18E60EEA1DA6371600B832E4 /* onGoingJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E60EE91DA6371600B832E4 /* onGoingJobs.m */; };
 		18E7A9C31DA653E700E572DA /* onGoingSectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E7A9C11DA653E700E572DA /* onGoingSectionCell.m */; };
 		18E7A9C41DA653E700E572DA /* onGoingSectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E7A9C21DA653E700E572DA /* onGoingSectionCell.xib */; };
+		18EA61611E02AE8C00C7B8BE /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 18EA61601E02AE8B00C7B8BE /* index.html */; };
+		18EA61651E02B25E00C7B8BE /* privacyPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EA61641E02B25E00C7B8BE /* privacyPolicy.m */; };
 		18FA59D41DA7B3B4006F4804 /* workhistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FA59D21DA7B3B4006F4804 /* workhistoryCell.m */; };
 		18FA59D51DA7B3B4006F4804 /* workhistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18FA59D31DA7B3B4006F4804 /* workhistoryCell.xib */; };
 		52B70BF51D476E6E00037603 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B70BF41D476E6E00037603 /* main.m */; };
@@ -235,6 +237,9 @@
 		18E7A9C01DA653E700E572DA /* onGoingSectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = onGoingSectionCell.h; sourceTree = "<group>"; };
 		18E7A9C11DA653E700E572DA /* onGoingSectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = onGoingSectionCell.m; sourceTree = "<group>"; };
 		18E7A9C21DA653E700E572DA /* onGoingSectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = onGoingSectionCell.xib; sourceTree = "<group>"; };
+		18EA61601E02AE8B00C7B8BE /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		18EA61631E02B25E00C7B8BE /* privacyPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privacyPolicy.h; sourceTree = "<group>"; };
+		18EA61641E02B25E00C7B8BE /* privacyPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = privacyPolicy.m; sourceTree = "<group>"; };
 		18FA59D11DA7B3B4006F4804 /* workhistoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = workhistoryCell.h; sourceTree = "<group>"; };
 		18FA59D21DA7B3B4006F4804 /* workhistoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = workhistoryCell.m; sourceTree = "<group>"; };
 		18FA59D31DA7B3B4006F4804 /* workhistoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = workhistoryCell.xib; sourceTree = "<group>"; };
@@ -510,6 +515,7 @@
 		185259CC1D48ADCA0018AC24 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				18EA61621E02B22800C7B8BE /* PrivacyPolicy */,
 				C52D11061D87F77400AABB86 /* Employer */,
 				185259CD1D48ADCA0018AC24 /* IntroductionViewController */,
 				185259E31D48B4980018AC24 /* Employee */,
@@ -790,6 +796,15 @@
 			path = onGoingSectionCell;
 			sourceTree = "<group>";
 		};
+		18EA61621E02B22800C7B8BE /* PrivacyPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				18EA61631E02B25E00C7B8BE /* privacyPolicy.h */,
+				18EA61641E02B25E00C7B8BE /* privacyPolicy.m */,
+			);
+			path = PrivacyPolicy;
+			sourceTree = "<group>";
+		};
 		18FA59D01DA7B37E006F4804 /* workhistoryCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -851,6 +866,7 @@
 		52B70BF31D476E6E00037603 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				18EA61601E02AE8B00C7B8BE /* index.html */,
 				52B70BF41D476E6E00037603 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -1730,6 +1746,7 @@
 				C5CABBEA1D5083B5009EEB31 /* GooglePlus.bundle in Resources */,
 				C56CF5D51D9A46C40031D26D /* OpenJobCandidatesCell.xib in Resources */,
 				18FA59D51DA7B3B4006F4804 /* workhistoryCell.xib in Resources */,
+				18EA61611E02AE8C00C7B8BE /* index.html in Resources */,
 				C56CF5CA1D9A2C710031D26D /* AccordionHeaderView.xib in Resources */,
 				C5524E4F1D58AA8E00D79801 /* Default-568h@2x.png in Resources */,
 			);
@@ -1802,6 +1819,7 @@
 				C55697201D4B5A8300E7FDDD /* TPKeyboardAvoidingCollectionView.m in Sources */,
 				185259E11D48AE410018AC24 /* IndicatorView.m in Sources */,
 				C50D64DB1D7EED1E00A9794D /* employeePendingCell.m in Sources */,
+				18EA61651E02B25E00C7B8BE /* privacyPolicy.m in Sources */,
 				C52D114F1D87F77400AABB86 /* employerTransaction.m in Sources */,
 				C52D11551D87F77400AABB86 /* MenuCtr.m in Sources */,
 				18BCE6251DE86B42005EF308 /* Reachability.m in Sources */,

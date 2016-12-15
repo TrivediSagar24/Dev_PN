@@ -189,6 +189,7 @@ static NSString *kDefaultAutoCompleteCellIdentifier = @"_DefaultAutoCompleteCell
 {
     NSInteger numberOfRows = [self.autoCompleteSuggestions count];
     [self expandAutoCompleteTableViewForNumberOfRows:numberOfRows];
+
     return numberOfRows;
 }
 
@@ -512,7 +513,7 @@ withAutoCompleteString:(NSString *)string
     [self setShowTextFieldDropShadowWhenAutoCompleteTableIsOpen:YES];
     [self setAutoCompleteRowHeight:40];
     [self setAutoCompleteFontSize:13];
-    [self setMaximumNumberOfAutoCompleteRows:3];
+    [self setMaximumNumberOfAutoCompleteRows:100];
     [self setPartOfAutoCompleteRowHeightToCut:0.0f];
     
     [self setAutoCompleteTableCellBackgroundColor:[UIColor clearColor]];

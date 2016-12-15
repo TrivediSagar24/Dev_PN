@@ -55,8 +55,9 @@
     _subCategoryCollectionView.allowsMultipleSelection = YES;
     
     _profileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
-    
     _profileImage.layer.masksToBounds = YES;
+    _profileImage.layer.borderWidth = 1.0;
+    _profileImage.layer.borderColor = [UIColor colorWithRed:220/255 green:220/255 blue:220/255 alpha:1.0].CGColor;
     if (EmployeeUserId.length==0){
         if (kAppDel.EmployerProfileImage==nil) {
             _profileImage.image = [UIImage imageNamed:@"profile"];

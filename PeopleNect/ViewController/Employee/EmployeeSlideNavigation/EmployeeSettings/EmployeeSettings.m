@@ -121,6 +121,9 @@
     if (_strCategoryId.length==0)
     {
         _strCategoryId = kAppDel.obj_responseEmployeeUserDetail.Employee_category_id;
+        
+        kAppDel.categorySelectionID = kAppDel.obj_responseEmployeeUserDetail.Employee_category_id;
+
     }
     if (_Exp.length ==0)
     {
@@ -141,7 +144,7 @@
         }
         [self returnImage:[UIImage imageWithData:imageData]];
         
-        [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:_strCategoryId subCategoryId:_strSubCategoryId experience:_Exp rate:_Price description:_profileDescriptionTV.text password:_tfPassword.text zipcode:_zipcode.text streetName:_streetName.text number:_streetNumber.text country_code:_tfCountryCode.text] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
+        [kAFClient POST:MAIN_URL parameters:[GlobalMethods EmployeeSaveUserDetail:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"] firstname:_tfName.text lastName:_tfSurname.text phone:_tfPhoneNumber.text categoryId:_strCategoryId subCategoryId:_strSubCategoryId experience:_Exp rate:_Price description:_profileDescriptionTV.text password:_tfPassword.text zipcode:_zipcode.text streetName:_streetName.text number:_streetNumber.text country_code:_tfCountryCode.text lastEmployer:@""] constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData)
          {
              [formData appendPartWithFileData:dataProfileImg name:@"profile_pic" fileName:@"image.jpg" mimeType:@"image/jpeg"];
              
@@ -486,6 +489,8 @@ numberOfRowsInComponent:(NSInteger)component
     
     [kAppDel.EmployeeSettingText setValue:_profileDescriptionTV.text forKey:@"description"];
     
+    kAppDel.categorySelectionID = kAppDel.obj_responseEmployeeUserDetail.Employee_category_id;
+
     CategoryEmployeeCtr * obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
     
     obj_CategoryEmployeeCtr.iscomingFromSettingCtr = YES;

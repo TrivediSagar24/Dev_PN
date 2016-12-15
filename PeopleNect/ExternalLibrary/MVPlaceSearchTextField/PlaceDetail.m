@@ -10,6 +10,7 @@
 
 
 #define apiURL @"https://maps.googleapis.com/maps/api/place/details/json?reference=%@&sensor=true&key=%@"
+
 #define apiURLWithoutKey @"https://maps.googleapis.com/maps/api/place/details/json?reference=%@&sensor=true"
 @implementation PlaceDetail
 -(id)initWithApiKey:(NSString *)ApiKey{
