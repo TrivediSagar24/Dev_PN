@@ -34,6 +34,7 @@
 		18AB57441DC06FA10033C47A /* CustomPlaceHolderTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB573F1DC06FA10033C47A /* CustomPlaceHolderTextField.m */; };
 		18AB57451DC06FA10033C47A /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB57411DC06FA10033C47A /* CustomPlaceHolderTextView.m */; };
 		18AB57461DC06FA10033C47A /* NSString+TextDirectionality.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AB57431DC06FA10033C47A /* NSString+TextDirectionality.m */; };
+		18AC13391E03E5BC001152C9 /* CustomClusterIconGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AC13381E03E5BC001152C9 /* CustomClusterIconGenerator.m */; };
 		18BCE6251DE86B42005EF308 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18BCE6241DE86B42005EF308 /* Reachability.m */; };
 		18E0568A1DBF6A1B00D40392 /* EmployerJobHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E056891DBF6A1B00D40392 /* EmployerJobHistory.m */; };
 		18E60EEA1DA6371600B832E4 /* onGoingJobs.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E60EE91DA6371600B832E4 /* onGoingJobs.m */; };
@@ -228,6 +229,8 @@
 		18AB57411DC06FA10033C47A /* CustomPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomPlaceHolderTextView.m; sourceTree = "<group>"; };
 		18AB57421DC06FA10033C47A /* NSString+TextDirectionality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TextDirectionality.h"; sourceTree = "<group>"; };
 		18AB57431DC06FA10033C47A /* NSString+TextDirectionality.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TextDirectionality.m"; sourceTree = "<group>"; };
+		18AC13371E03E5BC001152C9 /* CustomClusterIconGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomClusterIconGenerator.h; sourceTree = "<group>"; };
+		18AC13381E03E5BC001152C9 /* CustomClusterIconGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomClusterIconGenerator.m; sourceTree = "<group>"; };
 		18BCE6231DE86B42005EF308 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		18BCE6241DE86B42005EF308 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		18E056881DBF6A1B00D40392 /* EmployerJobHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmployerJobHistory.h; sourceTree = "<group>"; };
@@ -554,6 +557,8 @@
 		185259DB1D48AE410018AC24 /* ExternalLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				18AC13371E03E5BC001152C9 /* CustomClusterIconGenerator.h */,
+				18AC13381E03E5BC001152C9 /* CustomClusterIconGenerator.m */,
 				18BCE6221DE86B42005EF308 /* Reachability */,
 				18AB573D1DC06FA10033C47A /* CustomPlaceholderTextField */,
 				188C661B1DAF3EDC00EA3CD5 /* MVPlaceSearchTextField */,
@@ -1913,6 +1918,7 @@
 				C526480D1D8C1B9B00267C04 /* PN_TextViewGlobalMethods.m in Sources */,
 				18AB57461DC06FA10033C47A /* NSString+TextDirectionality.m in Sources */,
 				18AB57441DC06FA10033C47A /* CustomPlaceHolderTextField.m in Sources */,
+				18AC13391E03E5BC001152C9 /* CustomClusterIconGenerator.m in Sources */,
 				C574D66F1D59A2EA00E26716 /* EmployeeNewPassword.m in Sources */,
 				18A24C1B1D9E3E0D0090AB23 /* noBalance.m in Sources */,
 				C55697221D4B5A8300E7FDDD /* TPKeyboardAvoidingTableView.m in Sources */,

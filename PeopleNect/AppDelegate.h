@@ -68,6 +68,8 @@ static NSString * const kClientId = @"285378539209-tfajq8qi1s2pj56g6jpkmio1545it
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @property(nonatomic) int changeCount;
+@property(nonatomic) int totalCount;
+
 
 - (NSURL *)applicationDocumentsDirectory;
 @end

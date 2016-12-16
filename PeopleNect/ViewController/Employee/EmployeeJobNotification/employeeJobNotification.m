@@ -7,6 +7,48 @@
 //
 
 #import "employeeJobNotification.h"
+#import "CustomClusterIconGenerator.h"
+
+
+@interface POIItem : NSObject<GMUClusterItem>
+
+@property(nonatomic, readonly) CLLocationCoordinate2D position;
+@property(nonatomic, readonly) NSString *name;
+
+- (instancetype)initWithPosition:(CLLocationCoordinate2D)position name:(NSString *)name;
+
+@end
+
+
+@implementation POIItem
+
+- (instancetype)initWithPosition:(CLLocationCoordinate2D)position name:(NSString *)name {
+    if ((self = [super init])) {
+        _position = position;
+        _name = [name copy];
+    }
+    return self;
+}
+
+- (instancetype)initWithMapView:(GMSMapView *)mapView clusterIconGenerator:(id<GMUClusterIconGenerator>)iconGenerator
+{
+    if ((self = [super init])) {
+        
+        GMSMarker *marker= [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(24.0, 75.30)];
+        
+        UIView *customMarker =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 63, 40)];
+        customMarker.backgroundColor = [UIColor blueColor];
+        marker.iconView = customMarker;
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+        marker.map = mapView;
+    }
+    return self;
+}
+
+
+@end
+
+
 static int count = 0;
 static CLLocationCoordinate2D currentLocation;
 static NSInteger currentSelection,selected=-1;
@@ -23,6 +65,7 @@ NSInteger cellSelected;
 NSString *BoolSelectedSwitch;
 NSData *employeeUserDetailData;
 CGRect sliderFrame;
+    GMUClusterManager *_clusterManager;
 }
 
 @end
@@ -48,11 +91,30 @@ CGRect sliderFrame;
     
     _mapView.delegate = self;
 
-        [self areaWiseJob];
+       // [self areaWiseJob];
+    
+    
+    _totalVisibleJobs = [[NSMutableArray alloc]init];
+    
+    id<GMUClusterAlgorithm> algorithm = [[GMUNonHierarchicalDistanceBasedAlgorithm alloc] init];
+    
+    CustomClusterIconGenerator *iconGenerator = [[CustomClusterIconGenerator alloc]init];
+    
+    
+    id<GMUClusterRenderer> renderer =
+    [[GMUDefaultClusterRenderer alloc] initWithMapView:_mapView
+                                  clusterIconGenerator:iconGenerator];
+    
+    _clusterManager =
+    [[GMUClusterManager alloc] initWithMap:_mapView algorithm:algorithm renderer:renderer];
+
+    
+    
+    
         [self section];
         [self getUserAvailibility];
         
-        GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:16];
+        GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:6];
         [_mapView setCamera:camera];
     
         _employeeWeekCollection.backgroundColor = [UIColor clearColor];
@@ -95,6 +157,9 @@ CGRect sliderFrame;
     
     _employeeWeekCollection.delegate = self;
     _employeeWeekCollection.dataSource= self;
+    
+    [self allJob];
+
 }
 
 
@@ -233,13 +298,19 @@ CGRect sliderFrame;
 - (IBAction)btnAllClikced:(id)sender
 {
     [GlobalMethods dataTaskCancel];
-    if (count==0)
-    {
+    
+    if (_btnAreaBorder.hidden==NO) {
+        
         _btnAreaBorder.hidden = YES;
         _btnAllBorder.hidden = NO;
-    [self allJob];
+        [self allJob];
         [_btnInMyArea setTitleColor:[UIColor colorWithRed:142.0/255.0 green:142.0/255.0 blue:142.0/255.0 alpha:1.0] forState:UIControlStateNormal];
         [_btnAll setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+    }
+    
+    if (count==0)
+    {
+       
         count = 1;
     }
 }
@@ -248,13 +319,19 @@ CGRect sliderFrame;
 - (IBAction)btnInMyAreaClicked:(id)sender
 {
     [GlobalMethods dataTaskCancel];
-    if (count==1)
-    {
+    
+    if (_btnAllBorder.hidden==NO) {
         _btnAreaBorder.hidden = NO;
         _btnAllBorder.hidden = YES;
-          [self areaWiseJob];
+        [self areaWiseJob];
         [_btnAll setTitleColor:[UIColor colorWithRed:142.0/255.0 green:142.0/255.0 blue:142.0/255.0 alpha:1.0] forState:UIControlStateNormal];
         [_btnInMyArea setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+    }
+    
+    
+    if (count==1)
+    {
+        
         count = 0;
     }
 }
@@ -446,7 +523,7 @@ CGRect sliderFrame;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_totalJobs count];
+    return [_totalVisibleJobs count];
 }
 
 
@@ -461,35 +538,35 @@ CGRect sliderFrame;
         
         mapCell.middleMapImage.image = [UIImage imageNamed:@"maPurple"];
         
-        if ([mapCell.btnCanditatureClicked.titleLabel.text isEqualToString:@"Applied"]) {
+        if ([mapCell.btnCanditatureClicked.titleLabel.text isEqualToString:@"Apply"]) {
              [mapCell.btnCanditatureClicked setTitle:@"Already Applied" forState:UIControlStateNormal];
         }
     }
     else{
-        if ([[[_totalJobs valueForKey:@"applicationStatus"] objectAtIndex:indexPath.row] isEqual:@0]) {
-        [mapCell.btnCanditatureClicked setTitle:@"Applied" forState:UIControlStateNormal];
+        if ([[[_totalVisibleJobs valueForKey:@"applicationStatus"] objectAtIndex:indexPath.row] isEqual:@0]) {
+        [mapCell.btnCanditatureClicked setTitle:@"Apply" forState:UIControlStateNormal];
         }
-        if ([[[_totalJobs valueForKey:@"applicationStatus"] objectAtIndex:indexPath.row] isEqual:@1]) {
+        if ([[[_totalVisibleJobs valueForKey:@"applicationStatus"] objectAtIndex:indexPath.row] isEqual:@1]) {
         [mapCell.btnCanditatureClicked setTitle:@"Follow up" forState:UIControlStateNormal];
         }
-        if ([[[_totalJobs valueForKey:@"userInvitedStatus"]objectAtIndex:indexPath.row]isEqual:@1]) {
+        if ([[[_totalVisibleJobs valueForKey:@"userInvitedStatus"]objectAtIndex:indexPath.row]isEqual:@1]) {
              [mapCell.btnCanditatureClicked setTitle:@"Already invited" forState:UIControlStateNormal];
         }
-        if ([[[_totalJobs valueForKey:@"userSelectedStatus"]objectAtIndex:indexPath.row] isEqual:@1] && [[[_totalJobs valueForKey:@"userInvitedStatus"] objectAtIndex:indexPath.row]isEqual:@0]) {
+        if ([[[_totalVisibleJobs valueForKey:@"userSelectedStatus"]objectAtIndex:indexPath.row] isEqual:@1] && [[[_totalVisibleJobs valueForKey:@"userInvitedStatus"] objectAtIndex:indexPath.row]isEqual:@0]) {
             
             [self labelChangeColor:mapCell Color:[UIColor greenColor]];
             
             mapCell.mapImage.image = [UIImage imageNamed:@"map_green_"];
             mapCell.middleMapImage.image = [UIImage imageNamed:@"map_green_"];
         }
-        if ([[[_totalJobs valueForKey:@"userSelectedStatus"]objectAtIndex:indexPath.row] isEqual:@0] && [[[_totalJobs valueForKey:@"userInvitedStatus"] objectAtIndex:indexPath.row]isEqual:@0]){
+        if ([[[_totalVisibleJobs valueForKey:@"userSelectedStatus"]objectAtIndex:indexPath.row] isEqual:@0] && [[[_totalVisibleJobs valueForKey:@"userInvitedStatus"] objectAtIndex:indexPath.row]isEqual:@0]){
             
             [self labelChangeColor:mapCell Color:[UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0]];
             
             mapCell.mapImage.image = [UIImage imageNamed:@"map_"];
             mapCell.middleMapImage.image = [UIImage imageNamed:@"map_"];
         }
-        if ([[[_totalJobs valueForKey:@"userInvitedStatus"]objectAtIndex:indexPath.row] isEqual:@1] || [[[_totalJobs valueForKey:@"applicationStatus"]objectAtIndex:indexPath.row]isEqual:@1]) {
+        if ([[[_totalVisibleJobs valueForKey:@"userInvitedStatus"]objectAtIndex:indexPath.row] isEqual:@1] || [[[_totalVisibleJobs valueForKey:@"applicationStatus"]objectAtIndex:indexPath.row]isEqual:@1]) {
             
             [self labelChangeColor:mapCell Color:[UIColor purpleColor]];
             mapCell.mapImage.image = [UIImage imageNamed:@"maPurple"];
@@ -500,31 +577,31 @@ CGRect sliderFrame;
     
     [ mapCell.btnCanditatureClicked addTarget:self action:@selector(ApplyForJob:) forControlEvents:UIControlEventTouchUpInside];
     
-    mapCell.lblJobTitle.text = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"jobTitle"];
+    mapCell.lblJobTitle.text = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"jobTitle"];
     
-    mapCell.middleViewCompanyName.text = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"companyName"];
+    mapCell.middleViewCompanyName.text = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"companyName"];
     
-    mapCell.lblCompanyName.text = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"companyName"];
+    mapCell.lblCompanyName.text = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"companyName"];
     
-    mapCell.lblKM.text = [NSString stringWithFormat:@"%@km",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"distance"]];
+    mapCell.lblKM.text = [NSString stringWithFormat:@"%@km",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"distance"]];
     
-    mapCell.middleViewLBLKM.text = [NSString stringWithFormat:@"%@ km",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"distance"]];
+    mapCell.middleViewLBLKM.text = [NSString stringWithFormat:@"%@ km",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"distance"]];
     
-    mapCell.lblRatings.text = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"rating"];
+    mapCell.lblRatings.text = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"rating"];
     
-  mapCell.middleStartDate.text = [self dateToFormatedDate:[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]];
+  mapCell.middleStartDate.text = [self dateToFormatedDate:[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]];
     
-    mapCell.lblSecondJobDescription.text = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"jobDescription"];
+    mapCell.lblSecondJobDescription.text = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"jobDescription"];
    
     [self label:mapCell.lblPricetag];
     
-    mapCell.lblPricetag.text =  [NSString stringWithFormat:@"$%@ \n/hr",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"]];
+    mapCell.lblPricetag.text =  [NSString stringWithFormat:@"$%@ \n/hr",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"]];
     
     [self label:mapCell.lblSecondPricetag];
     
-    mapCell.lblSecondPricetag.text = [NSString stringWithFormat:@"%@ at %@ \n | \n %@ at %@ ",[self dateToFormatedDate:[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]],[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"],[self dateToFormatedDate:[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"end_date"]],[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"]];
+    mapCell.lblSecondPricetag.text = [NSString stringWithFormat:@"%@ at %@ \n | \n %@ at %@ ",[self dateToFormatedDate:[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]],[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"],[self dateToFormatedDate:[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"end_date"]],[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"hours_per_day"]];
     
-    mapCell.lblStartDate.text = [self dateToFormatedDate:[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]];
+    mapCell.lblStartDate.text = [self dateToFormatedDate:[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"start_date"]];
     
     mapCell.lblthirdPricetag.text = @"Only Working days";
     
@@ -532,7 +609,7 @@ CGRect sliderFrame;
     
     if (currentSelection == indexPath.row)
     {
-        NSString * totalHour = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"total_hours"];
+        NSString * totalHour = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"total_hours"];
         totalHour = [totalHour stringByReplacingOccurrencesOfString:@".00" withString:@" h"];
         
         [self label:mapCell.lblPricetag];
@@ -553,7 +630,7 @@ CGRect sliderFrame;
         
         mapCell.lblBlueBorder.hidden = YES;
 
-        if (indexPath.row == [_totalJobs count]-1) {
+        if (indexPath.row == [_totalVisibleJobs count]-1) {
             
             mapCell.BorderLblStraight.hidden = YES;
             
@@ -586,7 +663,7 @@ CGRect sliderFrame;
     
     mapCell.lblBlueBorder.hidden = NO;
     
-    if (indexPath.row == [_totalJobs count]-1) {
+    if (indexPath.row == [_totalVisibleJobs count]-1) {
        
         mapCell.BorderLblStraight.hidden = YES;
         
@@ -621,18 +698,17 @@ CGRect sliderFrame;
 {
     [kAppDel.subCategorymap removeAllObjects];
     
-    kAppDel.subCategorymap  = [[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"category"];
+    kAppDel.subCategorymap  = [[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"category"];
     
-    kAppDel.userSelectedStatus = [NSString stringWithFormat:@"%@",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"userSelectedStatus"]];
+    kAppDel.userSelectedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"userSelectedStatus"]];
     
-    kAppDel.userInvitedStatus = [NSString stringWithFormat:@"%@",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"userInvitedStatus"]];
+    kAppDel.userInvitedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"userInvitedStatus"]];
     
-    kAppDel.applicationStatus = [NSString stringWithFormat:@"%@",[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"applicationStatus"]];
+    kAppDel.applicationStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"applicationStatus"]];
 
-    NSString *str=[[_totalJobs objectAtIndex:indexPath.row]valueForKey:@"category"];
+    NSString *str=[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"category"];
     
     kAppDel.subCategorymap = [[NSMutableArray alloc] initWithArray:[str componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]]];
-    
     
     selected = indexPath.row;
     
@@ -642,7 +718,7 @@ CGRect sliderFrame;
     
     currentSelection = indexPath.row;
     
-    for(int i = 0;i<[_totalJobs count]; i++)
+    for(int i = 0;i<[_totalVisibleJobs count]; i++)
     {
         [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -654,19 +730,25 @@ CGRect sliderFrame;
 {
     kAppDel.SelectedFollowUp = @"0";
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"reload"];
+    
     if ([sender.titleLabel.text isEqualToString:@"Follow up"]) {
         
-        [self applyFollowJob:@"followUp" jobId:[[_totalJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
+        [self applyFollowJob:@"followUp" jobId:[[_totalVisibleJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
 
     }
-    if ([sender.titleLabel.text isEqualToString:@"Applied"]) {
-        [self applyFollowJob:@"applyForJob" jobId:[[_totalJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
+    if ([sender.titleLabel.text isEqualToString:@"Apply"]) {
+        [self applyFollowJob:@"applyForJob" jobId:[[_totalVisibleJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
 
     }
    
+    if ([sender.titleLabel.text isEqualToString:@"Already Applied"]) {
+        
+    [self applyFollowJob:@"followUp" jobId:[[_totalVisibleJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
+    }
+    
     if ([sender.titleLabel.text isEqualToString:@"Already invited"]) {
-        [self applyFollowJob:@"followUp" jobId:[[_totalJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
-
+        
+        [self applyFollowJob:@"followUp" jobId:[[_totalVisibleJobs valueForKey:@"jobId"] objectAtIndex:sender.tag] SenderButton:sender];
     }
     
     if ([[selectedFollowUp objectAtIndex:sender.tag]isEqualToString:@"0"]) {
@@ -680,10 +762,7 @@ CGRect sliderFrame;
         [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"reload"];
     }
    
-
     [_categoryTableView reloadData];
-
-    
 }
 
 
@@ -705,9 +784,10 @@ CGRect sliderFrame;
 
 -(void)section
 {
-[_btnInMyArea setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-    _btnAllBorder.hidden= YES;
-    _btnInMyArea.hidden = NO;
+[_btnAll setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+    _btnAllBorder.hidden= NO;
+    _btnAreaBorder.hidden = YES;
+   // _btnInMyArea.hidden = NO;
 }
 
 
@@ -725,6 +805,9 @@ CGRect sliderFrame;
     [_param setObject:@"excat match" forKey:@"serachType"];
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
     {
+        
+        NSLog(@"response object %@",responseObject);
+        
         kAppDel.obj_EmployeeAreWiseJob = [[EmployeeAreWiseJob alloc]initWithDictionary:responseObject];
         
     if ([[responseObject valueForKey:@"status"] isEqual:@1])
@@ -742,14 +825,19 @@ CGRect sliderFrame;
         latitude = [_totalJobs valueForKey:@"latitude"];
             
             longitude = [_totalJobs valueForKey:@"longitude"];
+            
             selected = -1;
-            markerUserLocation.map  = nil;
-            [_mapView clear];
+          markerUserLocation.map  = nil;
+           
+           [_mapView clear];
+            
             [self mapMarker];
-        _lblJobCategoryInfo.text = [NSString stringWithFormat:@"%lu jobs in %@",(unsigned long)[_totalJobs count],kAppDel.obj_responseEmployeeUserDetail.Employee_category_name];
-            _categoryTableView.delegate = self;
-            _categoryTableView.dataSource = self;
-            currentSelection = [_totalJobs count]+1;
+            
+            
+            [self SetVisibleJobs];
+
+//            _categoryTableView.delegate = self;
+//            _categoryTableView.dataSource = self;
             [_categoryTableView reloadData];
     }
 } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
@@ -770,8 +858,11 @@ CGRect sliderFrame;
     [_param setObject:[[NSString alloc] initWithFormat:@"%f", currentLocation.latitude]  forKey:@"latitude"];
     [_param setObject:[[NSString alloc] initWithFormat:@"%f", currentLocation.longitude]forKey:@"longitude"];
     [_param setObject:@"brader match" forKey:@"serachType"];
+    
+    
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
      {
+
          kAppDel.obj_EmployeeAllJob = [[EmployeeAllJob alloc]initWithDictionary:responseObject];
           if ([[responseObject valueForKey:@"status"] isEqual:@1])
           {
@@ -782,17 +873,17 @@ CGRect sliderFrame;
               latitude = [_totalJobs valueForKey:@"latitude"];
               longitude = [_totalJobs valueForKey:@"longitude"];
             selected = -1;
-              [_mapView clear];
+             
+              markerUserLocation.map  = nil;
+             [_mapView clear];
               [self mapMarker];
+              
+              [self SetVisibleJobs];
 
-              for (int i=0; i<_totalJobs.count; i++) {
-                  [selectedFollowUp addObject:@"0"];
-              }
-            _lblJobCategoryInfo.text = [NSString stringWithFormat:@"%lu jobs in %@",(unsigned long)[_totalJobs count],kAppDel.obj_responseEmployeeUserDetail.Employee_category_name];
-              _categoryTableView.delegate = self;
-              _categoryTableView.dataSource = self;
-              currentSelection = [_totalJobs count]+1;
-              [_categoryTableView reloadData];
+//              _categoryTableView.delegate = self;
+//              _categoryTableView.dataSource = self;
+//              currentSelection = [_totalJobs count]+1;
+             // [_categoryTableView reloadData];
           }
      } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
      {
@@ -846,13 +937,54 @@ CGRect sliderFrame;
     
     [self mapMarker];
     
-    for(int i = 0;i<[_totalJobs count]; i++)
+    for(int i = 0;i<[_totalVisibleJobs count]; i++)
     {
     [_categoryTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     }
     return YES;
 }
 
+-(void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture{
+    
+    [self SetVisibleJobs];
+
+}
+
+-(void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position{
+    
+    [self SetVisibleJobs];
+    
+}
+
+-(void)SetVisibleJobs{
+    
+    [_totalVisibleJobs removeAllObjects];
+
+    GMSVisibleRegion visibleRegion = _mapView.projection.visibleRegion;
+    GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithRegion: visibleRegion];
+    int count = 0;
+    for (int i = 0; i<latitude.count; i++) {
+        
+        CLLocationCoordinate2D position = CLLocationCoordinate2DMake([[latitude objectAtIndex:i]doubleValue],[[longitude objectAtIndex:i]doubleValue]);
+        
+        if ([bounds containsCoordinate:position]) {
+            count++;
+            [_totalVisibleJobs addObject:[_totalJobs objectAtIndex:i]];
+        }
+    }
+    _lblJobCategoryInfo.text = [NSString stringWithFormat:@"%d jobs in %@",count,kAppDel.obj_responseEmployeeUserDetail.Employee_category_name];
+    
+    for (int i=0; i<_totalVisibleJobs.count; i++) {
+        [selectedFollowUp addObject:@"0"];
+    }
+    
+    currentSelection = [_totalVisibleJobs count]+1;
+    
+    
+    _categoryTableView.delegate = self;
+    _categoryTableView.dataSource = self;
+    [_categoryTableView reloadData];
+}
 
 -(UIView *)BlueViewMarker:(NSUInteger)labelTextInt markerCount:(NSUInteger)markerCount
 {
@@ -918,8 +1050,24 @@ CGRect sliderFrame;
 #pragma mark - Marker
 -(void)mapMarker{
     
-    GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
-    bounds = [bounds includingCoordinate:currentLocation];
+
+   // GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
+   // bounds = [bounds includingCoordinate:currentLocation];
+    
+    [_clusterManager clearItems];
+    
+    for (int i = 0; i<latitude.count; i++) {
+       
+        id<GMUClusterItem> itemCluster =
+        
+        [[POIItem alloc]initWithPosition:CLLocationCoordinate2DMake([[latitude objectAtIndex:i]doubleValue], [[longitude objectAtIndex:i]doubleValue]) name:@"Name"];
+        
+        
+        [_clusterManager addItem:itemCluster];
+        
+        [_clusterManager cluster];
+        [_clusterManager setDelegate:self mapDelegate:self];
+    }
     
     NSArray *latit = [[NSSet setWithArray: latitude] allObjects];
     NSCountedSet *setLat = [[NSCountedSet alloc] initWithArray:latitude];
@@ -934,8 +1082,10 @@ CGRect sliderFrame;
     
     for (id item in setLong) {
         
+      
         markerCount = (unsigned long)[setLong countForObject:item];
-       
+        
+        
         if ([item isEqualToString:@"longLast"]) {
             markerUserLocation.map = nil;
             markerUserLocation.position = currentLocation;
@@ -955,12 +1105,12 @@ CGRect sliderFrame;
             
             GMSMarker *marker = [GMSMarker markerWithPosition:position];
             
-            bounds = [bounds includingCoordinate:marker.position];
+           // bounds = [bounds includingCoordinate:marker.position];
 
             marker.accessibilityLabel = [NSString stringWithFormat:@"%lu",(unsigned long)count];
             
             if (selected == [marker.accessibilityLabel intValue]){
-                GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:CLLocationCoordinate2DMake([[latitude objectAtIndex:count]doubleValue],[[longitude objectAtIndex:count]doubleValue])zoom:16.0];
+                GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:CLLocationCoordinate2DMake([[latitude objectAtIndex:count]doubleValue],[[longitude objectAtIndex:count]doubleValue])zoom:6.0];
                 [_mapView animateWithCameraUpdate:updatedCamera];
                 marker.iconView = [self GreenViewMarker:count markerCount:markerCount];
             }
@@ -968,9 +1118,9 @@ CGRect sliderFrame;
                 marker.iconView = [self BlueViewMarker:count markerCount:markerCount];
             }
             marker.appearAnimation = kGMSMarkerAnimationPop;
-            [_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withPadding:30.0f]];
+            //[_mapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withPadding:30.0f]];
 
-            marker.map = _mapView;
+            //marker.map = _mapView;
         }
     }
 }
@@ -1025,7 +1175,7 @@ CGRect sliderFrame;
         
         [self UserLocationMarker:currentLocation];
         
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:16];
+        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
         
         [_mapView animateWithCameraUpdate:updatedCamera];
         _mapView.mapType = kGMSTypeNormal;
@@ -1048,15 +1198,24 @@ CGRect sliderFrame;
                 currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
                 
                 markerUserLocation.map = nil;
-                if (count==0)
-                {
-                    [self allJob];
-                }
-                if (count==1)
-                {
+                
+                if (_btnAreaBorder.hidden == NO) {
                     [self areaWiseJob];
                 }
-                GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:16];
+                
+                if (_btnAllBorder.hidden == NO) {
+                    [self allJob];
+                }
+                
+//                if (count==0)
+//                {
+//                    [self allJob];
+//                }
+//                if (count==1)
+//                {
+//                    [self areaWiseJob];
+//                }
+                GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
                 
                 [_mapView animateWithCameraUpdate:updatedCamera];
                 
@@ -1077,7 +1236,7 @@ CGRect sliderFrame;
             {
                 [self areaWiseJob];
             }
-            GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:16];
+            GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
             
             [_mapView animateWithCameraUpdate:updatedCamera];
             
@@ -1087,7 +1246,23 @@ CGRect sliderFrame;
     }
 }
 
+#pragma mark GMUClusterManagerDelegate
 
+- (void)clusterManager:(GMUClusterManager *)clusterManager didTapCluster:(id<GMUCluster>)cluster {
+    
+    NSLog(@"called cluster count %lu ",(unsigned long)cluster.count);
+ 
+    for(int i = 0;i<[_totalVisibleJobs count]; i++)
+    {
+        [_categoryTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+
+- (void)clusterManager:(GMUClusterManager *)clusterManager
+     didTapClusterItem:(id<GMUClusterItem>)clusterItem{
+    NSLog(@"called");
+}
 
 #pragma mark - navigationBarButton navigation -
 -(UIBarButtonItem *) RightBarButton
@@ -1566,9 +1741,9 @@ CGRect sliderFrame;
             
             EmployeeApplyForJob *obj_EmployeeApplyForJob = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployeeApplyForJob"];
             
-            obj_EmployeeApplyForJob.companyName = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"companyName"];
+            obj_EmployeeApplyForJob.companyName = [[_totalVisibleJobs objectAtIndex:Sender.tag]valueForKey:@"companyName"];
             
-            obj_EmployeeApplyForJob.jobTitle = [[_totalJobs objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
+            obj_EmployeeApplyForJob.jobTitle = [[_totalVisibleJobs objectAtIndex:Sender.tag]valueForKey:@"jobTitle"];
             
             obj_EmployeeApplyForJob.applicationSent = @"Application Sent";
             obj_EmployeeApplyForJob.applicationWaiting = @"Waiting for hiring manager to check your application";

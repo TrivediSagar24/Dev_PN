@@ -20,22 +20,6 @@
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
-            timestampString = "502893183.051242"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "683"
-            endingLineNumber = "683"
-            landmarkName = "-ApplyForJob:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
@@ -148,7 +132,7 @@
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "503498961.845702"
+                  timestampString = "503585578.021834"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "866"
@@ -163,7 +147,7 @@
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "503498961.846083"
+                  timestampString = "503585578.022039"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "866"
@@ -178,27 +162,12 @@
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "503498961.846451"
+                  timestampString = "503585578.02222"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "866"
                   endingLineNumber = "866"
                   offsetFromSymbolStart = "29">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__32-[employeeMainChat sendMessage:]_block_invoke.408"
-                  moduleName = "PeopleNect"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "503498961.846673"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "869"
-                  endingLineNumber = "869"
-                  offsetFromSymbolStart = "83">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -384,6 +353,166 @@
             startingLineNumber = "166"
             endingLineNumber = "166"
             landmarkName = "-finishRegisterClicked:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1720"
+            endingLineNumber = "1720"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "732"
+            endingLineNumber = "732"
+            landmarkName = "-ApplyForJob:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1719"
+            endingLineNumber = "1719"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1725"
+            endingLineNumber = "1725"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1730"
+            endingLineNumber = "1730"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1735"
+            endingLineNumber = "1735"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[employeeJobNotification applyFollowJob:jobId:SenderButton:]"
+                  moduleName = "PeopleNect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+                  timestampString = "503585578.036873"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1733"
+                  endingLineNumber = "1733"
+                  offsetFromSymbolStart = "859">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__61-[employeeJobNotification applyFollowJob:jobId:SenderButton:]_block_invoke"
+                  moduleName = "PeopleNect"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+                  timestampString = "503585578.037085"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1733"
+                  endingLineNumber = "1733"
+                  offsetFromSymbolStart = "19">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1738"
+            endingLineNumber = "1738"
+            landmarkName = "-applyFollowJob:jobId:SenderButton:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PeopleNect/ViewController/Employee/EmployeeJobNotification/searchtableviewCell/searchTableViewCell.m"
+            timestampString = "503586416.070962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
