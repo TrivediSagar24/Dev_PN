@@ -26,9 +26,10 @@
 #import <Google-Maps-iOS-Utils/GMUMarkerClustering.h>
 #import <GoogleMaps/GoogleMaps.h>
 @import GoogleMaps;
+#import <Google-Maps-iOS-Utils/GMUMarkerClustering.h>
 
 @interface MenuCtr : UIViewController
-<UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate,GMSMapViewDelegate,GMUClusterManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate>
+<UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate,GMSMapViewDelegate,GMUClusterManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate,GMUClusterManagerDelegate>
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *heightOfMapView;
 @property (strong, nonatomic) IBOutlet UIButton *btnAdd;

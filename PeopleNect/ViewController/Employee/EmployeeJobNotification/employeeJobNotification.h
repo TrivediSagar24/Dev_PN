@@ -25,7 +25,9 @@
 #import <Google-Maps-iOS-Utils/GMUMarkerClustering.h>
 
 @interface employeeJobNotification : UIViewController<UITableViewDataSource,UITableViewDelegate,GMSMapViewDelegate ,CLLocationManagerDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,GMUClusterManagerDelegate>
-
+@property (strong, nonatomic) IBOutlet UIView *popUpMenuRegister;
+@property (strong, nonatomic) IBOutlet UIButton *understoodBtnPopUpMenu;
+@property (strong, nonatomic) IBOutlet UILabel *turnOnLablePopUpMenu;
 @property (strong, nonatomic) IBOutlet UIView *ButtonSectionView;
 @property(nonatomic,strong) IBOutlet NSLayoutConstraint *heightforTableCategoryView;
 @property (strong, nonatomic) IBOutlet GMSMapView *mapView;
@@ -65,11 +67,12 @@
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property(strong,nonatomic) NSMutableArray *totalJobs;
 @property(strong,nonatomic) NSMutableArray *totalVisibleJobs;
-
 @property(strong,nonatomic) UIButton *switchSelected;
 @property(strong,nonatomic)UIButton *chatSelected;
 @property(strong,nonatomic)  JSCustomBadge *chatBadge;
+@property(nonatomic)BOOL forPopUpMenuRegister;
 
+- (IBAction)understoodClicked:(id)sender;
 - (IBAction)btnAllClikced:(id)sender;
 - (IBAction)btnInMyAreaClicked:(id)sender;
 - (IBAction)advancedOptionClicked:(id)sender;

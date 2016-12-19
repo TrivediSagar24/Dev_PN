@@ -18,7 +18,6 @@
     return [self getUIImageFromThisUIView:[self BlueViewMarker:0 markerCount:size]];
     
    // return [UIImage imageNamed:@"map_green_"];
-
 }
 
 - (UIImage *)iconForMarker {
@@ -54,7 +53,18 @@
     label.textColor = [UIColor colorWithRed:24.0/255.0 green:59.0/255.0 blue:91.0/255.0 alpha:1.0];
     label.backgroundColor = [UIColor colorWithRed:177.0/255.0 green:177.0/255.0 blue:177.0/255.0 alpha:1.0];
     UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 21, 69, 38)];
-    [btn setImage:[UIImage imageNamed:@"map2_"] forState:UIControlStateNormal];
+    
+//    iconMapUser.png
+    
+    
+   NSString *EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
+
+    if (EmployeeUserID !=nil) {
+        [btn setImage:[UIImage imageNamed:@"map2_"] forState:UIControlStateNormal];
+    }else{
+        [btn setImage:[UIImage imageNamed:@"iconMapUser.png"] forState:UIControlStateNormal];
+    }
+    
     [view addSubview:label];
     [view addSubview:btn];
     return view;

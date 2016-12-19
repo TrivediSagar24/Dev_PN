@@ -7,18 +7,60 @@
 //
 
 #import "MenuCtr.h"
+#import "CustomClusterIconGenerator.h"
+
+
+@interface POIItemForEmployer : NSObject<GMUClusterItem>
+
+@property(nonatomic, readonly) CLLocationCoordinate2D position;
+@property(nonatomic, readonly) NSString *name;
+
+- (instancetype)initWithPosition:(CLLocationCoordinate2D)position name:(NSString *)name;
+
+@end
+
+
+@implementation POIItemForEmployer
+
+- (instancetype)initWithPosition:(CLLocationCoordinate2D)position name:(NSString *)name {
+    if ((self = [super init])) {
+        _position = position;
+        _name = [name copy];
+    }
+    return self;
+}
+
+- (instancetype)initWithMapView:(GMSMapView *)mapView clusterIconGenerator:(id<GMUClusterIconGenerator>)iconGenerator
+{
+    if ((self = [super init])) {
+        
+        GMSMarker *marker= [GMSMarker markerWithPosition:CLLocationCoordinate2DMake(24.0, 75.30)];
+        
+        UIView *customMarker =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 63, 40)];
+        customMarker.backgroundColor = [UIColor blueColor];
+        marker.iconView = customMarker;
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+        marker.map = mapView;
+    }
+    return self;
+}
+
+
+@end
 
 static CLLocationCoordinate2D currentLocation;
 
 @interface MenuCtr ()
 {
     UITapGestureRecognizer *tap;
-    NSMutableArray *arraySelectedItems,*arrayCategoryId,*arrayCategoryList;
+    NSMutableArray *arraySelectedItems,*arrayCategoryId,*arrayCategoryList,*totalVisibleJobSeeker;
     NSString *EmployerUserID,*selectedCategoryName,*totalRecords;
     NSInteger selectedTab,check,flag,selectedTabNumber,lastSelectedIndex,nearByCount,selectedtag;
     GMSMarker *currentMarker,*markerUserLocation;
     NSMutableArray *EmployeeDetails;
     GMSCoordinateBounds *visibleRegions;
+    GMUClusterManager *_clusterManager;
+
 }
 @end
 
@@ -36,7 +78,7 @@ static CLLocationCoordinate2D currentLocation;
     
     EmployeeDetails = [[NSMutableArray alloc]init];
 
-    //[self showCurrentLocation];
+   [self showCurrentLocation];
     
     if ([GlobalMethods InternetAvailability]) {
         [self businessCategoryList];
@@ -51,11 +93,23 @@ static CLLocationCoordinate2D currentLocation;
    currentLocation = CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLat doubleValue]);
     
     markerUserLocation = [[GMSMarker alloc]init];
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:16.0];
+    
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:6.0];
     [_obj_MapView setCamera:camera];
+    
     selectedTab = 0;
     flag = 0;
     check = 0;
+    
+    id<GMUClusterAlgorithm> algorithm = [[GMUNonHierarchicalDistanceBasedAlgorithm alloc] init];
+    
+    CustomClusterIconGenerator *iconGenerator = [[CustomClusterIconGenerator alloc]init];
+    
+    id<GMUClusterRenderer> renderer =
+    [[GMUDefaultClusterRenderer alloc] initWithMapView:_obj_MapView
+                                  clusterIconGenerator:iconGenerator];
+    _clusterManager =
+    [[GMUClusterManager alloc] initWithMap:_obj_MapView algorithm:algorithm renderer:renderer];
     
     
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
@@ -63,10 +117,8 @@ static CLLocationCoordinate2D currentLocation;
     UISwipeGestureRecognizer *swipeRightSide = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideToRightWithGesture:)];
     swipeRightSide.direction = UISwipeGestureRecognizerDirectionRight;
     
-    
     UISwipeGestureRecognizer *swipeLeftSide = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideToLeftWithGesture:)];
     swipeLeftSide.direction = UISwipeGestureRecognizerDirectionLeft;
-    
     
     swipeLeftSide.delegate = self;
     swipeRightSide.delegate = self;
@@ -146,16 +198,9 @@ static CLLocationCoordinate2D currentLocation;
 
 -(void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position{
     
-    if ([visibleRegions containsCoordinate:position.target]) {
-    }
-}
+    [self SetVisibleJobs];
 
--(void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position{
-    
-    if ([visibleRegions containsCoordinate:position.target]) {
-    }
 }
-
 
 - (void)locationManager:(CLLocationManager *)manager
      didUpdateLocations:(NSArray<CLLocation *> *)locations
@@ -165,7 +210,7 @@ static CLLocationCoordinate2D currentLocation;
         currentLocation = CLLocationCoordinate2DMake([locations objectAtIndex:0].coordinate.latitude, [locations objectAtIndex:0].coordinate.longitude);
         [kAppDel.progressHud hideAnimated:YES];
         [self UserLocationMarker:currentLocation];
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:16.0];
+        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
         [_obj_MapView animateWithCameraUpdate:updatedCamera];
         _obj_MapView.mapType = kGMSTypeNormal;
         check = 1;
@@ -177,7 +222,7 @@ static CLLocationCoordinate2D currentLocation;
         markerUserLocation.map = nil;
         [kAppDel.progressHud hideAnimated:YES];
         currentLocation = CLLocationCoordinate2DMake([locations lastObject].coordinate.latitude, [locations lastObject].coordinate.longitude);
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:16.0];
+        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
         [_obj_MapView animateWithCameraUpdate:updatedCamera];
         [self UserLocationMarker:currentLocation];
     }
@@ -200,6 +245,22 @@ static CLLocationCoordinate2D currentLocation;
 
 
 -(void)mapMarker{
+    
+    [_clusterManager clearItems];
+    
+    for (int i = 0; i<[[EmployeeDetails valueForKey:@"name"]count]; i++) {
+        
+        id<GMUClusterItem> itemCluster =
+        
+        [[POIItemForEmployer alloc]initWithPosition:CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]) name:@"Name"];
+        
+        
+        [_clusterManager addItem:itemCluster];
+        
+        [_clusterManager cluster];
+        [_clusterManager setDelegate:self mapDelegate:self];
+    }
+    
      GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
     
     bounds = [bounds includingCoordinate:currentLocation];
@@ -214,17 +275,20 @@ static CLLocationCoordinate2D currentLocation;
         
         marker.iconView = [self EmployerMarker:i];
         marker.appearAnimation = kGMSMarkerAnimationPop;
-        marker.map = _obj_MapView;
+       // marker.map = _obj_MapView;
     }
-    [_obj_MapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withPadding:20.0f]];
+    //[_obj_MapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withPadding:20.0f]];
+}
+-(void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture{
+    
+    [self SetVisibleJobs];
+    
 }
 
 
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker{
    
-    if ([marker.userData isEqualToString:@"UserLocation"]) {
-    }
-    else{
+   
     employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
         
     obj_employerInviteForJobVC.employeeSelected = [marker.accessibilityLabel integerValue];
@@ -237,7 +301,7 @@ static CLLocationCoordinate2D currentLocation;
     obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
         
         [self presentViewController:obj_nav animated:YES completion:nil];
-    }
+    
     return YES;
 }
 
@@ -262,10 +326,46 @@ static CLLocationCoordinate2D currentLocation;
     return customMarker;
 }
 
+-(void)SetVisibleJobs{
+    
+    [totalVisibleJobSeeker removeAllObjects];
+    
+    GMSVisibleRegion visibleRegion = _obj_MapView.projection.visibleRegion;
+    GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] initWithRegion: visibleRegion];
+    int count = 0;
+    for (int i = 0; i<[[EmployeeDetails valueForKey:@"name"]count]; i++) {
+        
+        CLLocationCoordinate2D position = CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]);
+        
+        if ([bounds containsCoordinate:position]) {
+            count++;
+            
+            [totalVisibleJobSeeker addObject:[EmployeeDetails objectAtIndex:i]];
+        }
+    }
+    
+    kAppDel.obj_responseEmployeesList = [[responseEmployeesList alloc] initWithDictionary:totalVisibleJobSeeker];
+    
+    NSData *EmployeeList = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseEmployeesList];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:EmployeeList  forKey:@"EmployeeList"];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    
+    self.totalRecordEmployee.text = [NSString stringWithFormat:@"%d professionals in %@", count,selectedCategoryName];
+    
+    self.obj_MainTableView.delegate = self;
+    self.obj_MainTableView.dataSource = self;
+    [self.obj_MainTableView reloadData];
+
+}
+
+
 
 #pragma mark - Table DataSource & Delegates -
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [[EmployeeDetails valueForKey:@"name"]count];
+    return [[totalVisibleJobSeeker valueForKey:@"name"]count];
 }
 
 
@@ -273,15 +373,15 @@ static CLLocationCoordinate2D currentLocation;
     
     employerMainTVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"employerMainTVCell"];
     
-    cell.lblEmpNameMainTVC.text = [[EmployeeDetails valueForKey:@"name"]objectAtIndex:indexPath.row];
+    cell.lblEmpNameMainTVC.text = [[totalVisibleJobSeeker valueForKey:@"name"]objectAtIndex:indexPath.row];
    
-    cell.lblCategoryMainTVCell.text = [NSString stringWithFormat:@"%@ - %@years/ %@km",[[EmployeeDetails valueForKey:@"categoryName"] objectAtIndex:indexPath.row],[[EmployeeDetails valueForKey:@"exp_years"] objectAtIndex:indexPath.row],[[EmployeeDetails valueForKey:@"distance"] objectAtIndex:indexPath.row]];
+    cell.lblCategoryMainTVCell.text = [NSString stringWithFormat:@"%@ - %@years/ %@km",[[totalVisibleJobSeeker valueForKey:@"categoryName"] objectAtIndex:indexPath.row],[[totalVisibleJobSeeker valueForKey:@"exp_years"] objectAtIndex:indexPath.row],[[totalVisibleJobSeeker valueForKey:@"distance"] objectAtIndex:indexPath.row]];
     
-    cell.lblRatingMainTVCell.text = [[EmployeeDetails valueForKey:@"rating"] objectAtIndex:indexPath.row];
+    cell.lblRatingMainTVCell.text = [[totalVisibleJobSeeker valueForKey:@"rating"] objectAtIndex:indexPath.row];
    
-    cell.lblEmpNameMainTVC.text = [[EmployeeDetails valueForKey:@"name"] objectAtIndex:indexPath.row];
+    cell.lblEmpNameMainTVC.text = [[totalVisibleJobSeeker valueForKey:@"name"] objectAtIndex:indexPath.row];
     
-    [cell.imgVwMainTVCell sd_setImageWithURL: [NSURL URLWithString:[[EmployeeDetails valueForKey:@"image_url"] objectAtIndex:indexPath.row ]]placeholderImage:[UIImage imageNamed:@"plceholder"]];
+    [cell.imgVwMainTVCell sd_setImageWithURL: [NSURL URLWithString:[[totalVisibleJobSeeker valueForKey:@"image_url"] objectAtIndex:indexPath.row ]]placeholderImage:[UIImage imageNamed:@"plceholder"]];
     
     return cell;
 }
@@ -350,15 +450,6 @@ static CLLocationCoordinate2D currentLocation;
         
         /*-------Setting data in response object----------*/
         
-        kAppDel.obj_responseEmployeesList = [[responseEmployeesList alloc] initWithDictionary:responseObject];
-       
-        
-        NSData *EmployeeList = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseEmployeesList];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:EmployeeList  forKey:@"EmployeeList"];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
         EmployeeDetails = [[responseObject valueForKey:@"data"]mutableCopy];
         
         [self.obj_MapView clear];
@@ -366,26 +457,25 @@ static CLLocationCoordinate2D currentLocation;
         [self UserLocationMarker:currentLocation];
         [self mapMarker];
         
-        self.obj_MainTableView.delegate = self;
-        self.obj_MainTableView.dataSource = self;
-        [self.obj_MainTableView reloadData];
-
-    /*--Getting total records of particular selected data---*/
         
-    totalRecords = [responseObject valueForKey:@"totalRecords"];
+        totalRecords = [responseObject valueForKey:@"totalRecords"];
         selectedCategoryName = [responseObject valueForKey:@"selectedCategoryName"];
+        
+        self.totalRecordEmployee.textColor = [UIColor colorWithRed:164.0/255.0 green:164.0/255.0 blue:164.0/255.0 alpha:1.0];
+        self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
+        
+        
         if([selectedCategoryName isEqual:[NSNull null]])
         {
             selectedCategoryName = @"All";
-            self.totalRecordEmployee.textColor = [UIColor colorWithRed:164.0/255.0 green:164.0/255.0 blue:164.0/255.0 alpha:1.0];
-            self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
-            self.totalRecordEmployee.text = [NSString stringWithFormat:@"%@ professionals in %@", totalRecords,selectedCategoryName];
         }
         else{
-            self.totalRecordEmployee.textColor = [UIColor colorWithRed:164.0/255.0 green:164.0/255.0 blue:164.0/255.0 alpha:1.0];
-            self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
-           self.totalRecordEmployee.text = [NSString stringWithFormat:@"%@ professionals in %@", totalRecords,selectedCategoryName];
         }
+        
+        [self SetVisibleJobs];
+
+    /*--Getting total records of particular selected data---*/
+        
     }
             failure:^(NSURLSessionDataTask *  task, NSError *  error) {
                 [kAppDel.progressHud hideAnimated:YES];
@@ -517,6 +607,7 @@ static CLLocationCoordinate2D currentLocation;
     arraySelectedItems= [[NSMutableArray alloc] init];
     arrayCategoryList = [[NSMutableArray alloc] init];
     arrayCategoryId  = [[NSMutableArray alloc] init];
+    totalVisibleJobSeeker = [[NSMutableArray alloc]init];
     self.btnAdd.layer.cornerRadius = self.btnAdd.frame.size.height /2;
     self.btnAdd.layer.masksToBounds = YES;
     [self unarchivingData];

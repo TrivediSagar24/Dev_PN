@@ -12,6 +12,9 @@
 #define apiURL @"https://maps.googleapis.com/maps/api/place/details/json?reference=%@&sensor=true&key=%@"
 
 #define apiURLWithoutKey @"https://maps.googleapis.com/maps/api/place/details/json?reference=%@&sensor=true"
+
+#define apiURLWithPlace @"https://maps.googleapis.com/maps/api/place/autocomplete/json?input=%@&types=geocode&language=en&sensor=true&key=%@&location=%@&radius=500"
+
 @implementation PlaceDetail
 -(id)initWithApiKey:(NSString *)ApiKey{
     
@@ -23,7 +26,10 @@
 }
 
 -(void)getPlaceDetailForReferance:(NSString*)strReferance{
+    
     [NSString stringWithFormat:apiURLWithoutKey,strReferance];
+    
+    
     [[GMSPlacesClient sharedClient]lookUpPlaceID:strReferance callback:^(GMSPlace *place, NSError *error) {
         if(place){
             [_delegate placeDetailForReferance:strReferance didFinishWithResult:place];

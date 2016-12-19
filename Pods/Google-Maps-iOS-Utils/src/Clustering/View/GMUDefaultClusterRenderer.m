@@ -276,10 +276,24 @@ static const double kGMUAnimationDuration = 0.5;  // seconds.
         int totalCount = cluster.count;
         NSLog(@"totalCount %d",totalCount);
         
+        UIImageView *clusterIcon;
+        
+
+         NSString *EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
+        if (EmployeeUserID!= nil) {
+            clusterIcon = [self getUIImageFromThisUIView:[self BlueViewMarker:100 markerCount:totalCount]];
+        }else{
+            
+            if (totalCount==1) {
+                clusterIcon = [self getUIImageFromThisUIView:[self EmployerMarker:0]];
+            }else{
+                clusterIcon = [self getUIImageFromThisUIView:[self BlueViewMarker:100 markerCount:totalCount]];
+            }
+        }
       GMSMarker *marker = [self markerWithPosition:item.position
                                               from:fromPosition
                                           userData:item
-                                       clusterIcon:[self getUIImageFromThisUIView:[self BlueViewMarker:totalCount markerCount:0]]
+                                       clusterIcon:clusterIcon
                                           animated:shouldAnimate];
       [_markers addObject:marker];
       [_renderedClusterItems addObject:item];
@@ -302,11 +316,39 @@ static const double kGMUAnimationDuration = 0.5;  // seconds.
     label.textColor = [UIColor colorWithRed:24.0/255.0 green:59.0/255.0 blue:91.0/255.0 alpha:1.0];
     label.backgroundColor = [UIColor colorWithRed:177.0/255.0 green:177.0/255.0 blue:177.0/255.0 alpha:1.0];
     UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 21, 69, 38)];
-    [btn setImage:[UIImage imageNamed:@"map2_"] forState:UIControlStateNormal];
+    
+    NSString *EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
+    
+    if (EmployeeUserID !=nil) {
+        [btn setImage:[UIImage imageNamed:@"map2_"] forState:UIControlStateNormal];
+    }else{
+        [btn setImage:[UIImage imageNamed:@"iconMapUser.png"] forState:UIControlStateNormal];
+    }
     [view addSubview:label];
     [view addSubview:btn];
     return view;
 }
+
+-(UIView *)EmployerMarker:(int)labelTextInt{
+    UIView *customMarker =[[UIView alloc] initWithFrame:CGRectMake(0, 0, 63, 40)];
+    UIImageView *imgViewCustomMarker = [[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 24, 25)];
+    imgViewCustomMarker.image = [UIImage imageNamed:@"iconMapUser.png"];
+    [customMarker addSubview:imgViewCustomMarker];
+    UIView *viewRatingCustom = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 40, 15)];
+    viewRatingCustom.backgroundColor = [UIColor colorWithRed:192.0/255.0 green:192.0/255.0 blue:192.0/255.0 alpha:1.0];
+    UILabel *lblRatingEmployees = [[UILabel alloc] initWithFrame:CGRectMake(8, 1, 17,8)];
+    lblRatingEmployees.textColor = [UIColor colorWithRed:0.00/255.0 green:100.0/255.0 blue:150.0/255.0 alpha:1.0];
+    lblRatingEmployees.text = @"0";
+    lblRatingEmployees.font = [UIFont fontWithName:@"Helvetica-Bold" size:10];
+    [lblRatingEmployees sizeToFit];
+    [viewRatingCustom addSubview:lblRatingEmployees];
+    UIImageView *imageViewStar = [[UIImageView alloc] initWithFrame:CGRectMake(25, 3, 10, 8)];
+    imageViewStar.image = [UIImage imageNamed:@"iconBlueStar.png"];
+    [viewRatingCustom addSubview:imageViewStar];
+    [customMarker addSubview:viewRatingCustom];
+    return customMarker;
+}
+
 
 
 -(UIImage*)getUIImageFromThisUIView:(UIView*)aUIView

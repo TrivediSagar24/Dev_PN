@@ -173,7 +173,7 @@
 @property (nonatomic,strong) NSMutableArray  *employeeSubcategoryId;
 @property (nonatomic,strong) NSMutableArray  *employeeSubactegoryName;
 
--(responseEmployeesList *)initWithDictionary:(NSMutableDictionary *)dictionary;
+-(responseEmployeesList *)initWithDictionary:(NSMutableArray *)Array;
 @end
 
 

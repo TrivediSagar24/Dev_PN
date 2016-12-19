@@ -25,17 +25,18 @@
                                                object:nil];
     
    // [_employeeMapCategoryCollection reloadData];
-
+   
 }
 - (void)defaultsChanged:(NSNotification *)notification {
-    NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
     
-    if ([[defaults objectForKey:@"reload"] isEqualToString:@"collectionReload"]) {
-        [_employeeMapCategoryCollection reloadData];
-    }else{
-        kAppDel.SelectedFollowUp = @"0";
-        [_employeeMapCategoryCollection reloadData];
-    }
+    //NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
+    
+//    if ([[defaults objectForKey:@"reload"] isEqualToString:@"collectionReload"]) {
+//        [_employeeMapCategoryCollection reloadData];
+//    }else{
+//        kAppDel.SelectedFollowUp = @"0";
+//        [_employeeMapCategoryCollection reloadData];
+//    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -62,9 +63,9 @@
 {
     employeeCategoryMapCell *Cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"employeeCategoryMapCell" forIndexPath:indexPath];
     
-    if (indexPath.row == kAppDel.subCategorymap.count) {
-        kAppDel.SelectedFollowUp = @"0";
-    }
+//    if (indexPath.row == kAppDel.subCategorymap.count) {
+//        kAppDel.SelectedFollowUp = @"0";
+//    }
     Cell.categoryMapView.layer.cornerRadius =  Cell.categoryMapView.frame.size.height/2;
     
     Cell.categoryMapView.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:242.0/255.0 blue:242.0/255.0 alpha:1.0];
@@ -76,11 +77,6 @@
 //    Cell.categoryMapBtn.tag = indexPath.item;
     
     //[Cell.categoryMapBtn addTarget:self action:@selector(ButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-   
-    [ Cell.categoryMapBtn setTitleColor:[UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-    
-    
-
 
     if ([kAppDel.userSelectedStatus isEqualToString:@"1"] && [kAppDel.userInvitedStatus isEqualToString:@"0"]) {
         
@@ -89,11 +85,11 @@
      if ([kAppDel.userSelectedStatus isEqualToString:@"0"] && [kAppDel.userInvitedStatus isEqualToString:@"0"]) {
         
         [ Cell.categoryMapBtn setTitleColor:[UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+
     }
      if ([kAppDel.applicationStatus isEqualToString:@"1"] || [kAppDel.userInvitedStatus isEqualToString:@"1"] || [kAppDel.SelectedFollowUp isEqualToString:@"1"]) {
         
         [ Cell.categoryMapBtn setTitleColor:[UIColor purpleColor] forState:UIControlStateNormal];
-
     }
     return Cell;
 }

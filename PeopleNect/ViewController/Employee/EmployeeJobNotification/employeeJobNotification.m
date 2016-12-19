@@ -182,6 +182,14 @@ CGRect sliderFrame;
 //    [[[SlideNavigationController sharedInstance ]profileImage]setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
   
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
+    
+    if (_forPopUpMenuRegister==YES) {
+        
+        self.popUpMenuRegister.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        
+        [self.view addSubview:self.popUpMenuRegister];
+
+    }
 }
 
 
@@ -295,6 +303,11 @@ CGRect sliderFrame;
 
 
 #pragma mark- IBAction -
+- (IBAction)understoodClicked:(id)sender {
+    
+    [[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
+}
+
 - (IBAction)btnAllClikced:(id)sender
 {
     [GlobalMethods dataTaskCancel];
@@ -702,9 +715,15 @@ CGRect sliderFrame;
     
     kAppDel.userSelectedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"userSelectedStatus"]];
     
+    NSLog(@" kAppDel.userSelectedStatus %@", kAppDel.userSelectedStatus);
+    
     kAppDel.userInvitedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"userInvitedStatus"]];
     
+    NSLog(@"  kAppDel.userInvitedStatus %@",  kAppDel.userInvitedStatus);
+
     kAppDel.applicationStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"applicationStatus"]];
+
+    NSLog(@"  kAppDel.applicationStatus %@",   kAppDel.applicationStatus);
 
     NSString *str=[[_totalVisibleJobs objectAtIndex:indexPath.row]valueForKey:@"category"];
     
@@ -712,9 +731,9 @@ CGRect sliderFrame;
     
     selected = indexPath.row;
     
-    [_mapView clear];
-    
-    [self mapMarker];
+//    [_mapView clear];
+//    
+//    [self mapMarker];
     
     currentSelection = indexPath.row;
     
@@ -754,6 +773,7 @@ CGRect sliderFrame;
     if ([[selectedFollowUp objectAtIndex:sender.tag]isEqualToString:@"0"]) {
         [selectedFollowUp replaceObjectAtIndex:sender.tag withObject:@"1"];
         kAppDel.SelectedFollowUp = @"1";
+        
         [[NSUserDefaults standardUserDefaults] setObject:@"collectionReload"   forKey:@"reload"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
@@ -788,6 +808,7 @@ CGRect sliderFrame;
     _btnAllBorder.hidden= NO;
     _btnAreaBorder.hidden = YES;
    // _btnInMyArea.hidden = NO;
+    
 }
 
 
@@ -805,10 +826,10 @@ CGRect sliderFrame;
     [_param setObject:@"excat match" forKey:@"serachType"];
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
     {
-        
-        NSLog(@"response object %@",responseObject);
-        
         kAppDel.obj_EmployeeAreWiseJob = [[EmployeeAreWiseJob alloc]initWithDictionary:responseObject];
+        
+        NSLog(@"values %@",responseObject);
+        
         
     if ([[responseObject valueForKey:@"status"] isEqual:@1])
         {
@@ -927,15 +948,25 @@ CGRect sliderFrame;
 #pragma mark - MapView Delegates -
 -(BOOL) mapView:(GMSMapView *) mapView didTapMarker:(GMSMarker *)marker
 {
-    selected = [marker.accessibilityLabel intValue];
+    selected = 0;
 
-    currentSelection = [marker.accessibilityLabel intValue];
+    currentSelection = 0;
     
-    markerUserLocation.map  = nil;
+   // markerUserLocation.map  = nil;
     
-    [mapView clear];
+//    [mapView clear];
+//    
+//    [self mapMarker];
     
-    [self mapMarker];
+    kAppDel.userSelectedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"userSelectedStatus"]];
+    
+    kAppDel.userInvitedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"userInvitedStatus"]];
+    
+    kAppDel.applicationStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"applicationStatus"]];
+    
+    NSString *str=[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"category"];
+    
+    kAppDel.subCategorymap = [[NSMutableArray alloc] initWithArray:[str componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]]];
     
     for(int i = 0;i<[_totalVisibleJobs count]; i++)
     {
@@ -979,7 +1010,6 @@ CGRect sliderFrame;
     }
     
     currentSelection = [_totalVisibleJobs count]+1;
-    
     
     _categoryTableView.delegate = self;
     _categoryTableView.dataSource = self;
@@ -1050,7 +1080,6 @@ CGRect sliderFrame;
 #pragma mark - Marker
 -(void)mapMarker{
     
-
    // GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
    // bounds = [bounds includingCoordinate:currentLocation];
     
@@ -1251,7 +1280,21 @@ CGRect sliderFrame;
 - (void)clusterManager:(GMUClusterManager *)clusterManager didTapCluster:(id<GMUCluster>)cluster {
     
     NSLog(@"called cluster count %lu ",(unsigned long)cluster.count);
- 
+    selected = 0;
+    
+    currentSelection = 0;
+  
+    kAppDel.userSelectedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"userSelectedStatus"]];
+    
+    kAppDel.userInvitedStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"userInvitedStatus"]];
+    
+    kAppDel.applicationStatus = [NSString stringWithFormat:@"%@",[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"applicationStatus"]];
+    
+    
+    NSString *str=[[_totalVisibleJobs objectAtIndex:0]valueForKey:@"category"];
+    
+    kAppDel.subCategorymap = [[NSMutableArray alloc] initWithArray:[str componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]]];
+    
     for(int i = 0;i<[_totalVisibleJobs count]; i++)
     {
         [_categoryTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];

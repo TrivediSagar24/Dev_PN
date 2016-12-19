@@ -146,20 +146,25 @@
                  
                  [kAppDel.progressHud hideAnimated:YES];
                  
+                 
+                 /*
                  UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"Registration completed" message:@"Your registration has been completed successfully" preferredStyle:UIAlertControllerStyleAlert];
                  
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action)
                         {
-                    employeeSlideNavigation *leftMenu =[self.storyboard
-                                                                instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
-                            
-                    [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
-                            
-            employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
-                            
-                [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
             }]];
                  [self presentViewController:alert animated:YES completion:nil];
+        */
+                 
+                 employeeSlideNavigation *leftMenu =[self.storyboard
+                                                     instantiateViewControllerWithIdentifier: @"employeeSlideNavigation"];
+                 
+                 [[SlideNavigationController sharedInstance] setLeftMenu:leftMenu];
+                 
+                 employeeJobNotification *obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
+                 
+                 obj_employeeJobNotification.forPopUpMenuRegister = YES;
+                 [self.navigationController pushViewController:obj_employeeJobNotification animated:YES];
                  
              } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
              {

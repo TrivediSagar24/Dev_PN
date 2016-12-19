@@ -480,7 +480,7 @@
 
 @implementation responseEmployeesList
 
--(responseEmployeesList *)initWithDictionary:(NSMutableDictionary *)dictionary{
+-(responseEmployeesList *)initWithDictionary:(NSMutableDictionary *)Array{
     
     self.employeeAvailabilityStatus = [[NSMutableArray alloc] init];
     self.employeeCategoryId = [[NSMutableArray alloc] init];
@@ -499,21 +499,21 @@
     self.employeeSubactegoryName = [[NSMutableArray alloc] init];
     if(self == [super init]){
     /*---Allocating and initialising the arrays----------*/
-        self.employeeAvailabilityStatus = [[dictionary valueForKey:@"data"] valueForKey:@"availabilityStatus"];
-        self.employeeCategoryId =[[dictionary valueForKey:@"data"] valueForKey:@"categoryId"];
-        self.employeeCategoryName = [[dictionary valueForKey:@"data"] valueForKey:@"categoryName"];
-        self.employeeDescription = [[dictionary valueForKey:@"data"] valueForKey:@"description"];
-        self.employeeDistance = [[dictionary valueForKey:@"data"] valueForKey:@"distance"];
-        self.employeeId = [[dictionary valueForKey:@"data"] valueForKey:@"employeeId"];
-        self.employeeExpYears =[[dictionary valueForKey:@"data"] valueForKey:@"exp_years"];
-        self.employeeImage = [[dictionary valueForKey:@"data"] valueForKey:@"image_url"];
-        self.employeeLatitude=[[dictionary valueForKey:@"data"] valueForKey:@"lat"];
-        self.employeeLongitude = [[dictionary valueForKey:@"data"] valueForKey:@"lng"];
-        self.employeeName = [[dictionary valueForKey:@"data"] valueForKey:@"name"];
-        self.employeeRate = [[dictionary valueForKey:@"data"] valueForKey:@"ratePerHour"];
-        self.employeeRating = [[dictionary valueForKey:@"data"]valueForKey:@"rating"];
-        self.employeeSubcategoryId = [[dictionary valueForKey:@"data"] valueForKey:@"subCategoryId"];
-        self.employeeSubactegoryName = [[dictionary valueForKey:@"data"] valueForKey:@"subCategoryName"];
+        self.employeeAvailabilityStatus = [Array  valueForKey:@"availabilityStatus"];
+        self.employeeCategoryId =[Array valueForKey:@"categoryId"];
+        self.employeeCategoryName = [Array  valueForKey:@"categoryName"];
+        self.employeeDescription = [Array  valueForKey:@"description"];
+        self.employeeDistance = [Array  valueForKey:@"distance"];
+        self.employeeId = [Array valueForKey:@"employeeId"];
+        self.employeeExpYears =[Array  valueForKey:@"exp_years"];
+        self.employeeImage = [Array valueForKey:@"image_url"];
+        self.employeeLatitude=[Array  valueForKey:@"lat"];
+        self.employeeLongitude = [Array  valueForKey:@"lng"];
+        self.employeeName = [Array  valueForKey:@"name"];
+        self.employeeRate = [Array valueForKey:@"ratePerHour"];
+        self.employeeRating = [Array valueForKey:@"rating"];
+        self.employeeSubcategoryId = [Array  valueForKey:@"subCategoryId"];
+        self.employeeSubactegoryName = [Array valueForKey:@"subCategoryName"];
     }
     return self;
 }
