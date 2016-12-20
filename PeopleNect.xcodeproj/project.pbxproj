@@ -784,7 +784,6 @@
 		18E60EE71DA636AE00B832E4 /* onGoingJobs */ = {
 			isa = PBXGroup;
 			children = (
-				18E7A9B51DA6465100E572DA /* onGoingSectionCell */,
 				18E60EE81DA6371600B832E4 /* onGoingJobs.h */,
 				18E60EE91DA6371600B832E4 /* onGoingJobs.m */,
 			);
@@ -798,7 +797,8 @@
 				18E7A9C11DA653E700E572DA /* onGoingSectionCell.m */,
 				18E7A9C21DA653E700E572DA /* onGoingSectionCell.xib */,
 			);
-			path = onGoingSectionCell;
+			name = onGoingSectionCell;
+			path = onGoingJobs/onGoingSectionCell;
 			sourceTree = "<group>";
 		};
 		18EA61621E02B22800C7B8BE /* PrivacyPolicy */ = {
@@ -1034,6 +1034,7 @@
 		C5286D801D5CA4D10055642C /* EmployeeSlideNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				18E7A9B51DA6465100E572DA /* onGoingSectionCell */,
 				18E60EE71DA636AE00B832E4 /* onGoingJobs */,
 				C5D50B261D801A7800F23B8A /* employeeJobHistory */,
 				C563D0521D62D590006020DD /* EmployeePendingInvitation */,
