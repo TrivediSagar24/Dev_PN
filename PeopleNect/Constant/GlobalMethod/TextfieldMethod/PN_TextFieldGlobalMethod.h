@@ -2,7 +2,7 @@
 //  PN_TextFieldGlobalMethod.h
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 7/28/16.
+//  Created by Narendra Pandey on 7/28/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -15,13 +15,9 @@ IB_DESIGNABLE
 
 @property (nonatomic) IBInspectable UIImage *leftImag;
 @property (nonatomic) IBInspectable UIImage *rightImag;
-
 @property (nonatomic) IBInspectable UIColor *BorderColor;
-
 @property (nonatomic) IBInspectable UIColor *PlaceHolderColor;
-
 @property(nonatomic)BOOL secure;
 @property(nonatomic,strong)NSString *actualText;
 @property (strong, nonatomic) CALayer *borderLayer;
-
 @end

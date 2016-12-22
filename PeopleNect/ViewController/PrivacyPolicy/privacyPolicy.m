@@ -2,7 +2,7 @@
 //  privacyPolicy.m
 //  PeopleNect
 //
-//  Created by Apple on 15/12/16.
+//  Created by  Narendra Pandey on 15/12/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -13,11 +13,9 @@
 @end
 
 @implementation privacyPolicy
-
+#pragma mark - View LifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissView)];
     gestureRecognizer.delegate = self;
     [self.privacyPolicyWebView addGestureRecognizer:gestureRecognizer];
@@ -33,25 +31,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
-
 }
-
+#pragma mark - dismissView -
 -(void)dismissView{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+#pragma mark - gesture Delegates -
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return YES;
 }

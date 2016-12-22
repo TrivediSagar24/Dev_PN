@@ -2,7 +2,7 @@
 //  employeeAvailability.m
 //  PeopleNect
 //
-//  Created by Apple on 16/11/16.
+//  Created by Narendra Pandey on 16/11/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

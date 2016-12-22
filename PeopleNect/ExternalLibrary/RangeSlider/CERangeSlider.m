@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "CERangeSliderKnobLayer.h"
 #import "CERangeSliderTrackLayer.h"
-
+#import "PN_Constants.h"
 @implementation CERangeSlider
 {
     CERangeSliderTrackLayer* _trackLayer;
@@ -61,14 +61,13 @@ GENERATE_SETTER(upperValue, float, setUpperValue, setLayerFrames)
     self = [super initWithFrame:frame];
     if (self)
     {
-        _trackHighlightColour = [UIColor colorWithRed:44.0/255.0 green:96.0/255.0 blue:144.0/255.0 alpha:1.0];
+    _trackHighlightColour = RGBCOLOR(44.0, 96.0, 144.0);
         
-         _trackColour = [ UIColor colorWithRed:167.0/255.0 green:167.0/255.0 blue:167.0/255.0 alpha:1.0];
+        _trackColour =RGBCOLOR(167.0, 167.0, 167.0);
         
         _trackColour = [ UIColor redColor];
         
-        _knobColour = [UIColor colorWithRed:44.0/255.0 green:96.0/255.0 blue:144.0/255.0 alpha:1.0];
-
+        _knobColour =  RGBCOLOR(44.0, 96.0, 144.0);
         _curvatiousness = 1.0;
         
         _maximumValue = 24;

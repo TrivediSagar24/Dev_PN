@@ -2,7 +2,7 @@
 //  employeeChangeLoc.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/8/16.
+//  Created by Narendra Pandey on 9/8/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -29,15 +29,12 @@
 #pragma mark - View LifeCycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     _tfZipStreetName.placeSearchDelegate = self;
     _tfZipStreetName.delegate = self;
-//    _tfZipStreetName.strApiKey = @"AIzaSyCDi2dklT-95tEHqYoE7Tklwzn3eJP-MtM";
-    _tfZipStreetName.strApiKey = @"AIzaSyB9U-Ssv6A9Tt2keQtZyWMuadHoELYeGlk";
+    _tfZipStreetName.strApiKey = GoogleAPIKey;
     _tfZipStreetName.superViewOfList = self.view;
     _tfZipStreetName.autoCompleteShouldHideOnSelection = YES;
     _tfZipStreetName.maximumNumberOfAutoCompleteRows = 5;
-    
     obj_employeeJobNotification = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeJobNotification"];
 }
 

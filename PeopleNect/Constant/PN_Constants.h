@@ -102,9 +102,6 @@
 #define iOS_VERSION_LESS_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 
-/*----- NSUserDefaults -----*/
-#define kUser_Detail @"OH_UserDetail"
-#define kUser_ID @"OH_UserID"
 
 /*----- constant value -----*/
 #define minimumPasswordLength 8
@@ -118,14 +115,18 @@
 
 /*----- social sharing keys/secrets ------*/
 /*----- google plus ------*/
-#define GPP_Client_ID           @""
+#define GPP_Client_ID           @"285378539209-tfajq8qi1s2pj56g6jpkmio1545itrrf.apps.googleusercontent.com"
 #define GTLAuthScopePlusLogin   @""
-
+#define GoogleAPIKey @"AIzaSyB9U-Ssv6A9Tt2keQtZyWMuadHoELYeGlk"
 
 /*----- linkedin ------*/
 #define Linkedin_Client_ID      @""
 #define Linkedin_Client_Secret  @""
 #define Linkedin_Callback_URL   @""
+
+/*----- paypal ------*/
+
+#define PayPalEnvironmentSandboxKey @"AYEzBeYksFb3Nf_xnHBeX2I2W4gj4WJkFQwQnEUBW31F-p3Ui4jfILBMjoLsz8e0azcCWDBLxX1ZcUQJ"
 
 /*--- DeviceID ----*/
 #define DevideID [[[UIDevice currentDevice]identifierForVendor]UUIDString]

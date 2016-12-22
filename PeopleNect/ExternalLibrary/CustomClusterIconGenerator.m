@@ -2,12 +2,12 @@
 //  CustomClusterIconGenerator.m
 //  ObjCDemoApp
 //
-//  Created by Apple on 05/12/16.
+//  Created by Narendra Pandey on 05/12/16.
 //  Copyright © 2016 Google. All rights reserved.
 //
 
 #import "CustomClusterIconGenerator.h"
-
+#import "PN_Constants.h"
 @implementation CustomClusterIconGenerator
 
 
@@ -50,10 +50,9 @@
     label.font = [UIFont systemFontOfSize:10];
     
     label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [UIColor colorWithRed:24.0/255.0 green:59.0/255.0 blue:91.0/255.0 alpha:1.0];
-    label.backgroundColor = [UIColor colorWithRed:177.0/255.0 green:177.0/255.0 blue:177.0/255.0 alpha:1.0];
+    label.textColor =RGBCOLOR(24.0, 59.0, 91.0);
+    label.backgroundColor = RGBCOLOR(177.0, 177.0, 177.0);
     UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 21, 69, 38)];
-    
 //    iconMapUser.png
     
     

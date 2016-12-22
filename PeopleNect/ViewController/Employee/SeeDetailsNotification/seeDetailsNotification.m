@@ -2,7 +2,7 @@
 //  seeDetailsNotification.m
 //  PeopleNect
 //
-//  Created by Apple on 07/10/16.
+//  Created by Narendra Pandey on 07/10/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

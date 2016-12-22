@@ -2,7 +2,7 @@
 //  employeeLoginCtr.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 8/8/16.
+//  Created by Narendra Pandey on 8/8/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -211,7 +211,7 @@
 -(void)googleSignIn
 {
     signIn = [GPPSignIn sharedInstance];
-    signIn.clientID = kClientId;
+    signIn.clientID = GPP_Client_ID;
     signIn.scopes = @[ kGTLAuthScopePlusLogin ];
     signIn.delegate = self;
     signIn.shouldFetchGoogleUserEmail = YES;

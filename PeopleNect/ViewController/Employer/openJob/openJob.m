@@ -2,7 +2,7 @@
 //  openJob.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/23/16.
+//  Created by Narendra Pandey on 9/23/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -14,26 +14,19 @@
 
 @implementation openJob
 #pragma mark - ViewLifeCycle -
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     _openJobTableView.delegate = self;
     _openJobTableView.dataSource = self;
-    
     [self openJobs];
-    
     self.openJobTableView.rowHeight = UITableViewAutomaticDimension;
     self.openJobTableView.estimatedRowHeight = 44.0;
-    
     self.openJobTableView.allowMultipleSectionsOpen = YES;
-
     [self.openJobTableView registerNib:[UINib nibWithNibName:@"AccordionHeaderView" bundle:nil] forHeaderFooterViewReuseIdentifier:kAccordionHeaderViewReuseIdentifier];
 }
 
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
@@ -41,17 +34,14 @@
     self.navigationController.navigationBar.translucent = NO;
 }
 
-
 #pragma mark - <UITableViewDataSource> / <UITableViewDelegate> -
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section==0) {
         if (_currentJob.count==0) {
             return 1;
-        }
-        else
+        }else
         return _currentJob.count;
-    }
-    else
+    }else
         if (_guestJob.count==0) {
             return 1;
         }else
@@ -71,13 +61,11 @@
 
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-   
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return [self tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section {
-   
     return [self tableView:tableView heightForHeaderInSection:section];
 }
 
@@ -85,15 +73,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     openJobCell *Cell = [tableView dequeueReusableCellWithIdentifier:@"openJobCell" forIndexPath:indexPath];
-    
     if (indexPath.section==0) {
-        
         if (_currentJob.count==0) {
             Cell.textLabel.textColor = Cell.jobTitleLbl.textColor;
             Cell.textLabel.text = @"no available current jobs";
             Cell.textLabel.textAlignment = NSTextAlignmentCenter;
         }else{
-            
         Cell.jobTitleLbl.text = [[_currentJob valueForKey:@"jobTitle"] objectAtIndex:indexPath.row];
         
         Cell.priceLbl.text = [NSString stringWithFormat:@"$ %@/h",[[_currentJob valueForKey:@"rate"] objectAtIndex:indexPath.row]];
@@ -110,8 +95,7 @@
             Cell.textLabel.text = @"no available guest jobs";
         Cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
-        }
-        else{
+        }else{
             Cell.jobTitleLbl.text = [[_guestJob valueForKey:@"jobTitle"] objectAtIndex:indexPath.row];
             
             Cell.priceLbl.text = [NSString stringWithFormat:@"$ %@/h",[[_guestJob valueForKey:@"rate"] objectAtIndex:indexPath.row]];

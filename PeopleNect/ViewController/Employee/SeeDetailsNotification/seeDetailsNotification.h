@@ -2,7 +2,7 @@
 //  seeDetailsNotification.h
 //  PeopleNect
 //
-//  Created by Apple on 07/10/16.
+//  Created by Narendra Pandey on 07/10/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -22,7 +22,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *priceHourLbl;
 @property (strong, nonatomic) IBOutlet UIImageView *dolarImg;
 @property (strong, nonatomic) IBOutlet UILabel *dateTimeLbl;
-
 @property (strong, nonatomic) IBOutlet UIImageView *clockImg;
 @property (strong, nonatomic) IBOutlet UILabel *jobTitleLbl;
 @property (strong, nonatomic) IBOutlet UILabel *bottomJobPriceLbl;

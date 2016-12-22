@@ -177,7 +177,6 @@ extern NSString * const CardIOScanningOrientationAnimationDuration;
 
 @end
 
-/// Methods with names that do not conflict with Apple's private APIs.
 @interface CardIOPaymentViewController (NonConflictingAPINames)
 
 /// If YES, the status bar's style will be kept as whatever your app has set it to.

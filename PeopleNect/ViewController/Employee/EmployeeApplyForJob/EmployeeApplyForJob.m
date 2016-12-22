@@ -2,7 +2,7 @@
 //  EmployeeApplyForJob.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/6/16.
+//  Created by Narendra Pandey on 9/6/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -94,9 +94,9 @@
 }
 
 -(void)waitingDotLabel{
-    _waitingOneLbl.backgroundColor = [UIColor colorWithRed:54.0/255.0 green:230.0/255.0 blue:34.0/255.0 alpha:1.0];
-    _waitingTwoLbl.backgroundColor = [UIColor colorWithRed:54.0/255.0 green:230.0/255.0 blue:34.0/255.0 alpha:1.0];
-    _waitingThreeLbl.backgroundColor = [UIColor colorWithRed:54.0/255.0 green:230.0/255.0 blue:34.0/255.0 alpha:1.0];
+    _waitingOneLbl.backgroundColor = RGBCOLOR(54.0, 230.0, 34.0);
+    _waitingTwoLbl.backgroundColor = RGBCOLOR(54.0, 230.0, 34.0);
+    _waitingThreeLbl.backgroundColor = RGBCOLOR(54.0, 230.0, 34.0);
 }
 
 

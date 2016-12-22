@@ -2,9 +2,8 @@
 //  AppDelegate.h
 //  PeopleNect
 //
-//  Created by Trivedi Sagar on 26/07/16.
+//  Created by Narendra Pandey on 26/07/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 #import <GooglePlus/GooglePlus.h>
@@ -25,8 +24,7 @@
 #import <CoreData/CoreData.h>
 #import "GlobalMethods.h"
 #import "PayPalMobile.h"
-
-static NSString * const kClientId = @"285378539209-tfajq8qi1s2pj56g6jpkmio1545itrrf.apps.googleusercontent.com";
+#import "PN_Constants.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -37,7 +35,6 @@ static NSString * const kClientId = @"285378539209-tfajq8qi1s2pj56g6jpkmio1545it
 @property(strong,nonatomic)NSString *userInvitedStatus;
 @property(strong,nonatomic)NSString *applicationStatus;
 @property(strong,nonatomic)NSString *SelectedFollowUp;
-
 @property(strong ,nonatomic)MBProgressHUD *progressHud;
 @property(strong,nonatomic)  responseDataOC *obj_responseDataOC;
 @property (strong,nonatomic) responseUpdateEmployerDetails *obj_responseDataUpdateEmployerDetails;
@@ -58,19 +55,14 @@ static NSString * const kClientId = @"285378539209-tfajq8qi1s2pj56g6jpkmio1545it
 @property(strong,nonatomic)EmployerDetails *obj_EmployerDetails;
 @property(strong,nonatomic)NSString *apnDeviceToken;
 @property(strong,nonatomic)NSString *categorySelectionID;
-
 @property(strong,nonatomic) NSMutableArray *subCategorymap;
-
 @property(strong,nonatomic) NSMutableArray *subCategoryFromInvited;
-
 @property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, retain, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 @property(nonatomic) int changeCount;
 @property(nonatomic) int totalCount;
-
-
 - (NSURL *)applicationDocumentsDirectory;
+
 @end
 

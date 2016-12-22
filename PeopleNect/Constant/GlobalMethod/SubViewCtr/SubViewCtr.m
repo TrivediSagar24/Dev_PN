@@ -2,7 +2,7 @@
 //  SubViewCtr.m
 //  PeopleNect
 //
-//  Created by Apple on 01/08/16.
+//  Created by Narendra Pandey on 01/08/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

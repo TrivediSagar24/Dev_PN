@@ -2,7 +2,7 @@
 //  PN_TextViewGlobalMethods.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 8/3/16.
+//  Created by  Narendra Pandey on 8/3/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -10,46 +10,22 @@
 
 @implementation PN_TextViewGlobalMethods
 {
-    
-    NSString *placeholderText;  // make a property
-  
+    NSString *placeholderText;
 }
 
--(void)awakeFromNib
-{
-    
-    
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-}
-
-
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if ([textView respondsToSelector: @selector(updateForTextChange)])
-    {
+- (void)textViewDidChange:(UITextView *)textView{
+    if ([textView respondsToSelector: @selector(updateForTextChange)]){
         [self updateForTextChange];
     }
-    
 }
 
-- (void) updateForTextChange
-{
-    if ([self.text length] == 0)
-    {
+- (void) updateForTextChange{
+    if ([self.text length] == 0){
         self.textColor = self.PlaceHolderColor;
         self.text = self.PlaceHolder;
-    }
-    else
-    {
+    }else{
         self.textColor = self.NormalColor;
         self.text =@"";
-
     }
-    
 }
-
 @end

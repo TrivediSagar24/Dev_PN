@@ -2,7 +2,7 @@
 //  employeeSlideNavigation.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 8/11/16.
+//  Created by Narendra Pandey on 8/11/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -709,6 +709,8 @@ static int employerCount = 0;
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"employerRegister"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"employerLogin"];
    
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"Update"];
+
     kAppDel.EmployerProfileImage = nil;
     
     SplashEmployerCtr *obj_SplashEmployerCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"SplashEmployerCtr"];

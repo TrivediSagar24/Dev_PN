@@ -2,7 +2,7 @@
 //  CollectionViewCell.m
 //  PeopleNect
 //
-//  Created by Apple on 27/07/16.
+//  Created by Narendra Pandey on 27/07/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -12,7 +12,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
 }
 
 @end

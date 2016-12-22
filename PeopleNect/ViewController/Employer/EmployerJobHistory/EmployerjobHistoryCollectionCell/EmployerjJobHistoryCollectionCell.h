@@ -2,7 +2,7 @@
 //  EmployerjJobHistoryCollectionCell.h
 //  PeopleNect
 //
-//  Created by Apple on 25/10/16.
+//  Created by Narendra Pandey on 25/10/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

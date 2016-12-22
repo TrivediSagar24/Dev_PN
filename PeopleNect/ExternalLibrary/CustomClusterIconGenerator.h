@@ -2,7 +2,7 @@
 //  CustomClusterIconGenerator.h
 //  ObjCDemoApp
 //
-//  Created by Apple on 05/12/16.
+//  Created by Narendra Pandey on 05/12/16.
 //  Copyright © 2016 Google. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  employeeJobHistory.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/7/16.
+//  Created by Narendra Pandey on 9/7/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -112,19 +112,44 @@
 //        UILabel *BorderLabel = [[UILabel alloc]initWithFrame:CGRectMake(workCell.contentView.frame.origin.x, workCell.contentView.frame.size.height-10, workCell.frame.size.width, 1)];
 //        BorderLabel.backgroundColor = [UIColor blackColor];
 //        [workCell.contentView addSubview:BorderLabel];
+        workCell.jobTitle.text = [[_WorkhistoryArray valueForKey:@"jobTitle"]objectAtIndex:indexPath.row];
+        workCell.priceLbl.text = [[_WorkhistoryArray valueForKey:@"TotalAmount"]objectAtIndex:indexPath.row];
         
         return workCell;
     }
     if (indexPath.section==1) {
         onGoingSectionCell *cell = [tableView dequeueReusableCellWithIdentifier:@"onGoingSectionCell" forIndexPath:indexPath];
         
+        cell.jobTitleLbl.text = [[_declineJobArray valueForKey:@"jobTitle"]objectAtIndex:indexPath.row];
+        NSString *price = [[_declineJobArray valueForKey:@"rate"]objectAtIndex:indexPath.row];
+        price = [price stringByReplacingOccurrencesOfString:@".00" withString:@""];
+        cell.priceLbl.text = [NSString stringWithFormat:@"RS%@/h",price];
+        cell.companyNameLbl.text = [[_declineJobArray valueForKey:@"companyName"]objectAtIndex:indexPath.row];
+        
+        NSString *distance = [[_declineJobArray valueForKey:@"distance"]objectAtIndex:indexPath.row];
+        
+        double distanceValues = [distance doubleValue];
+        
+        cell.kmLbl.text = [NSString stringWithFormat:@"%.02fkm",distanceValues];
+        
+        cell.dateLbl.text = [[_declineJobArray valueForKey:@"date"]objectAtIndex:indexPath.row];
+        
+        cell.ratingLbl.text = [[_declineJobArray valueForKey:@"rating"]objectAtIndex:indexPath.row];
+        
+        cell.jobDescriptionLbl.text = [[_declineJobArray valueForKey:@"description"]objectAtIndex:indexPath.row];
+        cell.addressLbl.text = [NSString stringWithFormat:@"%@ %@ %@",[[_declineJobArray valueForKey:@"address"]objectAtIndex:indexPath.row],[[_declineJobArray valueForKey:@"address1"]objectAtIndex:indexPath.row],[[_declineJobArray valueForKey:@"street_name"]objectAtIndex:indexPath.row]];
+        
+        cell.timeLbl.text = [NSString stringWithFormat:@"Start hour %@ /Total hours %@ ",[[_declineJobArray valueForKey:@"startHour"]objectAtIndex:indexPath.row],[[_declineJobArray valueForKey:@"totalHours"]objectAtIndex:indexPath.row]];
+        
         cell.followBtn.hidden = YES;
+        
         return cell;
     }
     else if (indexPath.section==2){
         onGoingSectionCell *cell = [tableView dequeueReusableCellWithIdentifier:@"onGoingSectionCell" forIndexPath:indexPath];
         
         cell.followBtn.hidden = YES;
+        
         return cell;
     }
     return nil;

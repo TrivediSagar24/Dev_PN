@@ -2,7 +2,7 @@
 //  employeeViewController.m
 //  PeopleNect
 //
-//  Created by Apple on 27/07/16.
+//  Created by Narendra Pandey on 27/07/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -368,32 +368,27 @@ if (emailflag == YES)
     else if (theTextField == _tfEmail)
     {
         [_tfEmail resignFirstResponder];
-        [_tfPhoneCountryCode becomeFirstResponder];
-    }
-    else if (theTextField == _tfPhoneCountryCode)
-    {
-        [_tfPhoneCountryCode resignFirstResponder];
         [_tfPhoneNumber becomeFirstResponder];
     }
     else if (theTextField == _tfPhoneNumber)
     {
         [_tfPhoneNumber resignFirstResponder];
-        [_tfZipCode becomeFirstResponder];
-    }
-    else if (theTextField == _tfZipCode)
-    {
-        [_tfZipCode resignFirstResponder];
         [_tfStreetName becomeFirstResponder];
     }
     else if (theTextField == _tfStreetName)
     {
         [_tfStreetName resignFirstResponder];
-         [_tfStreetNumber becomeFirstResponder];
+        [_tfZipCode becomeFirstResponder];
+    }
+    else if (theTextField == _tfZipCode)
+    {
+        [_tfZipCode resignFirstResponder];
+        [_tfStreetNumber becomeFirstResponder];
     }
     else if (theTextField == _tfStreetNumber)
     {
         [_tfStreetNumber resignFirstResponder];
-        [_tfPassword becomeFirstResponder];
+         [_tfPassword becomeFirstResponder];
     }
     
     else if (theTextField == _tfPassword)
@@ -515,7 +510,7 @@ numberOfRowsInComponent:(NSInteger)component
 -(void)googleSignIn
 {
     signIn = [GPPSignIn sharedInstance];
-    signIn.clientID = kClientId;
+    signIn.clientID = GPP_Client_ID;
     signIn.scopes = @[ kGTLAuthScopePlusLogin ];
     signIn.delegate = self;
     signIn.shouldFetchGoogleUserEmail = YES;
@@ -875,7 +870,7 @@ numberOfRowsInComponent:(NSInteger)component
     _tfStreetName.maximumNumberOfAutoCompleteRows = 10;
     _tfPhoneCountryCode.text = @"+55";
     _tfPhoneCountryCode.enabled = NO;
-    _tfPhoneCountryCode.textColor = [UIColor grayColor];
+   // _tfPhoneCountryCode.textColor = [UIColor grayColor];
 }
 
 -(void)autoSuggestionOptionalProperty{

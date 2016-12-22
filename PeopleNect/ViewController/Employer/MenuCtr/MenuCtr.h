@@ -2,7 +2,7 @@
 //  MenuCtr.h
 //  PeopleNect
 //
-//  Created by Apple on 23/08/16.
+//  Created by Narendra Pandey on 23/08/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

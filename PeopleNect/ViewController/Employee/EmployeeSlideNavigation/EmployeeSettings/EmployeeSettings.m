@@ -2,7 +2,7 @@
 //  EmployeeSettings.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 8/16/16.
+//  Created by Narendra Pandey on 8/16/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -27,7 +27,6 @@
      employeeUserDetailData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeUserDetail"];
     
     
-   
     if (employeeUserDetailData!=nil) {
          kAppDel.obj_responseEmployeeUserDetail = [NSKeyedUnarchiver unarchiveObjectWithData:employeeUserDetailData];
         [self updateValues];
@@ -72,6 +71,8 @@
 {
     _EmployeeProfileImage.layer.cornerRadius = _EmployeeProfileImage.frame.size.height/2;
     
+    _saveBtn.frame = CGRectMake(_saveBtn.frame.origin.x, _tfPassword.frame.origin.y+_tfPassword.frame.size.height+15, _saveBtn.frame.size.width, _saveBtn.frame.size.height);
+
     if (_tfPassword.hidden)
     {
         _saveBtn.frame = CGRectMake(_saveBtn.frame.origin.x, _tfPassword.frame.origin.y, _saveBtn.frame.size.width, _saveBtn.frame.size.height);
@@ -110,12 +111,9 @@
 }
 
 #pragma mark - IBActions -
-
-
 - (IBAction)SaveUserDetailClicked:(id)sender
 {
-    if (_strSubCategoryId.length==0)
-    {
+    if (_strSubCategoryId.length==0){
         _strSubCategoryId = kAppDel.obj_responseEmployeeUserDetail.Employee_sub_category_id;
     }
     if (_strCategoryId.length==0)
@@ -163,13 +161,11 @@
                  }
                  [self presentViewController:[GlobalMethods AlertWithTitle:@"" Message:[responseObject valueForKey:@"message"] AlertMessage:@"OK"] animated:YES completion:nil];
              }
-             /*
+           
               employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
-              
               
               [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
               [[NSUserDefaults standardUserDefaults] synchronize];
-              */
              
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
          {

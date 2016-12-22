@@ -2,7 +2,7 @@
 //  openJobCell.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/23/16.
+//  Created by Narendra Pandey on 9/23/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

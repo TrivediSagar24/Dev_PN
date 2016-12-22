@@ -2,7 +2,7 @@
 //  employerInviteForJobCell.h
 //  PeopleNect
 //
-//  Created by Apple on 09/09/16.
+//  Created by Narendra Pandey on 09/09/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 

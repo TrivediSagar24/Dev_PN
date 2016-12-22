@@ -2,7 +2,7 @@
 //  employeeChat.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/8/16.
+//  Created by Narendra Pandey on 9/8/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -32,7 +32,7 @@ _chatHistoryArray = [[NSMutableArray alloc]init];
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0];
+    self.navigationController.navigationBar.barTintColor = RGBCOLOR(32.0, 88.0, 140.0);
     self.navigationController.navigationBar.translucent = NO;
      self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"arrow-left"];
     EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];

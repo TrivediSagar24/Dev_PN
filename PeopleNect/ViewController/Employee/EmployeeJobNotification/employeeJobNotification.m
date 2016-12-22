@@ -2,7 +2,7 @@
 //  employeeJobNotification.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 8/9/16.
+//  Created by Narendra Pandey on 8/9/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 
@@ -167,7 +167,7 @@ CGRect sliderFrame;
     [super viewWillAppear:YES];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
-    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:86.0/255.0 blue:136.0/255.0 alpha:1.0];
+    self.navigationController.navigationBar.barTintColor = RGBCOLOR(32.0, 86.0, 136.0);
     self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem =  [self RightBarButton];
     
@@ -317,8 +317,10 @@ CGRect sliderFrame;
         _btnAreaBorder.hidden = YES;
         _btnAllBorder.hidden = NO;
         [self allJob];
-        [_btnInMyArea setTitleColor:[UIColor colorWithRed:142.0/255.0 green:142.0/255.0 blue:142.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-        [_btnAll setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [_btnInMyArea setTitleColor:RGBCOLOR(142.0, 142.0, 142.0) forState:UIControlStateNormal];
+        
+        [_btnAll setTitleColor:RGBCOLOR(55.0, 99.0, 145.0)forState:UIControlStateNormal];
+        
     }
     
     if (count==0)
@@ -337,11 +339,9 @@ CGRect sliderFrame;
         _btnAreaBorder.hidden = NO;
         _btnAllBorder.hidden = YES;
         [self areaWiseJob];
-        [_btnAll setTitleColor:[UIColor colorWithRed:142.0/255.0 green:142.0/255.0 blue:142.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-        [_btnInMyArea setTitleColor:[UIColor colorWithRed:55.0/255.0 green:99.0/255.0 blue:145.0/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [_btnAll setTitleColor:RGBCOLOR(142.0, 142.0, 142.0) forState:UIControlStateNormal];
+        [_btnInMyArea setTitleColor:RGBCOLOR(55.0, 99.0, 145.0) forState:UIControlStateNormal];
     }
-    
-    
     if (count==1)
     {
         
@@ -574,8 +574,7 @@ CGRect sliderFrame;
         }
         if ([[[_totalVisibleJobs valueForKey:@"userSelectedStatus"]objectAtIndex:indexPath.row] isEqual:@0] && [[[_totalVisibleJobs valueForKey:@"userInvitedStatus"] objectAtIndex:indexPath.row]isEqual:@0]){
             
-            [self labelChangeColor:mapCell Color:[UIColor colorWithRed:32.0/255.0 green:88.0/255.0 blue:140.0/255.0 alpha:1.0]];
-            
+            [self labelChangeColor:mapCell Color: RGBCOLOR(32.0, 88.0, 140.0)];
             mapCell.mapImage.image = [UIImage imageNamed:@"map_"];
             mapCell.middleMapImage.image = [UIImage imageNamed:@"map_"];
         }

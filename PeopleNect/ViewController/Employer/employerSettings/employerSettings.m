@@ -2,7 +2,7 @@
 //  employerSettings.m
 //  PeopleNect
 //
-//  Created by Lokesh Dudhat on 9/9/16.
+//  Created by Narendra Pandey on 9/9/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 //
 #import "SubViewCtr.h"
@@ -25,8 +25,7 @@
     [super viewDidLoad];
     _tfStreetName.placeSearchDelegate = self;
     _tfStreetName.delegate = self;
-    _tfStreetName.strApiKey = @"AIzaSyB9U-Ssv6A9Tt2keQtZyWMuadHoELYeGlk";
-    
+    _tfStreetName.strApiKey = GoogleAPIKey;
     _tfStreetName.superViewOfList = self.view;
     _tfStreetName.autoCompleteShouldHideOnSelection = YES;
     _tfStreetName.maximumNumberOfAutoCompleteRows = 5;
@@ -40,16 +39,13 @@
     self.navigationController.navigationBar.translucent = NO;
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
     [self unarchivingData];
-    
     _tfName.text = kAppDel.obj_responseDataOC.employerName;
     _tfSurname.text = kAppDel.obj_responseDataOC.employerSurname;
     _tfEmail.text = kAppDel.obj_responseDataOC.employerEmail;
-    
-    _tfEmail.userInteractionEnabled = NO;
+        _tfEmail.userInteractionEnabled = NO;
     _tfCountryCode.userInteractionEnabled = NO;
     _tfEmail.textColor = [UIColor grayColor];
     _tfCountryCode.textColor = [UIColor grayColor];
-    
     _tfPhoneNumber.text = kAppDel.obj_responseDataOC.employerPhoneNumber;
     _tfCountryCode.text = kAppDel.obj_responseDataOC.employerCountryCode;
     _tfPassword.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"EmployerPassword"];
@@ -79,9 +75,6 @@
             profileImageView.image = kAppDel.EmployerProfileImage;
         }
         [_profileView addSubview:profileImageView];
-    
-    
-    
     _tfStreetName.autoCompleteRegularFontName =  @"HelveticaNeue-Bold";
     _tfStreetName.autoCompleteBoldFontName = @"HelveticaNeue";
     _tfStreetName.autoCompleteTableCornerRadius=0.0;
@@ -93,18 +86,15 @@
     _tfStreetName.autoCompleteShouldHideOnSelection=YES;
     _tfStreetName.autoCompleteShouldHideClosingKeyboard=YES;
     _tfStreetName.autoCompleteShouldSelectOnExactMatchAutomatically = YES;
-
     _tfStreetName.autoCompleteTableFrame = CGRectMake((self.view.frame.size.width-_tfStreetName.frame.size.width)*0.5, _tfName.frame.origin.y, _tfCompanyName.frame.size.width, 100.0);
 }
-
-
 #pragma mark - UITextField Delegates -
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField{
     if (theTextField == _tfName){
         [theTextField resignFirstResponder];
         [_tfSurname becomeFirstResponder];
     }
-else if (theTextField == _tfSurname){
+    else if (theTextField == _tfSurname){
         [_tfSurname resignFirstResponder];
         [_tfPhoneNumber becomeFirstResponder];
     }
@@ -154,8 +144,6 @@ else if (theTextField == _tfSurname){
     }
     return YES;
 }
-
-
 #pragma mark - SlideNavigationController Methods -
 - (BOOL)slideNavigationControllerShouldDisplayLeftMenu{
     return YES;
@@ -163,8 +151,6 @@ else if (theTextField == _tfSurname){
 - (BOOL)slideNavigationControllerShouldDisplayRightMenu{
     return NO;
 }
-
-
 #pragma mark - Place search Textfield Delegates -
 -(void)placeSearch:(MVPlaceSearchTextField*)textField ResponseForSelectedPlace:(GMSPlace*)responseDict{
     [self.view endEditing:YES];
@@ -189,8 +175,6 @@ else if (theTextField == _tfSurname){
         cell.contentView.backgroundColor = [UIColor whiteColor];
     }
 }
-
-
 #pragma mark - IBActions -
 - (IBAction)btnCameraClicked:(id)sender{
     _imagePicker = [[UIImagePickerController alloc] init];
