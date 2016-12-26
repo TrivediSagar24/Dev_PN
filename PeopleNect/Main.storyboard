@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pmD-82-IV0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pmD-82-IV0">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -3088,7 +3088,7 @@
                                                 </constraints>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.64313725489999995" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.12941176469999999" green="0.56862745100000001" blue="0.2666666667" alpha="0.93999999999999995" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="ne2-hr-R1p" firstAttribute="top" secondItem="20z-ds-tMK" secondAttribute="top" id="4cE-V7-ItY"/>
                                             <constraint firstItem="iT1-sa-5JG" firstAttribute="top" secondItem="20z-ds-tMK" secondAttribute="top" constant="20" id="Avl-yB-FJ9"/>
@@ -3126,7 +3126,7 @@
                                                 </constraints>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.64313725489999995" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.12941176469999999" green="0.56862745100000001" blue="0.2666666667" alpha="0.93999999999999995" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="MWi-51-7gB" firstAttribute="top" secondItem="RhV-zV-CLQ" secondAttribute="top" id="4fb-81-gPa"/>
                                             <constraint firstItem="MWi-51-7gB" firstAttribute="leading" secondItem="RhV-zV-CLQ" secondAttribute="leading" constant="20" id="55l-iS-gcp"/>
@@ -3816,7 +3816,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b3Q-mS-WCy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11527" y="377"/>
+            <point key="canvasLocation" x="11326" y="315"/>
         </scene>
         <!--Employee Revenues-->
         <scene sceneID="d22-CR-ozT">
@@ -6300,7 +6300,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cmh-P4-Jb6">
                                                 <rect key="frame" x="25" y="234" width="270" height="75"/>
                                                 <subviews>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="b6z-iB-Jd5" customClass="CustomPlaceHolderTextView">
+                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="b6z-iB-Jd5" customClass="CustomPlaceHolderTextView">
                                                         <rect key="frame" x="0.0" y="0.0" width="270" height="74"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -8606,7 +8606,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SAm-An-VhT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8375" y="1294"/>
+            <point key="canvasLocation" x="7980" y="1295"/>
         </scene>
         <!--Place Search Delegate-->
         <scene sceneID="VlJ-b7-VzA">

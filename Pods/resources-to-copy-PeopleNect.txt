@@ -1,4 +1,0 @@
-/Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/Pods/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle
-/Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/Pods/GooglePlacePicker/Frameworks/GooglePlacePicker.framework/Versions/A/Resources/GooglePlacePicker.bundle
-/Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/Pods/GooglePlaces/Frameworks/GooglePlaces.framework/Versions/A/Resources/GooglePlaces.bundle
-/Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/Pods/JSQMessagesViewController/JSQMessagesViewController/Assets/JSQMessagesAssets.bundle
