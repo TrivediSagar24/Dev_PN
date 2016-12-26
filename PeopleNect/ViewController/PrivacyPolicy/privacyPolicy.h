@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface privacyPolicy : UIViewController <UIGestureRecognizerDelegate>
-
 @property (strong, nonatomic) IBOutlet UIWebView *privacyPolicyWebView;
 @end

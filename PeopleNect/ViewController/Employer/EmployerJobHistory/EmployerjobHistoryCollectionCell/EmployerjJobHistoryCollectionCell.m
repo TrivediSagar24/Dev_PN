@@ -9,5 +9,4 @@
 #import "EmployerjJobHistoryCollectionCell.h"
 
 @implementation EmployerjJobHistoryCollectionCell
-
 @end

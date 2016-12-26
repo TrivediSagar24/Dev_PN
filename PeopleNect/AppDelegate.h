@@ -2,7 +2,7 @@
 //  AppDelegate.h
 //  PeopleNect
 //
-//  Created by Narendra Pandey on 26/07/16.
+//  Created by Trivedi Sagar on 26/07/16.
 //  Copyright © 2016 Sagar Trivedi. All rights reserved.
 
 #import <UIKit/UIKit.h>

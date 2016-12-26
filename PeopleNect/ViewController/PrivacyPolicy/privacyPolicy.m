@@ -9,9 +9,7 @@
 #import "privacyPolicy.h"
 
 @interface privacyPolicy ()
-
 @end
-
 @implementation privacyPolicy
 #pragma mark - View LifeCycle -
 - (void)viewDidLoad {
@@ -25,6 +23,7 @@
     NSString* htmlString = [NSString stringWithContentsOfFile:htmlFile encoding:NSUTF8StringEncoding error:nil];
     [self.privacyPolicyWebView loadHTMLString:htmlString baseURL: [[NSBundle mainBundle] bundleURL]];
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -43,5 +42,4 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return YES;
 }
-
 @end

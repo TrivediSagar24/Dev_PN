@@ -19,15 +19,13 @@
     [self employerJobHistory];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.translucent = NO;
 }
-
 
 #pragma mark - SlideNavigationController Methods -
 - (BOOL)slideNavigationControllerShouldDisplayLeftMenu{
@@ -74,7 +72,6 @@
         }];
     }else{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
-
     }
 }
 @end

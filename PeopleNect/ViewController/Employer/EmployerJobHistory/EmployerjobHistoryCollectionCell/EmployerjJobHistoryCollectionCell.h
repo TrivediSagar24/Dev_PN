@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface EmployerjJobHistoryCollectionCell : UICollectionViewCell
+
 @property (strong, nonatomic) IBOutlet UILabel *jobTitleLbl;
 @property (strong, nonatomic) IBOutlet UILabel *priceLbl;
 @property (strong, nonatomic) IBOutlet UILabel *reviewLbl;
@@ -18,5 +19,4 @@
 @property (strong, nonatomic) IBOutlet UIImageView *threeStar;
 @property (strong, nonatomic) IBOutlet UIImageView *fourStar;
 @property (strong, nonatomic) IBOutlet UIImageView *fiveStar;
-
 @end
