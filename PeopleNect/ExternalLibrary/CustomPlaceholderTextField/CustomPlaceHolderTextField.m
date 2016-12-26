@@ -10,70 +10,43 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     BOOL _isFloatingLabelFontDefault;
 }
 
--(void)awakeFromNib
-{
+-(void)awakeFromNib{
+    /* Border textfield  */
     _borderLayer = [CALayer layer];
     _borderLayer.backgroundColor = self.BorderColor.CGColor;
     [self.layer addSublayer:_borderLayer];
-    
-    if (self.leftImage != nil)
-    {
+    /*-----left Image -----*/
+    if (self.leftImage != nil){
         UIView *paddingLeftImage = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.layer.frame.size.height, self.layer.frame.size.height)];
-        
         UIButton * btn = [[UIButton alloc]init];
-        
         btn.frame = CGRectMake(0, 0, self.layer.frame.size.height, self.layer.frame.size.height);
-        
         [btn setImage:_leftImage forState:UIControlStateNormal];
-        
         [paddingLeftImage addSubview:btn];
-        
         self.leftViewMode = UITextFieldViewModeAlways;
-        
         self.leftView = paddingLeftImage;
-    }
-    
-    else
-    {
-        if (_rightImage==nil)
-        {
+    }else{
+        if (_rightImage==nil){
             UIView *paddingLeftSpace = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.layer.frame.size.height/2-5, self.layer.frame.size.height)];
-            
             self.leftViewMode = UITextFieldViewModeAlways;
-            
             self.leftView = paddingLeftSpace;
         }
-        
     }
-    
     /*-----Right Image -----*/
-    
-    if (self.rightImage != nil)
-    {
+    if (self.rightImage != nil){
         UIView *paddingRightImage = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.layer.frame.size.height, self.layer.frame.size.height)];
-        
         UIButton * btn = [[UIButton alloc]init];
-        
         btn.frame = CGRectMake(0, 0, self.layer.frame.size.height, self.layer.frame.size.height);
-        
         [btn setImage:_rightImage forState:UIControlStateNormal];
-        
         [paddingRightImage addSubview:btn];
-        
         self.rightViewMode = UITextFieldViewModeAlways;
         self.rightView = paddingRightImage;
-        
         UIView *paddingLeftSpace = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.layer.frame.size.height/2-5, self.layer.frame.size.height)];
-        
         self.leftViewMode = UITextFieldViewModeAlways;
-        
         self.leftView = paddingLeftSpace;
-        
     }
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
         [self commonInit];
@@ -81,8 +54,7 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self commonInit];
@@ -90,12 +62,10 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     return self;
 }
 
-- (void)commonInit
-{
+- (void)commonInit{
     _floatingLabel = [UILabel new];
     _floatingLabel.alpha = 0.0f;
     [self addSubview:_floatingLabel];
-	
     _floatingLabelFont = [self defaultFloatingLabelFont];
     _floatingLabel.font = _floatingLabelFont;
     _floatingLabelTextColor = [UIColor grayColor];
@@ -104,16 +74,13 @@ static CGFloat const kFloatingLabelHideAnimationDuration = 0.3f;
     _floatingLabelShowAnimationDuration = kFloatingLabelShowAnimationDuration;
     _floatingLabelHideAnimationDuration = kFloatingLabelHideAnimationDuration;
     [self setFloatingLabelText:self.placeholder];
-
     _adjustsClearButtonRect = YES;
     _isFloatingLabelFontDefault = YES;
-    
 }
 
 #pragma mark -
 
-- (UIFont *)defaultFloatingLabelFont
-{
+- (UIFont *)defaultFloatingLabelFont{
     UIFont *textFieldFont = nil;
     
     if (!textFieldFont && self.attributedPlaceholder && self.attributedPlaceholder.length > 0) {

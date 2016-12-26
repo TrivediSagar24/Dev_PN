@@ -9,7 +9,6 @@ typedef NS_ENUM(NSUInteger, JVTextDirection) {
 
 @interface NSString (TextDirectionality)
 
-
 - (JVTextDirection)getBaseDirection;
 
 @end
