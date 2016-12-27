@@ -213,6 +213,10 @@ CGRect sliderFrame;
         
         NSLog(@"Availability");
         
+        
+        _TurnOnLable.hidden = YES;
+        _settingWeekView.hidden = NO;
+        
         BoolSelectedSwitch = [NSString stringWithFormat:@"%i",_switchSelected.selected];
         
         if ([BoolSelectedSwitch isEqualToString:@"1"]){
@@ -235,6 +239,8 @@ CGRect sliderFrame;
 
             NSLog(@"Not Available");
 
+            _TurnOnLable.hidden = NO;
+            _settingWeekView.hidden = YES;
             [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
             
             [self.view addSubview:self.EmployeeAvailabilityView];
@@ -514,6 +520,9 @@ CGRect sliderFrame;
         
         _EmployeeAvailabilityView.hidden = NO;
         _availableLbl.text = @"I am Available";
+        _TurnOnLable.hidden = YES;
+        _settingWeekView.hidden = NO;
+        
     }
     if ([BoolSelectedSwitch isEqualToString:@"0"])
     {
@@ -526,6 +535,9 @@ CGRect sliderFrame;
         }
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
         _availableLbl.text = @"I am Unavailable";
+        
+        _TurnOnLable.hidden = NO;
+        _settingWeekView.hidden = YES;
 
     }
 }

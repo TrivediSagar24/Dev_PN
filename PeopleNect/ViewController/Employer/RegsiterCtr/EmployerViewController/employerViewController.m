@@ -25,6 +25,7 @@
     [self countryCodeWebService ];
     flagEmail = NO;
     flagPassword = NO;
+    [_buttonPriviceProtection addTarget:self action:@selector(privacypolicy) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
@@ -287,6 +288,18 @@ numberOfRowsInComponent:(NSInteger)component{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
         }
  }
+}
+
+-(void)privacypolicy{
+    privacyPolicy *obj_privacyPolicy = [self.storyboard instantiateViewControllerWithIdentifier:@"privacyPolicy"];
+    
+    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:obj_privacyPolicy];
+    
+    obj_nav.definesPresentationContext = YES;
+    
+    obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    
+    [self presentViewController:obj_nav animated:YES completion:nil];
 }
 
 @end
