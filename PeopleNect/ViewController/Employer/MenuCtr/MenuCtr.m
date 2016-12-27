@@ -69,8 +69,9 @@ static CLLocationCoordinate2D currentLocation;
 #pragma  mark - View Life Cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self intiallize];
+    [self intiallize];  
     
+     selectedCategoryName = @"All";
     kAppDel.subCategoryFromInvited = [[NSMutableArray alloc]init];
     self.totalRecordEmployee.textColor = [UIColor colorWithRed:164.0/255.0 green:164.0/255.0 blue:164.0/255.0 alpha:1.0];
     self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
@@ -492,13 +493,7 @@ static CLLocationCoordinate2D currentLocation;
     [kAFClient POST:MAIN_URL parameters:categoryDictionary progress:nil success:^(NSURLSessionDataTask *  task, id responseObject){
         
         [kAppDel.progressHud hideAnimated:YES];
-        kAppDel.obj_responseCategoryList =[[responseCategoryList alloc] initWithDictionary:responseObject];
-        
-        NSData *categoryData =[NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_responseCategoryList ];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:categoryData forKey:@"categoryData"] ;
-        [[NSUserDefaults standardUserDefaults]synchronize];
-        
+               
         NSInteger count =[[[responseObject valueForKey:@"categoryList"] valueForKey:@"categoryName"] count];
         
         [arrayCategoryList addObject:@"All"];

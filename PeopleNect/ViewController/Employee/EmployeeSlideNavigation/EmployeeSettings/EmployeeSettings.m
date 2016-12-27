@@ -13,36 +13,28 @@
     NSData *dataProfileImg,*employeeUserDetailData;;
     UIImage *chosenImage;
     UITapGestureRecognizer *tapGesture;
+    NSTimer *Timer;
 }
 @end
 
 @implementation EmployeeSettings
-
-
 #pragma mark - View Life Cycle -
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-    
      employeeUserDetailData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeUserDetail"];
-    
     
     if (employeeUserDetailData!=nil) {
          kAppDel.obj_responseEmployeeUserDetail = [NSKeyedUnarchiver unarchiveObjectWithData:employeeUserDetailData];
         [self updateValues];
-
     }
     if ([kAppDel.obj_CountryCode.countryCode count]==0)
     {
-        [self countryCodeWebService];
+        Timer = [NSTimer scheduledTimerWithTimeInterval: 0.3 target: self selector:@selector(countryCodeWebService)userInfo: nil repeats:NO];
     }
-    
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    
     if (_strCategory.length>0)
     {
         _tfCategory.text = _strCategory;
@@ -63,23 +55,18 @@
     _EmployeeProfileImage.image =  kAppDel.EmployeeProfileImage;
     }
     _EmployeeProfileImage.layer.cornerRadius = _EmployeeProfileImage.frame.size.height/2;
-    
     _EmployeeProfileImage.layer.masksToBounds = YES;
+    _EmployeeProfileImage.layer.borderWidth = 1.0;
+    _EmployeeProfileImage.layer.borderColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1.0].CGColor;
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
+-(void)viewDidAppear:(BOOL)animated{
     _EmployeeProfileImage.layer.cornerRadius = _EmployeeProfileImage.frame.size.height/2;
-    
     _saveBtn.frame = CGRectMake(_saveBtn.frame.origin.x, _tfPassword.frame.origin.y+_tfPassword.frame.size.height+15, _saveBtn.frame.size.width, _saveBtn.frame.size.height);
-
-    if (_tfPassword.hidden)
-    {
+    if (_tfPassword.hidden){
         _saveBtn.frame = CGRectMake(_saveBtn.frame.origin.x, _tfPassword.frame.origin.y, _saveBtn.frame.size.width, _saveBtn.frame.size.height);
     }
-    
-    if ([kAppDel.EmployeeSettingText count]>0)
-    {
+    if ([kAppDel.EmployeeSettingText count]>0){
         _tfName.text = [kAppDel.EmployeeSettingText valueForKey:@"name"];
         _tfSurname.text =[kAppDel.EmployeeSettingText valueForKey:@"surName"];
         _tfCountryCode.text = [kAppDel.EmployeeSettingText valueForKey:@"countryCode"];
@@ -87,14 +74,10 @@
         _tfExperience.text = [kAppDel.EmployeeSettingText valueForKey:@"exp"];
         _tfPriceHour.text = [kAppDel.EmployeeSettingText valueForKey:@"price"];
         _zipcode.text = [kAppDel.EmployeeSettingText valueForKey:@"zipCode"];
-        
         _streetName.text = [kAppDel.EmployeeSettingText valueForKey:@"streetName"];
-
         _streetNumber.text = [kAppDel.EmployeeSettingText valueForKey:@"streetNumber"];
-        
         _profileDescriptionTV.text = [kAppDel.EmployeeSettingText valueForKey:@"description"];
     }
-    
     tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(CategorySelection)];
     
     [_tfCategory addGestureRecognizer:tapGesture];
@@ -163,23 +146,17 @@
              }
            
               employeeUserDetailData =[NSKeyedArchiver archivedDataWithRootObject: kAppDel.obj_responseEmployeeUserDetail];
-              
               [[NSUserDefaults standardUserDefaults] setObject:employeeUserDetailData forKey:@"employeeUserDetail"];
               [[NSUserDefaults standardUserDefaults] synchronize];
-             
-         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-         {
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error){
              [kAppDel.progressHud hideAnimated:YES];
-             
          }];
-
-        
     }else{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
     }
 }
 
-#pragma mark - Textfield Delegates
+#pragma mark - Textfield Delegates -
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     if (textField == _tfCategory)
@@ -296,7 +273,7 @@
     }
 }
 
-#pragma mark - TextField Values
+#pragma mark - TextField Values -
 
 -(void)updateValues
 {
@@ -306,6 +283,8 @@
     
     _tfEmail.text = kAppDel.obj_responseEmployeeUserDetail.Employee_email;
     _tfEmail.userInteractionEnabled = NO;
+    
+   // _tfCountryCode.enabled = NO;
     
     _tfPhoneNumber.text = kAppDel.obj_responseEmployeeUserDetail.Employee_phone;
     
@@ -378,7 +357,7 @@
     [self presentViewController:actionSheet animated:YES completion:nil];
 }
 
-#pragma mark - ImagePicker Delegates.
+#pragma mark - ImagePicker Delegates. -
 
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
@@ -391,17 +370,19 @@
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - Picker
+#pragma mark - Picker -
 
 - (NSInteger)numberOfComponentsInPickerView:
-(UIPickerView *)pickerView
-{
+(UIPickerView *)pickerView{
     return 1;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView
-numberOfRowsInComponent:(NSInteger)component
-{
+numberOfRowsInComponent:(NSInteger)component{
+    
+    if ([kAppDel.obj_CountryCode.countryCode count]>0) {
+        [[SubViewCtr sharedInstance].activityIndicator stopAnimating];
+    }
     return [kAppDel.obj_CountryCode.countryCode count];
 }
 
@@ -418,7 +399,7 @@ numberOfRowsInComponent:(NSInteger)component
 }
 
 
-#pragma mark - Picker ToolBar Next button
+#pragma mark - Picker ToolBar Next button -
 
 -(void)next
 {
@@ -426,8 +407,7 @@ numberOfRowsInComponent:(NSInteger)component
     [_tfPhoneNumber becomeFirstResponder];
 }
 
-#pragma mark - Country CodeWebService
-
+#pragma mark - Country CodeWebService -
 -(void)countryCodeWebService
 {
     /*----Getting country code---*/
@@ -435,20 +415,14 @@ numberOfRowsInComponent:(NSInteger)component
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     [dict setObject:@"countryCodeList" forKey:@"methodName"];
     
-    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject)
-     {
-         kAppDel.obj_CountryCode
-         = [[CountryCode alloc] initWithDictionary:responseObject];
-         
-     }
-            failure:^(NSURLSessionDataTask *task, NSError   *error)
-     {
-         
-     }];
-    
+    [kAFClient POST:MAIN_URL parameters:dict progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        kAppDel.obj_CountryCode
+        = [[CountryCode alloc] initWithDictionary:responseObject];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+    }];
 }
 
-#pragma mark - Image
+#pragma mark - Image -
 -(NSData*)returnImage :(UIImage *)img
 {
     dataProfileImg = UIImageJPEGRepresentation(img, 1.0);
@@ -456,7 +430,7 @@ numberOfRowsInComponent:(NSInteger)component
     return dataProfileImg;
 }
 
-#pragma mark - Category - 
+#pragma mark - Category -
 -(void)CategorySelection
 {
 //    [[NSUserDefaults standardUserDefaults ]setObject:@"True" forKey:@"Setting"];

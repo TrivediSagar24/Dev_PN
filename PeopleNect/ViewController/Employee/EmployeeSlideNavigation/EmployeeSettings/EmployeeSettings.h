@@ -37,11 +37,9 @@
 @property(strong,nonatomic) NSString *strSubCategoryId;
 @property(strong,nonatomic) NSString *Exp;
 @property(strong,nonatomic) NSString *Price;
-
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *zipcode;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *streetName;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *streetNumber;
-
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *profileDescriptionTV;
 @property (strong, nonatomic) IBOutlet UIButton *saveBtn;
 

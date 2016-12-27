@@ -63,7 +63,7 @@
     
     _tfStreetName.placeSearchDelegate = self;
     _tfStreetName.delegate = self;
-    _tfStreetName.strApiKey = @"AIzaSyB9U-Ssv6A9Tt2keQtZyWMuadHoELYeGlk";
+    _tfStreetName.strApiKey = GoogleAPIKey;
     
     _tfStreetName.superViewOfList = self.view;
     _tfStreetName.autoCompleteShouldHideOnSelection = YES;
@@ -78,9 +78,9 @@
     addressViewHeight = kDEV_PROPROTIONAL_Height(244);
     
     _profileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
-    
     _profileImage.layer.masksToBounds = YES;
-    
+    _profileImage.layer.borderWidth = 1.0;
+    _profileImage.layer.borderColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1.0].CGColor;
     if (_isFrominVitedScreen == YES) {
         [_profileImage sd_setImageWithURL:[NSURL URLWithString:_employeeProfielImage] placeholderImage:[UIImage imageNamed:@"profile"]] ;
         _lastDetailsLbl.text = _employeeName;
@@ -316,7 +316,7 @@ if (textField==_tfHoursPerDay || textField ==_tfMoneyPerHour) {
 }
 
 
-#pragma  mark - ToolBarDatePicker
+#pragma  mark - ToolBarDatePicker -
 -(UIView *)toolBar{
      obj_ToolBar = [[UIToolbar alloc] initWithFrame: CGRectMake(0,0,[UIScreen mainScreen].bounds.size.width,45)];
     obj_ToolBar.barStyle = UIBarStyleDefault;
@@ -783,7 +783,7 @@ if (_tfJobTitle.text.length==0) {
 }
 
 
-#pragma mark - Unarchiving data
+#pragma mark - Unarchiving data -
 -(void)unarchivingData{
     NSData *registerData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employerRegister"];
     if (registerData!=nil) {
@@ -936,7 +936,7 @@ if (_tfJobTitle.text.length==0) {
 }
 
 
-#pragma mark -jobDetailbyId -
+#pragma mark - jobDetailbyId -
 -(void)jobDetailbyId{
     if ([GlobalMethods InternetAvailability]) {
         NSMutableDictionary *param = [[NSMutableDictionary alloc]init];

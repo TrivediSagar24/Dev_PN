@@ -22,7 +22,7 @@
 @end
 
 @implementation EmployerSecondScreenCtr
-#pragma mark - View Life Cycle
+#pragma mark - View Life Cycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
     EmployerUserID   = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"];
@@ -48,7 +48,7 @@
 }
 
 
-#pragma mark - Unarchiving data
+#pragma mark - Unarchiving data -
 -(void)unarchivingData{
     NSData *registerData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employerRegister"];
     if (registerData!=nil) {
@@ -57,7 +57,7 @@
 }
 
 
-#pragma mark - TextField Delegate
+#pragma mark - TextField Delegate -
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
     if(textField == _tfCity){
         [SubViewCtr sharedInstance].obj_PickerView.delegate = self;
@@ -130,7 +130,7 @@
 }
 
 
-#pragma mark - Register Button
+#pragma mark - Register Button -
 - (IBAction)onClickRegister:(id)sender {
     if(!imgData.length){
          [self presentViewController:[GlobalMethods AlertWithTitle:@"Company's photo name is required" Message:@"Please enter your company's photo" AlertMessage:@"OK"] animated:YES completion:nil];
@@ -194,7 +194,7 @@
 }
 
 
-#pragma mark - Image Picker Button
+#pragma mark - Image Picker Button -
 - (IBAction)onClickImage:(id)sender {
     imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate =self;
@@ -239,7 +239,7 @@
 }
 
 
-#pragma mark - Image Picker Delegate
+#pragma mark - Image Picker Delegate -
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     
     chosenImage = info[UIImagePickerControllerEditedImage];
@@ -254,7 +254,7 @@
 
 
 
-#pragma mark - WebServices
+#pragma mark - WebServices -
 -(void)stateWebService {
     
     if ([GlobalMethods InternetAvailability]) {
@@ -300,7 +300,7 @@
 }
 
 
-#pragma mark - Picker DataSource
+#pragma mark - Picker DataSource -
 - (NSInteger)numberOfComponentsInPickerView:
 (UIPickerView *)pickerView{
     return 1;
@@ -356,7 +356,7 @@ numberOfRowsInComponent:(NSInteger)component{
 }
 
 
-#pragma  mark - ToolBar Method
+#pragma  mark - ToolBar Method -
 -(void)nextActionOnState{
     [_tfState resignFirstResponder];
     [_tfCity becomeFirstResponder];
@@ -368,7 +368,7 @@ numberOfRowsInComponent:(NSInteger)component{
     [_tfNumber becomeFirstResponder];
 }
 
-#pragma Mark - Image
+#pragma Mark - Image -
 -(NSData*)returnImage :(UIImage *)img
 {
     dataProfileImg = UIImageJPEGRepresentation(img, 1.0);

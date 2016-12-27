@@ -833,6 +833,10 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="u8q-rY-r5b" id="CWP-Sm-P3X"/>
+                                    <outlet property="delegate" destination="u8q-rY-r5b" id="WoX-MW-K1F"/>
+                                </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jzq-3g-LwL">
                                 <rect key="frame" x="25" y="34" width="15" height="22"/>
@@ -979,6 +983,10 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="q2l-k2-Z4B" id="ADA-Rm-K02"/>
+                                    <outlet property="delegate" destination="q2l-k2-Z4B" id="OmO-nN-GBS"/>
+                                </connections>
                             </collectionView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do You provide any of these     related services?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y9L-SV-uYx">
                                 <rect key="frame" x="52" y="144" width="216" height="55"/>
@@ -6218,7 +6226,7 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b82-Ba-mV6">
                                                         <rect key="frame" x="0.0" y="0.0" width="96" height="96"/>
-                                                        <color key="backgroundColor" red="0.92549019610000005" green="0.92549019610000005" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <state key="normal" image="photo_"/>
                                                         <connections>
                                                             <action selector="btnCameraClicked:" destination="q2l-k2-Z4B" eventType="touchUpInside" id="7bi-UU-QPn"/>

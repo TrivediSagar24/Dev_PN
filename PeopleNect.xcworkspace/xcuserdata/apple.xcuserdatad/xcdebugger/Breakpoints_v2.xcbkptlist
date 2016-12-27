@@ -115,8 +115,8 @@
                   symbolName = "__32-[employeeMainChat sendMessage:]_block_invoke"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "504095343.631219"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
+                  timestampString = "504525503.333929"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "866"
@@ -130,8 +130,8 @@
                   symbolName = "__copy_helper_block_.403"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "504095343.631392"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
+                  timestampString = "504525503.334137"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "866"
@@ -145,8 +145,8 @@
                   symbolName = "__32-[employeeMainChat sendMessage:]_block_invoke.406"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
-                  timestampString = "504095343.631719"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeChat/EmployeeMainChat/employeeMainChat.m"
+                  timestampString = "504525503.334516"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "869"
@@ -251,7 +251,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/RegsiterCtr/EmployerLastDetailsCtr/EmployerLastDetailsCtr.m"
-            timestampString = "502896509.042291"
+            timestampString = "504515717.177477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "693"
@@ -267,7 +267,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/RegsiterCtr/EmployerLastDetailsCtr/EmployerLastDetailsCtr.m"
-            timestampString = "502896511.698704"
+            timestampString = "504515717.177477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "689"
@@ -283,7 +283,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/RegsiterCtr/EmployerLastDetailsCtr/EmployerLastDetailsCtr.m"
-            timestampString = "502896517.890226"
+            timestampString = "504515717.177477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "773"
@@ -299,28 +299,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PeopleNect/ViewController/Employer/RegsiterCtr/EmployerLastDetailsCtr/EmployerLastDetailsCtr.m"
-            timestampString = "502896522.482178"
+            timestampString = "504515717.177477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "778"
             endingLineNumber = "778"
             landmarkName = "-PostJob"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ViewController/Employee/EmployeeSlideNavigation/EmployeeSettings/EmployeeSettings.m"
-            timestampString = "504096034.500158"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
-            landmarkName = "-SaveUserDetailClicked:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -362,8 +346,8 @@
                   symbolName = "-[employeeJobNotification applyFollowJob:jobId:SenderButton:]"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
-                  timestampString = "504095343.641276"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+                  timestampString = "504525503.345952"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "1777"
@@ -377,8 +361,8 @@
                   symbolName = "__61-[employeeJobNotification applyFollowJob:jobId:SenderButton:]_block_invoke"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
-                  timestampString = "504095343.641511"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ViewController/Employee/EmployeeJobNotification/employeeJobNotification.m"
+                  timestampString = "504525503.346137"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "1777"
@@ -426,8 +410,8 @@
                   symbolName = "-[PlaceDetail getPlaceDetailForReferance:]"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ExternalLibrary/MVPlaceSearchTextField/PlaceDetail.m"
-                  timestampString = "504095343.644925"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ExternalLibrary/MVPlaceSearchTextField/PlaceDetail.m"
+                  timestampString = "504525503.348162"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "35"
@@ -441,8 +425,8 @@
                   symbolName = "__42-[PlaceDetail getPlaceDetailForReferance:]_block_invoke"
                   moduleName = "PeopleNect"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/apple/Documents/Projects/LatestCode/PeopleNectGitCode/PeopleNect/ExternalLibrary/MVPlaceSearchTextField/PlaceDetail.m"
-                  timestampString = "504095343.645207"
+                  urlString = "file:///Users/apple/Documents/Projects/LatestCode%20PeopleNect/PeopleNectGitCode/PeopleNect/ExternalLibrary/MVPlaceSearchTextField/PlaceDetail.m"
+                  timestampString = "504525503.34832"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "36"
@@ -657,118 +641,6 @@
             startingLineNumber = "120"
             endingLineNumber = "120"
             landmarkName = "-onClickProfessional:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504095728.860773"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "479"
-            endingLineNumber = "479"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504095728.860773"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "474"
-            endingLineNumber = "474"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504094550.321127"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "474"
-            endingLineNumber = "474"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504094551.569362"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "470"
-            endingLineNumber = "470"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504094551.792798"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "468"
-            endingLineNumber = "468"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504094552.289391"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "466"
-            endingLineNumber = "466"
-            landmarkName = "-barButtonItemForMenu:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PeopleNect/ExternalLibrary/SlideNavigation/SlideNavigationController.m"
-            timestampString = "504094553.712151"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "464"
-            endingLineNumber = "464"
-            landmarkName = "-barButtonItemForMenu:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -421,15 +421,30 @@
 
 @implementation EmployeeCategory
 
--(EmployeeCategory*) initWithDictionary:(NSMutableDictionary *)dictionary
-{
+-(EmployeeCategory*) initWithDictionary:(NSMutableDictionary *)dictionary{
     _categoryList = [[NSMutableDictionary alloc]init];
     if (self = [super init])
     {
         [_categoryList setObject: [[dictionary objectForKey:@"categoryList"]valueForKey:@"categoryName"] forKey:@"categoryName"];
-        
          [_categoryList setObject: [[dictionary objectForKey:@"categoryList"]valueForKey:@"categoryId"] forKey:@"categoryId"];
-       
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeObject:self.categoryList forKey:@"categoryName"];
+    [coder encodeObject:self.categoryList forKey:@"categoryId"];
+    
+}
+
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if (self = [super init])
+    {
+        self.categoryList = [decoder decodeObjectForKey:@"categoryName"];
+        self.categoryList  = [decoder decodeObjectForKey:@"categoryId"];
     }
     return self;
 }

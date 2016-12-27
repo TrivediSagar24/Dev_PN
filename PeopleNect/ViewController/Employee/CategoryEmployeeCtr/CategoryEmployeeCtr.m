@@ -17,13 +17,9 @@
 
 @implementation CategoryEmployeeCtr
 @synthesize imagePicker;
-
-#pragma mark - View Life Cycle
-
-- (void)viewDidLoad
-{
+#pragma mark - View Life Cycle -
+- (void)viewDidLoad{
     [super viewDidLoad];
-    
     userId = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
     
     employeeUserId = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
@@ -31,34 +27,32 @@
     if (userId.length==0) {
         userId= [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"];
     }
-    [self categoryId];
-  
-//    if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"Setting"] isEqualToString:@"True"])
-//    {
-//        _backBtn.hidden = NO;
-//    }
-//    else
-//    {
-//        _backBtn.hidden = YES;
-//    }
     
+    /*  For storing category if required
+     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeCategory"];
+    if (data!=nil) {
+        kAppDel.obj_EmployeeCategory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
+    */
+    
+    if (kAppDel.obj_EmployeeCategory.categoryList.count==0) {
+        [self categoryId];
+    }
     if (_iscomingFromSettingCtr ==YES) {
         _backBtn.hidden = NO;
     }else{
         _backBtn.hidden = YES;
     }
-    
     _profileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
     _profileImage.layer.masksToBounds = YES;
     _profileImage.layer.borderWidth = 1.0;
-    _profileImage.layer.borderColor = RGBCGCOLOR(220.0, 220.0, 220.0);
-    
+    _profileImage.layer.borderColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1.0].CGColor;
     if (employeeUserId.length==0){
         if (kAppDel.EmployerProfileImage==nil) {
             _profileImage.image = [UIImage imageNamed:@"profile"];
         }
         else{
-            _profileImage.image = kAppDel.EmployerProfileImage;
+        _profileImage.image = kAppDel.EmployerProfileImage;
         }
     }else{
         _profileImage.image = kAppDel.EmployeeProfileImage;
@@ -79,14 +73,13 @@
     else{
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
     }
-    
     if ([[kAppDel.obj_EmployeeCategory.categoryList valueForKey:@"categoryId"]count]>0) {
         [_collectionCategory reloadData];
     }
 }
 
 
-#pragma mark - collectionView Datasource
+#pragma mark - collectionView Datasource -
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -151,7 +144,7 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
     [self.navigationController pushViewController:obj_subCategoryCtr animated:YES];
 }
 
-#pragma mark - collectionView flowLayout
+#pragma mark - collectionView flowLayout -
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -163,11 +156,8 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
        return CGSizeMake(width-10, height-35);
 }
 
-#pragma mark - CateGory WebServices
-
--(void)categoryId
-{
-    
+#pragma mark - CateGory WebServices -
+-(void)categoryId{
     if ([GlobalMethods InternetAvailability]) {
         
         kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
@@ -183,11 +173,15 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
              [kAppDel.progressHud hideAnimated:YES];
              
              kAppDel.obj_EmployeeCategory = [[EmployeeCategory alloc]initWithDictionary:responseObject];
-             
-             _collectionCategory.delegate = self;
-             
-             _collectionCategory.dataSource = self;
-             
+             /*
+              For storing category if required.
+              
+             NSData *employeeCategory = [NSKeyedArchiver archivedDataWithRootObject:kAppDel.obj_EmployeeCategory];
+            [[NSUserDefaults standardUserDefaults] setObject:employeeCategory  forKey:@"employeeCategory"];
+             [[NSUserDefaults standardUserDefaults] synchronize];
+              
+          */
+             [_collectionCategory reloadData];
              
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
          {
@@ -200,7 +194,7 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
     }
 }
 
-#pragma  mark - IBAction
+#pragma  mark - IBAction -
 
 - (IBAction)btnCameraClicked:(id)sender
 {
@@ -272,7 +266,7 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
     }
 }
 
-#pragma mark - ImagePicker Delegates.
+#pragma mark - ImagePicker Delegates. -
 
 -(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {

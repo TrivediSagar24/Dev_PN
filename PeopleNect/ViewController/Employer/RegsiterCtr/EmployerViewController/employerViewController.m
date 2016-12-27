@@ -19,7 +19,7 @@
 
 @implementation employerViewController
 
-#pragma mark - View Life Cycle
+#pragma mark - View Life Cycle -
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self countryCodeWebService ];
@@ -43,7 +43,7 @@
 }
 
 
-#pragma mark - Back Button
+#pragma mark - Back Button -
 -(void)onClickBack{
     for (UIViewController *viewControllrObj in self.navigationController.viewControllers){
     if ([viewControllrObj isKindOfClass:[SplashEmployerCtr class]])
@@ -54,7 +54,7 @@
 }
 
 
-#pragma mark- TextField Delegates
+#pragma mark- TextField Delegates -
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     if(textField == _tfCountryCode){
         [SubViewCtr sharedInstance].obj_PickerView.delegate = self;
@@ -101,7 +101,7 @@
 }
 
 
-#pragma mark - Country CodeWebService
+#pragma mark - Country CodeWebService -
 -(void)countryCodeWebService {
     NSMutableDictionary *dictCountry = [[NSMutableDictionary alloc]init];
     [dictCountry setObject:@"countryCodeList" forKey:@"methodName"];
@@ -123,7 +123,7 @@
 }
 
 
-#pragma mark - Picker DataSource
+#pragma mark - Picker DataSource -
 - (NSInteger)numberOfComponentsInPickerView:
 (UIPickerView *)pickerView{
     return 1;
@@ -153,14 +153,14 @@ numberOfRowsInComponent:(NSInteger)component{
 }
 
 
-#pragma mark - Picker button
+#pragma mark - Picker button -
 -(void)nextAction{
     [_tfCountryCode resignFirstResponder];
     [_tfPhoneNumber becomeFirstResponder];
 }
 
 
-#pragma mark - Click Continue
+#pragma mark - Click Continue -
 - (IBAction)onClickContinue:(id)sender {
     BOOL emailflag = NO,passwordflag=NO;
     if (_tfName.text.length == 0)

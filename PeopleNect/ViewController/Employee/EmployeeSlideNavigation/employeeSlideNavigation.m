@@ -214,45 +214,39 @@ static int employerCount = 0;
 //        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:employeeJobNotification
 //    withSlideOutAnimation:NO andCompletion:nil];
 //    });
-        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:employeeJobNotification
-                                                                 withSlideOutAnimation:NO andCompletion:nil];
+        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:employeeJobNotification withSlideOutAnimation:NO andCompletion:nil];
     
 }
 
-- (IBAction)btnCameraClicked:(id)sender
-{
+- (IBAction)btnCameraClicked:(id)sender{
     imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.delegate =self;
     imagePicker.allowsEditing = YES;
     UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Select One" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action)
-                            {
-                                [self dismissViewControllerAnimated:YES completion:^{
-                                }];
-                            }]];
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Camera" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
-                            {
-                                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-                                {
-                                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action){
+        [self dismissViewControllerAnimated:YES completion:^{
+            }];
+        }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Camera" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
                                     
-//                                    [self.view.window.rootViewController presentViewController:imagePicker animated:YES completion:nil];
-                                    [self presentViewController:imagePicker animated:YES completion:nil];
-                                }
-                                else
-                                {
-                                    [self presentViewController:[GlobalMethods AlertWithTitle:@"Camera Missing" Message:@"It seems that no camera is attached to this device" AlertMessage:@"OK"]animated:YES completion:nil];
-                                }
-                            }]];
-    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Gallery" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action)
-                            {
-                                imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                               
-                                //[self.view.window.rootViewController presentViewController:imagePicker animated:YES completion:nil];
+        [self.view.window.rootViewController presentViewController:imagePicker animated:YES completion:nil];
+        //[self presentViewController:imagePicker animated:YES completion:nil];
+        }else{
+        [self presentViewController:[GlobalMethods AlertWithTitle:@"Camera Missing" Message:@"It seems that no camera is attached to this device" AlertMessage:@"OK"]animated:YES completion:nil];
+        }
+    }]];
+    [actionSheet addAction:[UIAlertAction actionWithTitle:@"Gallery" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+            imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        
+        imagePicker.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        
+    [self.view.window.rootViewController presentViewController:imagePicker animated:YES completion:nil];
                                 
-                                [self presentViewController:imagePicker animated:YES completion:nil];
+        //[self presentViewController:imagePicker animated:YES completion:nil];
                                 
-                            }]];
+            }]];
     
     [self.view.window.rootViewController presentViewController:actionSheet animated:YES completion:nil];
 
@@ -266,7 +260,10 @@ static int employerCount = 0;
     
     _ProfileImage.image = chosenImage;
     kAppDel.EmployeeProfileImage = chosenImage;
+   
     [picker dismissViewControllerAnimated:YES completion:nil];
+    
+   // [self.view.window.rootViewController dismissViewControllerAnimated:YES completion:nil]
 }
 
 

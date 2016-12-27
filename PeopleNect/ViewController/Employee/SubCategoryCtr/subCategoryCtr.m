@@ -57,7 +57,7 @@
     _profileImage.layer.cornerRadius = kDEV_PROPROTIONAL_Height(96)/2;
     _profileImage.layer.masksToBounds = YES;
     _profileImage.layer.borderWidth = 1.0;
-    _profileImage.layer.borderColor = [UIColor colorWithRed:220/255 green:220/255 blue:220/255 alpha:1.0].CGColor;
+    _profileImage.layer.borderColor = [UIColor colorWithRed:220.0/255.0 green:220.0/255.0 blue:220.0/255.0 alpha:1.0].CGColor;
     if (EmployeeUserId.length==0){
         if (kAppDel.EmployerProfileImage==nil) {
             _profileImage.image = [UIImage imageNamed:@"profile"];
@@ -119,13 +119,10 @@ if (_iscomingFromSettingCtr==YES)
 
 
 #pragma mark - subCategory Web services
--(void)subCategoryId
-{
+-(void)subCategoryId{
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-    
     if ([GlobalMethods InternetAvailability]) {
         kAppDel.progressHud =[GlobalMethods ShowProgressHud:self.view];
-        
         [dict setObject:@"subCategoryList" forKey:@"methodName"];
         [dict setObject:CategoryUserId forKey:@"categoryId"];
         [dict setObject:userId forKey:@"userId"];
@@ -169,9 +166,8 @@ if (_iscomingFromSettingCtr==YES)
                      }
                  }
              }
-             self.subCategoryCollectionView.delegate = self;
-             self.subCategoryCollectionView.dataSource = self;
-             
+             [self.subCategoryCollectionView reloadData];
+          
          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
          {
              [kAppDel.progressHud hideAnimated:YES];
