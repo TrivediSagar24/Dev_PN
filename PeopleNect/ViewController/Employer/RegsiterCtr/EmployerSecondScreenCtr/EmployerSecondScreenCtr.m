@@ -39,7 +39,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    self.navigationController.navigationBar.hidden = NO;
+    [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
 
 
@@ -132,10 +132,11 @@
 
 #pragma mark - Register Button -
 - (IBAction)onClickRegister:(id)sender {
-    if(!imgData.length){
-         [self presentViewController:[GlobalMethods AlertWithTitle:@"Company's photo name is required" Message:@"Please enter your company's photo" AlertMessage:@"OK"] animated:YES completion:nil];
-    }
-    else if(!_tfCompanyName.text.length){
+//    if(!imgData.length){
+//        
+//        [self presentViewController:[GlobalMethods AlertWithTitle:@"Company's photo name is required" Message:@"Please enter your company's photo" AlertMessage:@"OK"] animated:YES completion:nil];
+//    }
+     if(!_tfCompanyName.text.length){
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Company name is required" Message:@"Please enter your company name" AlertMessage:@"OK"] animated:YES completion:nil];
          }
     else if (!_tfZipCode.text.length){
@@ -147,13 +148,18 @@
     else if (!_tfCity.text.length){
         [self presentViewController:[GlobalMethods AlertWithTitle:@"City code  is required" Message:@"Please enter your city" AlertMessage:@"OK"] animated:YES completion:nil];
     }
-        if(imgData.length>0 && _tfCompanyName.text.length>0 && _tfCity.text.length>0  && _tfState.text.length>0 &&_tfZipCode.text.length >0){
+        if(_tfCompanyName.text.length>0 && _tfCity.text.length>0  && _tfState.text.length>0 &&_tfZipCode.text.length >0){
      
             if ([GlobalMethods InternetAvailability]) {
                 
                 kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
-                
-                NSData* imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
+               
+                NSData* imageData;
+                if (chosenImage!=nil) {
+                    imageData = UIImageJPEGRepresentation(chosenImage, 1.0);
+                }else{
+                    imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"plceholder"], 1.0);
+                }
                 
                 [self returnImage:[UIImage imageWithData:imageData]];
                 

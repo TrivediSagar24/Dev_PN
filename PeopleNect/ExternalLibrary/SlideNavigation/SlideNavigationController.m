@@ -460,7 +460,10 @@ static SlideNavigationController *singletonInstance;
     }
     else
 	{
-        _profileImage = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 36, 36)];
+        UIButton *Profile = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 64, 64)];
+        Profile.backgroundColor = [UIColor clearColor];
+        
+        _profileImage = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
         _profileImage.layer.cornerRadius = _profileImage.frame.size.height/2;
         
        NSData* employeeUserDetailData= [[NSUserDefaults standardUserDefaults] objectForKey:@"employeeUserDetail"];
@@ -510,7 +513,10 @@ static SlideNavigationController *singletonInstance;
             }
         }
         _profileImage.layer.masksToBounds = YES;
-                
+        
+
+       [Profile addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
+        
         [_profileImage addTarget:self action:selector forControlEvents:UIControlEventTouchUpInside];
         
         _profileBadge = [JSCustomBadge customBadgeWithString:@"" withStringColor:[UIColor redColor] withInsetColor:[UIColor redColor] withBadgeFrame:NO withBadgeFrameColor:[UIColor blueColor] withScale:1.0 withShining:NO withShadow:NO];
@@ -523,7 +529,10 @@ static SlideNavigationController *singletonInstance;
                 
             UIView * leftView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 190, 40)];
         
-        [leftView addSubview:_profileImage];
+        //[leftView addSubview:_profileImage];
+        
+        [Profile addSubview:_profileImage];
+
      
         if (EmployeeUserID.length>0)
         {
@@ -531,7 +540,8 @@ static SlideNavigationController *singletonInstance;
             //[leftView addSubview:_profileBadge];
         }
         [leftView addSubview:logo];
-         
+        [leftView addSubview:Profile];
+
     return [[UIBarButtonItem alloc]initWithCustomView:leftView];
 	}
     

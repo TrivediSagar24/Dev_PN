@@ -11,6 +11,7 @@
 @interface lastRegisterCtr ()
 {
     NSData *dataProfileImg;
+    IBOutlet UIView *NavigationView;
     UITapGestureRecognizer *tap;
 }
 @end
@@ -22,14 +23,19 @@
     [super viewDidLoad];
     [self TapGesture];
     [self.btnCamera setImage:kAppDel.EmployeeProfileImage forState:UIControlStateNormal];
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backBarButtonTapped:)];
+    gestureRecognizer.delegate = self;
+    [NavigationView addGestureRecognizer:gestureRecognizer];
+
 }
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
     self.btnCamera.layer.cornerRadius = self.btnCamera.frame.size.height/2;
     self.btnCamera.layer.masksToBounds = YES;
-//    self.btnCamera.layer.borderWidth = 1;
-//    self.btnCamera.layer.borderColor = [UIColor colorWithRed:220/255 green:220/255 blue:220/255 alpha:1.0].CGColor;
+    self.btnCamera.layer.borderWidth = 1;
+    self.btnCamera.layer.borderColor = [UIColor colorWithRed:220/255 green:220/255 blue:220/255 alpha:1.0].CGColor;
  self.btnCamera.backgroundColor = [UIColor colorWithRed:236.0/255.0 green:236.0/255.0 blue:236.0/255.0 alpha:1.0];
 }
 -(void)viewWillAppear:(BOOL)animated
@@ -209,13 +215,10 @@
 }
 #pragma mark - ImagePicker Delegates.
 
--(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
+-(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
     [self.btnCamera setImage:chosenImage forState:UIControlStateNormal];
-    
     kAppDel.EmployeeProfileImage = chosenImage;
-    
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - UITextfield  and textview Delegates
@@ -296,5 +299,10 @@
 -(void)dismissKeyboard
 {
     [self.view endEditing:YES];
+}
+
+#pragma mark - gesture Delegates -
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
 }
 @end

@@ -15,7 +15,7 @@
 #import "EmployeeSettings.h"
 #import "repostJobEmployerCtr.h"
 @interface CategoryEmployeeCtr : UIViewController
-<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextFieldDelegate>
+<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionCategory;
 
 @property (strong, nonatomic) IBOutlet UIView *profileView;

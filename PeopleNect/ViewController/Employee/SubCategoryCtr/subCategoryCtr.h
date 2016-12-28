@@ -10,7 +10,7 @@
 #import "EmployeeSettings.h"
 #import "CategoryEmployeeCtr.h"
 @interface subCategoryCtr : UIViewController
-<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
 @property(strong,nonatomic)NSString *CategoryUserId;
 @property(strong,nonatomic)NSString *CategoryName;

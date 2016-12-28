@@ -17,8 +17,9 @@
 #import "SubViewCtr.h"
 
 @interface EmployeeSettings : UIViewController
-<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate>
+<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate,PlaceSearchTextFieldDelegate>
 
+@property (strong, nonatomic) IBOutlet MVPlaceSearchTextField *streetName;
 @property (strong, nonatomic) IBOutlet UIImageView *EmployeeProfileImage;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfName;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfSurname;
@@ -26,6 +27,7 @@
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfCountryCode;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfPhoneNumber;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfCategory;
+@property (strong, nonatomic) IBOutlet UIView *experienceView;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfSubCategory;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfExperience;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfPriceHour;
@@ -38,7 +40,7 @@
 @property(strong,nonatomic) NSString *Exp;
 @property(strong,nonatomic) NSString *Price;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *zipcode;
-@property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *streetName;
+
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *streetNumber;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *profileDescriptionTV;
 @property (strong, nonatomic) IBOutlet UIButton *saveBtn;

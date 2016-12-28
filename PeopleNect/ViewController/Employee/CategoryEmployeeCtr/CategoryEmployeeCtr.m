@@ -13,6 +13,7 @@
 {
     NSString *userId,*employeeUserId;
 }
+@property (strong, nonatomic) IBOutlet UIView *NavigationView;
 @end
 
 @implementation CategoryEmployeeCtr
@@ -34,6 +35,11 @@
         kAppDel.obj_EmployeeCategory = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     }
     */
+    
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popViewBackClicked:)];
+    gestureRecognizer.delegate = self;
+    [self.NavigationView addGestureRecognizer:gestureRecognizer];
     
     if (kAppDel.obj_EmployeeCategory.categoryList.count==0) {
         [self categoryId];
@@ -301,6 +307,10 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
 - (BOOL)slideNavigationControllerShouldDisplayRightMenu
 {
     return NO;
+}
+#pragma mark - gesture Delegates -
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
 }
 
 @end

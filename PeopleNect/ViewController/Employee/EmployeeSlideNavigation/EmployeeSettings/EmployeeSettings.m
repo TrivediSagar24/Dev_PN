@@ -14,6 +14,7 @@
     UIImage *chosenImage;
     UITapGestureRecognizer *tapGesture;
     NSTimer *Timer;
+    NSArray *json;
 }
 @end
 
@@ -31,6 +32,12 @@
     {
         Timer = [NSTimer scheduledTimerWithTimeInterval: 0.3 target: self selector:@selector(countryCodeWebService)userInfo: nil repeats:NO];
     }
+    _streetName.placeSearchDelegate = self;
+    _streetName.delegate = self;
+    _streetName.strApiKey = GoogleAPIKey;
+    _streetName.superViewOfList = self.view;
+    _streetName.autoCompleteShouldHideOnSelection = YES;
+    _streetName.maximumNumberOfAutoCompleteRows = 5;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -81,6 +88,21 @@
     tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(CategorySelection)];
     
     [_tfCategory addGestureRecognizer:tapGesture];
+    
+    
+    _streetName.autoCompleteRegularFontName =  @"HelveticaNeue-Bold";
+    _streetName.autoCompleteBoldFontName = @"HelveticaNeue";
+    _streetName.autoCompleteTableCornerRadius=0.0;
+    _streetName.autoCompleteRowHeight=35;
+    _streetName.autoCompleteTableCellTextColor=[UIColor colorWithWhite:0.131 alpha:1.000];
+    _streetName.autoCompleteFontSize=14;
+    _streetName.autoCompleteTableBorderWidth=1.0;
+    _streetName.showTextFieldDropShadowWhenAutoCompleteTableIsOpen=YES;
+    _streetName.autoCompleteShouldHideOnSelection=YES;
+    _streetName.autoCompleteShouldHideClosingKeyboard=YES;
+    _streetName.autoCompleteShouldSelectOnExactMatchAutomatically = YES;
+    _streetName.autoCompleteTableFrame = CGRectMake((self.view.frame.size.width-_streetName.frame.size.width)*0.5, _tfEmail.frame.origin.y, _streetName.frame.size.width, 200.0);
+    
 }
 #pragma mark - SlideNavigationController Methods -
 
@@ -272,7 +294,30 @@
         return YES;
     }
 }
+#pragma mark - Place search Textfield Delegates -
+-(void)placeSearch:(MVPlaceSearchTextField*)textField ResponseForSelectedPlace:(GMSPlace*)responseDict{
+    [self.view endEditing:YES];
+   CLLocationCoordinate2D Location = responseDict.coordinate;
+    NSString *req = [NSString stringWithFormat:@"http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&sensor=true",Location.latitude,Location.longitude];
+    [self usingNsurljsonParsing:req];
+}
 
+
+-(void)placeSearchWillShowResult:(MVPlaceSearchTextField*)textField{
+}
+
+
+-(void)placeSearchWillHideResult:(MVPlaceSearchTextField*)textField{
+}
+
+
+-(void)placeSearch:(MVPlaceSearchTextField*)textField ResultCell:(UITableViewCell*)cell withPlaceObject:(PlaceObject*)placeObject atIndex:(NSInteger)index{
+    if(index%2==0){
+        cell.contentView.backgroundColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+    }else{
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+    }
+}
 #pragma mark - TextField Values -
 
 -(void)updateValues
@@ -472,4 +517,50 @@ numberOfRowsInComponent:(NSInteger)component{
     
     [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
 }
+
+-(void)usingNsurljsonParsing:(NSString *)urlAsString
+{
+    NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
+    
+    NSString *encodedUrlAsString = [urlAsString stringByAddingPercentEncodingWithAllowedCharacters:set];
+    
+    
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    [[session dataTaskWithURL:[NSURL URLWithString:encodedUrlAsString]
+            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                if (!error){
+                    if ([response isKindOfClass:[NSHTTPURLResponse class]]){
+                        NSError *jsonError;
+                        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+                        if (jsonError){
+                        } else{
+                            dispatch_async(dispatch_get_main_queue(), ^(void){
+                                NSArray *StateCity = [[json valueForKey:@"results"]valueForKey:@"address_components"];
+                                
+                                NSMutableDictionary *dict = [StateCity objectAtIndex:0];
+                                
+                                for (int i = 0; i<dict.count; i++) {
+                                    
+                                    NSArray *type = [[dict valueForKey:@"types"]objectAtIndex:i];
+                                    if ([type containsObject:@"administrative_area_level_1"]) {
+                                       // _tfState.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                                    }
+                                    if ([type containsObject:@"administrative_area_level_2"]) {
+                                       // _tfCity.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                                    }
+                                    if ([type containsObject:@"postal_code"]) {
+                                        _zipcode.text = [[dict valueForKey:@"long_name"]objectAtIndex:i];
+                                    }
+                                    
+                                }
+                            });
+                        }
+                    }
+                } else{
+                    //NSLog(@"error : %@", error.description);
+                }
+            }] resume];
+}
+
 @end

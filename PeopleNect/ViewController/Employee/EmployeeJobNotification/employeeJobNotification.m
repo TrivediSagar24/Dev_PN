@@ -57,7 +57,7 @@ static NSInteger currentSelection,selected=-1;
 NSMutableArray *latitude,*longitude,*responseSelectedAvailibility,*endTimeFrames ,*startTimeFrames,*selectedFollowUp,*selectedWeekAvailibility;
 GMSMarker *markerUserLocation;
 int check;
-NSArray *WeekDays,*progreeWeekDays;
+NSArray *WeekDays,*progreeWeekDays,*startTimeArray,*endTimeArray;
 NSString *selectedWeekDays,*startTime ,*endTime;
 CERangeSlider* _rangeSlider;
 UILabel * StatTimelbl,*endTimelbl;
@@ -66,7 +66,7 @@ NSString *BoolSelectedSwitch;
 NSData *employeeUserDetailData;
 CGRect sliderFrame;
     GMUClusterManager *_clusterManager;
-}
+    }
 
 @end
 
@@ -81,8 +81,9 @@ CGRect sliderFrame;
     
     markerUserLocation = [[GMSMarker alloc]init];
     
-    _mapView.indoorEnabled = NO;
-
+    _mapView.indoorEnabled = YES;
+    
+    
     [self showCurrentLocation];
 
    // currentLocation = CLLocationCoordinate2DMake(23.0813, 72.5269);
@@ -170,6 +171,14 @@ CGRect sliderFrame;
     self.navigationController.navigationBar.barTintColor = RGBCOLOR(32.0, 86.0, 136.0);
     self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem =  [self RightBarButton];
+    
+    if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"OnlineStatus"] isEqualToString:@"Yes"]) {
+        _switchSelected.selected  = YES;
+        
+    }else{
+        _switchSelected.selected  = NO;
+    }
+
     
 //    _EmployeeAvailabilityView.hidden  = NO;
 //      _TopAvailabilityView.hidden = NO;
@@ -503,12 +512,14 @@ CGRect sliderFrame;
 //    self.FreeView.layer.borderWidth = 1.0;
         
 //    self.FreeView.layer.borderColor = [UIColor colorWithRed:90.0/255.0 green:126.0/255.0 blue:164.0/255.0 alpha:1.0].CGColor;
-//        
+        
+//
+        [[NSUserDefaults standardUserDefaults ]setObject:@"Yes" forKey:@"OnlineStatus"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+        
     self.EmployeeAvailabilityView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         
         [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
-        
-        
         
         BOOL doesContain = [self.view.subviews containsObject:self.EmployeeAvailabilityView];
         
@@ -526,6 +537,9 @@ CGRect sliderFrame;
     }
     if ([BoolSelectedSwitch isEqualToString:@"0"])
     {
+        
+        [[NSUserDefaults standardUserDefaults ]setObject:@"No" forKey:@"OnlineStatus"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
         BOOL doesContain = [self.view.subviews containsObject:self.EmployeeAvailabilityView];
         
         if (doesContain==YES) {
@@ -1081,6 +1095,7 @@ CGRect sliderFrame;
 
 -(void)UserLocationMarker:(CLLocationCoordinate2D )Position
 {
+    markerUserLocation.map = nil;
     markerUserLocation.position = Position;
         markerUserLocation.icon = [UIImage imageNamed:@"map_user_"];
     markerUserLocation.userData = @"UserLocation";
@@ -1175,7 +1190,7 @@ CGRect sliderFrame;
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate=self;
     self.locationManager.desiredAccuracy=kCLLocationAccuracyBest;
-    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
 }
@@ -1193,6 +1208,11 @@ CGRect sliderFrame;
     currentLocation = CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     }
     
+    GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
+    
+    [_mapView animateWithCameraUpdate:updatedCamera];
+    _mapView.mapType = kGMSTypeNormal;
+    
     [kAppDel.progressHud hideAnimated:YES];
     [self UserLocationMarker:currentLocation];
 }
@@ -1205,20 +1225,35 @@ CGRect sliderFrame;
     {
         if ([[[NSUserDefaults standardUserDefaults]valueForKey:@"Location"] isEqualToString:@"changeLocation"]) {
             
-            currentLocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);        }
-        
-        else{
+         
+            CLLocationCoordinate2D changedlocation = CLLocationCoordinate2DMake([[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLat"]doubleValue], [[[NSUserDefaults standardUserDefaults]valueForKey:@"changeLong"]doubleValue]);
+            
+            if (changedlocation.latitude == [locations lastObject].coordinate.latitude && changedlocation.longitude == [locations lastObject].coordinate.longitude){
+                currentLocation = CLLocationCoordinate2DMake([locations objectAtIndex:0].coordinate.latitude, [locations objectAtIndex:0].coordinate.longitude);
+            }else{
+                currentLocation = changedlocation;
+                [self UserLocationMarker:currentLocation];
+                
+                GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
+                
+                [_mapView animateWithCameraUpdate:updatedCamera];
+                _mapView.mapType = kGMSTypeNormal;
 
+            }
+        }
+        else{
         currentLocation = CLLocationCoordinate2DMake([locations objectAtIndex:0].coordinate.latitude, [locations objectAtIndex:0].coordinate.longitude);
+            
+            [self UserLocationMarker:currentLocation];
+            
+            GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
+            
+            [_mapView animateWithCameraUpdate:updatedCamera];
+            _mapView.mapType = kGMSTypeNormal;
         }
         [kAppDel.progressHud hideAnimated:YES];
         
-        [self UserLocationMarker:currentLocation];
-        
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6];
-        
-        [_mapView animateWithCameraUpdate:updatedCamera];
-        _mapView.mapType = kGMSTypeNormal;
+      
         
         check = 1;
     }
@@ -1322,21 +1357,28 @@ CGRect sliderFrame;
 -(UIBarButtonItem *) RightBarButton
 {
     UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 90, 40)];
+    UIButton *switchBtn  = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 55, 40)];
     _switchSelected = [[UIButton alloc]initWithFrame:CGRectMake(0, 6, 35, 24)];
     [_switchSelected setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
     [_switchSelected setImage:[UIImage imageNamed:@"on_off_"] forState:UIControlStateSelected];
     [_switchSelected addTarget:self action: @selector(switchedClicked) forControlEvents:UIControlEventTouchUpInside];
-    _chatSelected = [[UIButton alloc]initWithFrame:CGRectMake(55, 4, 32, 28)];
+    [switchBtn addTarget:self action: @selector(switchedClicked) forControlEvents:UIControlEventTouchUpInside];
+
+    UIButton *chatBtn  = [[UIButton alloc]initWithFrame:CGRectMake(55, 0, 35, 40)];
+    _chatSelected = [[UIButton alloc]initWithFrame:CGRectMake(0, 4, 32, 28)];
     [_chatSelected setImage:[UIImage imageNamed:@"chat_.png"] forState:UIControlStateNormal];
     _chatSelected.layer.masksToBounds = YES;
     [_chatSelected addTarget:self action:@selector(chatClicked) forControlEvents:UIControlEventTouchUpInside];
-    
+    [chatBtn addTarget:self action:@selector(chatClicked) forControlEvents:UIControlEventTouchUpInside];
+
     _chatBadge = [JSCustomBadge customBadgeWithString:@"" withStringColor:[UIColor redColor] withInsetColor:[UIColor redColor] withBadgeFrame:NO withBadgeFrameColor:[UIColor blueColor] withScale:1.0 withShining:NO withShadow:NO];
     
     _chatBadge.frame = CGRectMake(_chatSelected.frame.size.width+_chatSelected.frame.origin.x-15, _chatSelected.frame.origin.y, 20, 20);
     
-    [rightView addSubview:_switchSelected];
-    [rightView addSubview:_chatSelected];
+    [switchBtn addSubview:_switchSelected];
+    [chatBtn addSubview:_chatSelected];
+    [rightView addSubview:switchBtn];
+    [rightView addSubview:chatBtn];
     
     //[rightView addSubview:_chatBadge];
     
@@ -1366,9 +1408,9 @@ CGRect sliderFrame;
     
     if (responseSelectedAvailibility.count>0) {
         
-         NSArray *startTimeArray = [[responseSelectedAvailibility valueForKey:@"start_time"]objectAtIndex:0];
+        startTimeArray = [[responseSelectedAvailibility valueForKey:@"start_time"]objectAtIndex:0];
         
-         NSArray *endTimeArray = [[responseSelectedAvailibility valueForKey:@"end_time"]objectAtIndex:0];
+         endTimeArray = [[responseSelectedAvailibility valueForKey:@"end_time"]objectAtIndex:0];
         
         for (int i = 0; i<[[responseSelectedAvailibility firstObject]count]; i++) {
             
@@ -1467,12 +1509,17 @@ CGRect sliderFrame;
 -(void)btnWeekAddClicked:(UIButton*)sender
 {
     cellSelected = sender.tag;
-    
     _ProgressSaveEmployeeView.hidden = NO;
-    
     selectedWeekDays = [NSString stringWithFormat:@"%ld",(long)sender.tag+1];
-    
      _lblProgressWeekNames.text = [progreeWeekDays objectAtIndex:sender.tag];
+    
+    
+    StatTimelbl.text = [startTimeArray objectAtIndex:sender.tag];
+    endTimelbl.text = [endTimeArray objectAtIndex:sender.tag];
+    
+//    startTimeArray
+//    endTimeArray
+    
     
     if([[selectedWeekAvailibility objectAtIndex:sender.tag] isEqualToString:@"0"]){
         
@@ -1577,10 +1624,10 @@ CGRect sliderFrame;
 
 #pragma mark - Progress Slider -
 -(void) ProgressSlider{
+    
+    _TopstartTimeLbl.constant = 80;
     float start = _startTimeOnelbl.frame.origin.x+_startTimeOnelbl.frame.size.width;
-    
     float end = _endTimeTwlvLbl.frame.size.width+14;
-    
     float width = self.view.frame.size.width - (start+end);
 
      sliderFrame = CGRectMake(_startTimeOnelbl.frame.origin.x+_startTimeOnelbl.frame.size.width+5, _lblProgressWeekNames.frame.origin.y+_lblProgressWeekNames.frame.size.height+40,width-7 , 20);
@@ -1598,15 +1645,15 @@ CGRect sliderFrame;
     
     StatTimelbl = [[UILabel alloc]init];
     
-    StatTimelbl.text = @"00:00";
+  //  StatTimelbl.text = @"00:00";
     
     StatTimelbl.textColor = _lblProgressWeekNames.textColor;
     
-    StatTimelbl.frame = CGRectMake(sliderFrame.origin.x, sliderFrame.size.height+sliderFrame.origin.y+10, [self widthForLabel:StatTimelbl withText:StatTimelbl.text], _endTimeTwlvLbl.frame.size.height);
+    StatTimelbl.frame = CGRectMake(sliderFrame.origin.x, sliderFrame.origin.y-20, [self widthForLabel:StatTimelbl withText:StatTimelbl.text], _endTimeTwlvLbl.frame.size.height);
     
     endTimelbl = [[UILabel alloc]init];
     
-    endTimelbl.text = @"24:00";
+   // endTimelbl.text = @"24:00";
     
     endTimelbl.textColor = _lblProgressWeekNames.textColor;
     
@@ -1615,13 +1662,9 @@ CGRect sliderFrame;
     endTimelbl.frame = CGRectMake(sliderFrame.size.width+sliderFrame.origin.x, StatTimelbl.frame.origin.y, [self widthForLabel:endTimelbl withText:endTimelbl.text], _endTimeTwlvLbl.frame.size.height);
 
     [_ProgressSaveEmployeeView addSubview:lbl];
-
      [_ProgressSaveEmployeeView addSubview:StatTimelbl];
-    
      [_ProgressSaveEmployeeView addSubview:endTimelbl];
-    
     [_ProgressSaveEmployeeView addSubview:_rangeSlider];
-    
     [_rangeSlider addTarget:self
                      action:@selector(slideValueChanged:)
            forControlEvents:UIControlEventValueChanged];

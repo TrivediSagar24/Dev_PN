@@ -183,7 +183,7 @@ static CLLocationCoordinate2D currentLocation;
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate=self;
     self.locationManager.desiredAccuracy=kCLLocationAccuracyBest;
-    [self.locationManager requestWhenInUseAuthorization];
+    [self.locationManager requestAlwaysAuthorization];
     [self.locationManager startMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
 }

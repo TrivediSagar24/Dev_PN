@@ -14,6 +14,7 @@
 #import "EmployerLastDetailsCtr.h"
 @interface subCategoryCtr ()
 {
+    IBOutlet UIView *NavigationView;
     NSMutableArray *selectedSubCategoryArray,*selectedIndexPath;
     NSArray *selectedItems;
     NSString *userId,*EmployeeUserId;
@@ -44,6 +45,14 @@
 
     self.subCategoryCollectionView.backgroundColor = [UIColor clearColor];
 
+    
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popViewBackClicked:)];
+    gestureRecognizer.delegate = self;
+    [NavigationView addGestureRecognizer:gestureRecognizer];
+    
+    
+    
     if ( _iscomingFromSettingCtr==YES)
     {
         selectedItems = [kAppDel.obj_responseEmployeeUserDetail.Employee_sub_category_id componentsSeparatedByString:@","];
@@ -382,6 +391,9 @@ if (_iscomingFromSettingCtr==YES)
     
     return CGSizeMake(width, 50);
 }
-
+#pragma mark - gesture Delegates -
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
 
 @end

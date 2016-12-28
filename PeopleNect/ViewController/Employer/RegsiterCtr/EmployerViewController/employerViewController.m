@@ -210,6 +210,8 @@ numberOfRowsInComponent:(NSInteger)component{
                 {
                     if (_tfPassword.text.length>0)
                     {
+                        passwordflag = YES;
+                        /*
                         NSString *passwordRegex = @"((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%?_!^&*]).{8,})";
                         NSPredicate *passwordTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", passwordRegex];
                         [passwordTest evaluateWithObject:_tfPassword.text];
@@ -217,9 +219,11 @@ numberOfRowsInComponent:(NSInteger)component{
                         {
                             passwordflag = YES;
                         }
+                         
                         else{
                     [self presentViewController:[GlobalMethods AlertWithTitle:@"Invalid password" Message:@"Password must contain an alphabet, a special character, a capital alphabet  and a number" AlertMessage:@"OK"]animated:YES completion:nil];
                         }
+                         */
                     }
                 }
             }

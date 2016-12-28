@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="16C68" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -30,7 +30,7 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arrow_right" translatesAutoresizingMaskIntoConstraints="NO" id="nyQ-LT-UkP">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_right" translatesAutoresizingMaskIntoConstraints="NO" id="nyQ-LT-UkP">
                                     <rect key="frame" x="290" y="10" width="10" height="19"/>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cf4-ld-nyV">
@@ -45,15 +45,19 @@
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
+                                <constraint firstItem="nyQ-LT-UkP" firstAttribute="height" secondItem="Gvh-HF-Ktt" secondAttribute="height" multiplier="19:40" id="1OT-El-yyH"/>
                                 <constraint firstAttribute="height" constant="40" id="2Km-El-cAv"/>
                                 <constraint firstItem="cf4-ld-nyV" firstAttribute="leading" secondItem="Gvh-HF-Ktt" secondAttribute="leading" constant="85" id="Cwk-OL-4E6"/>
+                                <constraint firstItem="nyQ-LT-UkP" firstAttribute="top" secondItem="Gvh-HF-Ktt" secondAttribute="top" constant="10" id="G1S-DP-ay1"/>
                                 <constraint firstItem="529-R1-yiG" firstAttribute="leading" secondItem="Gvh-HF-Ktt" secondAttribute="leading" constant="20" id="I0D-Iu-B0V"/>
+                                <constraint firstItem="nyQ-LT-UkP" firstAttribute="width" secondItem="Gvh-HF-Ktt" secondAttribute="width" multiplier="10:320" id="Iz0-gd-9O4"/>
                                 <constraint firstItem="66i-im-ZFz" firstAttribute="leading" secondItem="529-R1-yiG" secondAttribute="trailing" constant="8" id="KTl-Xx-scS"/>
                                 <constraint firstItem="cf4-ld-nyV" firstAttribute="centerY" secondItem="ofH-M8-DZ5" secondAttribute="centerY" id="Mqb-OX-w4S"/>
                                 <constraint firstItem="ofH-M8-DZ5" firstAttribute="top" secondItem="cf4-ld-nyV" secondAttribute="bottom" constant="-25" id="U6R-xU-QcB"/>
                                 <constraint firstItem="ofH-M8-DZ5" firstAttribute="top" secondItem="Gvh-HF-Ktt" secondAttribute="top" constant="6" id="Vcr-m9-Ybx"/>
                                 <constraint firstItem="ofH-M8-DZ5" firstAttribute="height" secondItem="Gvh-HF-Ktt" secondAttribute="height" multiplier="25:40" id="WRf-GY-E5g"/>
                                 <constraint firstItem="529-R1-yiG" firstAttribute="top" secondItem="Gvh-HF-Ktt" secondAttribute="top" constant="10" id="a2r-xB-k3I"/>
+                                <constraint firstAttribute="trailing" secondItem="nyQ-LT-UkP" secondAttribute="trailing" constant="20" id="e3o-tG-PfF"/>
                                 <constraint firstItem="ofH-M8-DZ5" firstAttribute="width" secondItem="Gvh-HF-Ktt" secondAttribute="width" multiplier="25:320" id="jNI-hR-Q8v"/>
                                 <constraint firstItem="66i-im-ZFz" firstAttribute="centerY" secondItem="529-R1-yiG" secondAttribute="centerY" id="kJO-p6-ReR"/>
                                 <constraint firstItem="ofH-M8-DZ5" firstAttribute="leading" secondItem="Gvh-HF-Ktt" secondAttribute="leading" constant="40" id="pMY-wU-SkQ"/>

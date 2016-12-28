@@ -14,7 +14,7 @@
 #import "employeeJobNotification.h"
 #import "subCategoryCtr.h"
 
-@interface lastRegisterCtr : UIViewController<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextViewDelegate>
+@interface lastRegisterCtr : UIViewController<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextViewDelegate,UIGestureRecognizerDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UIButton *btnCamera;
