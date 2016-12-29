@@ -45,8 +45,8 @@
 @property(strong,nonatomic)UIButton *chatSelected;
 @property(strong,nonatomic)  JSCustomBadge *chatBadge;
 @property (strong, nonatomic) IBOutlet UIScrollView *categoryScrollView;
-
 @property (strong, nonatomic) IBOutlet UIButton *changeLocationbtn;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
 
 
 - (IBAction)changeLocationClicked:(id)sender;

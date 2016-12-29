@@ -1183,7 +1183,7 @@ CGRect sliderFrame;
 
 - (void)showCurrentLocation
 {  _mapView.myLocationEnabled = YES;
-    _mapView.settings.myLocationButton = YES;
+    //_mapView.settings.myLocationButton = YES;
     _mapView.delegate = self;
     markerUserLocation.map  = nil;
     _mapView.myLocationEnabled = YES;

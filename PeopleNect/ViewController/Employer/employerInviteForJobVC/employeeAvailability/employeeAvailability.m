@@ -34,14 +34,12 @@
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
-
-
 #pragma mark - ViewLifeCycle -
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return weekDays.count;
 }
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     availabilityCell *Cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"availabilityCell" forIndexPath:indexPath];
 
     Cell.weekNameLbl.text = [weekDays objectAtIndex:indexPath.row];

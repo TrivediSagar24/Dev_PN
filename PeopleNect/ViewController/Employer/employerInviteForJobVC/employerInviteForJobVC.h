@@ -16,7 +16,7 @@
 #import "inviteForPostedJob.h"
 
 @interface employerInviteForJobVC : UIViewController
-<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *obj_CollectionView;
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
@@ -24,9 +24,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *busyBtn;
 @property (strong, nonatomic) IBOutlet UILabel *chatLabel;
 @property (strong, nonatomic) IBOutlet UIView *ProfileView;
+@property (strong, nonatomic) IBOutlet UIView *leftViewArrow;
+@property (strong, nonatomic) IBOutlet UIView *rightViewArrow;
 @property (strong, nonatomic) IBOutlet UIButton *ProfileBtn;
 @property (strong, nonatomic) IBOutlet UIView *invitedJobView;
 @property (strong, nonatomic) IBOutlet UIButton *postedJobBtn;
+@property (strong, nonatomic) IBOutlet UIView *chatView;
+@property (strong, nonatomic) IBOutlet UIView *busyView;
 
 @property (strong,nonatomic) NSString *employeeName;
 @property (strong,nonatomic) NSString *employeeImage;

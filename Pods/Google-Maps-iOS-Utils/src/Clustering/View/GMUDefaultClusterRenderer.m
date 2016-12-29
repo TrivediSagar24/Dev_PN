@@ -275,20 +275,24 @@ static const double kGMUAnimationDuration = 0.5;  // seconds.
       }
         int totalCount = cluster.count;
         NSLog(@"totalCount %d",totalCount);
+        NSLog(@"zoom point %f",zoom);
         
         UIImageView *clusterIcon;
         
-
          NSString *EmployeeUserID = [[NSUserDefaults standardUserDefaults]stringForKey:@"EmployeeUserId"];
         if (EmployeeUserID!= nil) {
             clusterIcon = [self getUIImageFromThisUIView:[self BlueViewMarker:100 markerCount:totalCount]];
+
         }else{
             
-            if (totalCount==1) {
-                clusterIcon = [self getUIImageFromThisUIView:[self EmployerMarker:0]];
-            }else{
-                clusterIcon = [self getUIImageFromThisUIView:[self BlueViewMarker:100 markerCount:totalCount]];
-            }
+        clusterIcon = [self getUIImageFromThisUIView:[self EmployerMarker:0]];
+            
+//            if (totalCount==1) {
+//                clusterIcon = [self getUIImageFromThisUIView:[self EmployerMarker:0]];
+//
+//            }else{
+//                clusterIcon = [self getUIImageFromThisUIView:[self BlueViewMarker:100 markerCount:totalCount]];
+//            }
         }
       GMSMarker *marker = [self markerWithPosition:item.position
                                               from:fromPosition

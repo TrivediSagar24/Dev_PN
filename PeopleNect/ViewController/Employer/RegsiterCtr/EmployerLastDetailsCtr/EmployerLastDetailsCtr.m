@@ -110,7 +110,7 @@
     [super viewWillAppear:YES];
     [[self navigationController] setNavigationBarHidden:NO animated:YES];
     self.navigationItem.hidesBackButton = YES;
-    self.navigationController.navigationBar.translucent = NO;
+    self.navigationController.navigationBar.translucent = YES;
     self.navigationItem.leftBarButtonItem = [GlobalMethods customNavigationBarButton:@selector(barBackButton) Target:self Image:@"Gray_right_arrow_"];
 }
 
@@ -136,6 +136,9 @@
     
 }
 
+-(void)viewDidDisappear:(BOOL)animated{
+     [[NSUserDefaults standardUserDefaults ]setObject:@"over" forKey:@"PostJob"];
+}
 
 #pragma mark - Navigation Back Button -
 -(void)barBackButton{
@@ -948,6 +951,8 @@ if (_tfJobTitle.text.length==0) {
         
         [param setObject:@"" forKey:@"jobSeekerId"];
        
+        
+        NSLog(@"param %@",param);
         kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
         
         [kAFClient POST:MAIN_URL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

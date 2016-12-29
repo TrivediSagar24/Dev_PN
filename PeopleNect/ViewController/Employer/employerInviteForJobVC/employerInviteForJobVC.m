@@ -67,6 +67,7 @@
     self.obj_CollectionView.delegate = self;
    
     [self.obj_CollectionView.collectionViewLayout invalidateLayout];
+    [self gestureView];
 }
 
 
@@ -350,15 +351,12 @@ return Cell;
 
 - (IBAction)onClickChat:(id)sender {
         if (_chatBtn.enabled ==YES) {
-           
              //[self chatHistory];
-            
             if ([GlobalMethods InternetAvailability]) {
                 [self receiveMessageWebservice];
             }else{
                 [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
             }
-            
 //            employeeMainChat *obj_employeeMainChat = [self.storyboard instantiateViewControllerWithIdentifier:@"employeeMainChat"];
 //            
 //            obj_employeeMainChat.FromEmployerInvite = EmployeeDetails;
@@ -450,14 +448,12 @@ return Cell;
     
     if (_isfromOpenJobSelected == YES) {
         
-
         if ([_invitedJobListArray count]-1>=nextItem.item) {
             
             //_employeeSelected = nextItem.item;
             
             _employeeSelected = _employeeSelected+1;
 
-            
             [UIView setAnimationsEnabled:NO];
             
             [_obj_CollectionView performBatchUpdates:^{
@@ -476,7 +472,6 @@ return Cell;
             
             _employeeSelected = _employeeSelected+1;
 
-            
             [UIView setAnimationsEnabled:NO];
             
             [_obj_CollectionView performBatchUpdates:^{
@@ -492,24 +487,17 @@ return Cell;
     }
 }
 
-
+#pragma mark  - receiveMessageWebservice -
 -(void)receiveMessageWebservice{
-
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
-    
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
-
-    
     [_param setObject:self.employeeId forKey:@"sender_id"];
-   
     [_param setObject:[[NSUserDefaults standardUserDefaults]stringForKey:@"EmployerUserID"] forKey:@"receiver_id"];
-    
     [_param setObject:@"1" forKey:@"flag"];
-    
     [_param setObject:@"0" forKey:@"latest_msg_id"];
-    
+    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
+        [kAppDel.progressHud hideAnimated:YES];
         NSMutableArray *Sort  = [[NSMutableArray alloc]init];
         
         Sort = [[responseObject valueForKey:@"data"]mutableCopy];
@@ -590,5 +578,27 @@ return Cell;
     self.categoryID = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"category_id"];
     
     self.subCategoryID = [[_invitedJobListArray objectAtIndex:_employeeSelected]valueForKey:@"sub_category_id"];;
+}
+#pragma mark- GestureView -
+-(void)gestureView{
+    UITapGestureRecognizer *chatGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickChat:)];
+    chatGestureRecognizer.delegate = self;
+    [self.chatView addGestureRecognizer:chatGestureRecognizer];
+    
+    UITapGestureRecognizer *busyGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(busyBtnClicked:)];
+    busyGestureRecognizer.delegate = self;
+    [self.busyView addGestureRecognizer:busyGestureRecognizer];
+
+    UITapGestureRecognizer *leftGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickBtnLeft:)];
+    leftGestureRecognizer.delegate = self;
+    [self.leftViewArrow addGestureRecognizer:leftGestureRecognizer];
+    
+    UITapGestureRecognizer *rightGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onClickBtnRight:)];
+    rightGestureRecognizer.delegate = self;
+    [self.rightViewArrow addGestureRecognizer:rightGestureRecognizer];
+}
+#pragma mark - gesture Delegates -
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
 }
 @end

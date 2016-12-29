@@ -9,10 +9,16 @@
 #import "availabilityCell.h"
 #import "PN_Constants.h"
 @implementation availabilityCell
--(void)layoutSubviews{
+
+-(void)awakeFromNib{
     _availabilityView.layer.borderColor = RGBCGCOLOR(92.0, 121.0, 159.0);
     _availabilityView.layer.borderWidth = 1.0;
     _availabilityView.layer.masksToBounds = YES;
-    _availabilityView.layer.cornerRadius = 10.0;
+    _availabilityView.layer.cornerRadius = 10;
+
+}
+-(void)layoutSubviews{
+      // _availabilityView.layer.cornerRadius = (self.frame.size.width*10)/414;
+
 }
 @end

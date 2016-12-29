@@ -61,6 +61,32 @@
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }
+#pragma mark - <FZAccordionTableViewDelegate> -
+
+- (void)tableView:(FZAccordionTableView *)tableView willOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
+    
+}
+
+- (void)tableView:(FZAccordionTableView *)tableView didOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
+    
+    AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
+    customHeader.rightArrowImg.frame = CGRectMake(customHeader.rightArrowImg.frame.origin.x, 15, 18, 12);
+    
+    customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_down"];
+}
+
+- (void)tableView:(FZAccordionTableView *)tableView willCloseSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
+    
+}
+
+- (void)tableView:(FZAccordionTableView *)tableView didCloseSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
+    
+    AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
+    
+    customHeader.rightArrowImg.frame = CGRectMake(customHeader.rightArrowImg.frame.origin.x, 10, 10, 19);
+    
+    customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_right"];
+}
 
 
 #pragma mark - <UITableViewDataSource> / <UITableViewDelegate> -

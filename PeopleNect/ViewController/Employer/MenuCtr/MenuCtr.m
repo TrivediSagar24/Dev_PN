@@ -95,7 +95,9 @@ static CLLocationCoordinate2D currentLocation;
     
     markerUserLocation = [[GMSMarker alloc]init];
     
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:currentLocation zoom:6.0];
+    [self UserLocationMarker:CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLong doubleValue])];
+
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithTarget:CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLong doubleValue]) zoom:6.0];
     [_obj_MapView setCamera:camera];
     
     selectedTab = 0;
@@ -112,8 +114,6 @@ static CLLocationCoordinate2D currentLocation;
     _clusterManager =
     [[GMUClusterManager alloc] initWithMap:_obj_MapView algorithm:algorithm renderer:renderer];
     
-    
-    [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
     
     UISwipeGestureRecognizer *swipeRightSide = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(slideToRightWithGesture:)];
     swipeRightSide.direction = UISwipeGestureRecognizerDirectionRight;
@@ -133,6 +133,7 @@ static CLLocationCoordinate2D currentLocation;
                                                  name:NSUserDefaultsDidChangeNotification
                                                object:nil];
     _changeLocationbtn.hidden = YES;
+    _indicatorView.hidden = YES;
 }
 
 
@@ -146,8 +147,6 @@ static CLLocationCoordinate2D currentLocation;
         
     }
 }
-
-
 
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -170,15 +169,15 @@ static CLLocationCoordinate2D currentLocation;
     self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:32.0/255.0 green:86.0/255.0 blue:136.0/255.0 alpha:1.0];
     self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem =  [self RightBarButton];
+    [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:NO];
 }
 
 
 #pragma mark - show Current Location  Delegates -
 - (void)showCurrentLocation
 {
-    markerUserLocation.map  = nil;
     _obj_MapView.myLocationEnabled = YES;
-    _obj_MapView.settings.myLocationButton = YES;
+   // _obj_MapView.settings.myLocationButton = YES;
 
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate=self;
@@ -191,10 +190,11 @@ static CLLocationCoordinate2D currentLocation;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    markerUserLocation.map = nil;
+//    markerUserLocation.map = nil;
     currentLocation = CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [kAppDel.progressHud hideAnimated:YES];
-    [self UserLocationMarker:CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude)];
+    
+    //[self UserLocationMarker:CLLocationCoordinate2DMake(newLocation.coordinate.latitude, newLocation.coordinate.longitude)];
 }
 
 -(void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position{
@@ -210,22 +210,22 @@ static CLLocationCoordinate2D currentLocation;
     {
         currentLocation = CLLocationCoordinate2DMake([locations objectAtIndex:0].coordinate.latitude, [locations objectAtIndex:0].coordinate.longitude);
         [kAppDel.progressHud hideAnimated:YES];
-        [self UserLocationMarker:currentLocation];
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
-        [_obj_MapView animateWithCameraUpdate:updatedCamera];
-        _obj_MapView.mapType = kGMSTypeNormal;
+       // [self UserLocationMarker:currentLocation];
+//        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
+//        [_obj_MapView animateWithCameraUpdate:updatedCamera];
+//        _obj_MapView.mapType = kGMSTypeNormal;
         check = 1;
     }
     if (currentLocation.latitude == [locations lastObject].coordinate.latitude && currentLocation.longitude == [locations lastObject].coordinate.longitude){
-        [self UserLocationMarker:currentLocation];
+        //[self UserLocationMarker:currentLocation];
     }
     else{
-        markerUserLocation.map = nil;
-        [kAppDel.progressHud hideAnimated:YES];
+       // markerUserLocation.map = nil;
+//        [kAppDel.progressHud hideAnimated:YES];
         currentLocation = CLLocationCoordinate2DMake([locations lastObject].coordinate.latitude, [locations lastObject].coordinate.longitude);
-        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
-        [_obj_MapView animateWithCameraUpdate:updatedCamera];
-        [self UserLocationMarker:currentLocation];
+//        GMSCameraUpdate *updatedCamera = [GMSCameraUpdate setTarget:currentLocation zoom:6.0];
+//        [_obj_MapView animateWithCameraUpdate:updatedCamera];
+//        [self UserLocationMarker:currentLocation];
     }
 }
 
@@ -233,7 +233,7 @@ static CLLocationCoordinate2D currentLocation;
 -(void)UserLocationMarker:(CLLocationCoordinate2D )Position{
     
     //markerUserLocation.position = Position;
-    
+   // markerUserLocation.map = nil;
     markerUserLocation.position = CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLong doubleValue]);
     
     markerUserLocation.icon = [UIImage imageNamed:@"iconMapGreen.png"];
@@ -249,15 +249,15 @@ static CLLocationCoordinate2D currentLocation;
     
     [_clusterManager clearItems];
     
+    [self.obj_MapView clear];
+
     for (int i = 0; i<[[EmployeeDetails valueForKey:@"name"]count]; i++) {
         
         id<GMUClusterItem> itemCluster =
         
         [[POIItemForEmployer alloc]initWithPosition:CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]) name:@"Name"];
         
-        
         [_clusterManager addItem:itemCluster];
-        
         [_clusterManager cluster];
         [_clusterManager setDelegate:self mapDelegate:self];
     }
@@ -289,20 +289,23 @@ static CLLocationCoordinate2D currentLocation;
 
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker{
    
-   
-    employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
+    
+    if ([marker.userData isKindOfClass:[NSString class]]) {
         
-    obj_employerInviteForJobVC.employeeSelected = [marker.accessibilityLabel integerValue];
+    }else{
+        employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
         
-    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:
-                                obj_employerInviteForJobVC];
+        obj_employerInviteForJobVC.employeeSelected = [marker.accessibilityLabel integerValue];
         
-    obj_nav.definesPresentationContext = YES;
+        UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:
+                                           obj_employerInviteForJobVC];
         
-    obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        obj_nav.definesPresentationContext = YES;
+        
+        obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
         
         [self presentViewController:obj_nav animated:YES completion:nil];
-    
+    }
     return YES;
 }
 
@@ -352,7 +355,6 @@ static CLLocationCoordinate2D currentLocation;
     [[NSUserDefaults standardUserDefaults] setObject:EmployeeList  forKey:@"EmployeeList"];
     
     [[NSUserDefaults standardUserDefaults] synchronize];
-
     
     self.totalRecordEmployee.text = [NSString stringWithFormat:@"%d professionals in %@", count,selectedCategoryName];
     
@@ -438,7 +440,10 @@ static CLLocationCoordinate2D currentLocation;
 
 
 -(void)nearByEmployeesSelected :(NSInteger) selectedCategory{
-    kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
+    
+    _indicatorView.hidden = NO;
+    [_indicatorView startAnimating];
+
     NSMutableDictionary *parameterDictionary= [[NSMutableDictionary alloc]  init];
     [parameterDictionary setObject:@"nearByEmployees" forKey:@"methodName"];
     [parameterDictionary setObject:EmployerUserID forKey:@"employerId"];
@@ -447,24 +452,22 @@ static CLLocationCoordinate2D currentLocation;
     [parameterDictionary setObject:[[NSString alloc] initWithFormat:@"%f", currentLocation.longitude] forKey:@"longitude"];
     
     [kAFClient POST:MAIN_URL parameters:parameterDictionary progress:nil success:^(NSURLSessionDataTask *  task, id   responseObject) {
-        [kAppDel.progressHud hideAnimated:YES];
-        
+
+        _indicatorView.hidden = YES;
+        [_indicatorView stopAnimating];
         /*-------Setting data in response object----------*/
         
+        [EmployeeDetails removeAllObjects];
         EmployeeDetails = [[responseObject valueForKey:@"data"]mutableCopy];
-        
-        [self.obj_MapView clear];
-        
-        [self UserLocationMarker:currentLocation];
+
         [self mapMarker];
-        
+        [self UserLocationMarker:CLLocationCoordinate2DMake([kAppDel.obj_responseDataOC.employerLocationLat doubleValue], [kAppDel.obj_responseDataOC.employerLocationLong doubleValue])];
         
         totalRecords = [responseObject valueForKey:@"totalRecords"];
         selectedCategoryName = [responseObject valueForKey:@"selectedCategoryName"];
         
         self.totalRecordEmployee.textColor = [UIColor colorWithRed:164.0/255.0 green:164.0/255.0 blue:164.0/255.0 alpha:1.0];
         self.totalRecordEmployee.font = [UIFont fontWithName:@"helvetica" size:13];
-        
         
         if([selectedCategoryName isEqual:[NSNull null]])
         {
@@ -476,10 +479,12 @@ static CLLocationCoordinate2D currentLocation;
         [self SetVisibleJobs];
 
     /*--Getting total records of particular selected data---*/
-        
     }
             failure:^(NSURLSessionDataTask *  task, NSError *  error) {
-                [kAppDel.progressHud hideAnimated:YES];
+                
+                _indicatorView.hidden = YES;
+                [_indicatorView stopAnimating];
+
             }];
 }
 
@@ -643,7 +648,7 @@ static CLLocationCoordinate2D currentLocation;
     }
 }
 
-#pragma mark - topTapCreate -
+#pragma mark- topTapCreate -
 -(void)topTabCreate
 {
     int scrollWidh = 0;
@@ -668,8 +673,7 @@ static CLLocationCoordinate2D currentLocation;
         [btnAddActual setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         
         
-        UIImageView *lineimage = [[UIImageView alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, 37, (btnAddTemp.frame.size.width+spacer*2)+1, 3)];
-        
+        UIImageView *lineimage = [[UIImageView alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, 30, (btnAddTemp.frame.size.width+spacer*2)+1, 3)];
         
         lineimage.backgroundColor = [UIColor blueColor];
         
@@ -705,14 +709,17 @@ static CLLocationCoordinate2D currentLocation;
     
     scrollWidh = distX-spacer;
     
-    _categoryScrollView.contentSize = CGSizeMake(scrollWidh, 40);
-    
+    _categoryScrollView.contentSize = CGSizeMake(scrollWidh, 0);
+    _categoryScrollView.showsVerticalScrollIndicator = NO;
+    _categoryScrollView.showsHorizontalScrollIndicator = NO;
+  
     UIButton *btn = [[UIButton alloc]init];
     btn.tag = selectedTabNumber;
     [self tabSelectAction:btn];
+    
 }
 
-#pragma mark btnAddActualTemp -
+#pragma mark- btnAddActualTemp -
 - (void)btnActualTempForTagsPressed:(UIButton *)sender
 {
     [self performSelector:@selector(tabSelectAction:) withObject:sender afterDelay:0.01];
@@ -723,6 +730,8 @@ static CLLocationCoordinate2D currentLocation;
 {
     nearByCount = nearByCount+1;
     
+   // [_clusterManager clearItems];
+
     if(self.view.userInteractionEnabled == NO)
     {
         return;
@@ -731,7 +740,6 @@ static CLLocationCoordinate2D currentLocation;
     lastSelectedIndex = selectedTabNumber;
     
     selectedtag = ((UIButton *)sender).tag;
-    
     
     for(UIView * subView in _categoryScrollView.subviews )
     {
@@ -822,6 +830,7 @@ static CLLocationCoordinate2D currentLocation;
 #pragma mark - swipe gesture to slide between view -
 -(void)slideToRightWithGesture:(UISwipeGestureRecognizer *)gestureRecognizer
 {
+
     if(selectedTabNumber == 0)
     {
         
