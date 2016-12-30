@@ -12,7 +12,10 @@
 
 @interface employerInviteForJobVC ()
 {
+    IBOutlet NSLayoutConstraint *busyLblBottomConstraints;
     NSString *userType;
+    IBOutlet NSLayoutConstraint *starTopConstraints;
+    IBOutlet NSLayoutConstraint *collectionTopConstraints;
     NSInteger indexOfChat;
     NSMutableDictionary *EmployeeDetails;
     NSString *employeeProfileImage;
@@ -29,8 +32,18 @@
     self.ProfileView.clipsToBounds = YES;
     _ProfileBtn.hidden = YES;
     
-    self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(80)/2;
-   
+    NSLog(@"employeeSelected %ld",(long)_employeeSelected);
+    
+    starTopConstraints.constant =kDEV_PROPROTIONAL_Height(5);
+    
+    if IS_IPHONE_4{
+    collectionTopConstraints.constant =kDEV_PROPROTIONAL_Height(90);
+        
+          self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(75)/2;
+    }else{
+        self.ProfileView.layer.cornerRadius  =  kDEV_PROPROTIONAL_Height(80)/2;
+
+    }
     EmployeeDetails = [[NSMutableDictionary alloc]init];
     
     if (_isfromOpenJobSelected == YES) {
@@ -75,8 +88,23 @@
     [super viewWillAppear:animated];
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 
-
+    if IS_IPHONE_4{
+      busyLblBottomConstraints.constant = 5;
+    }
+    
+    if IS_IPHONE_5{
+        busyLblBottomConstraints.constant = 10;
+    }
+    if IS_IPHONE_6{
+        busyLblBottomConstraints.constant = 25;
+    }
+    if IS_IPHONE_6_Plus{
+        busyLblBottomConstraints.constant = 25;
+    }
+}
 #pragma mark - Collection View Delegate
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     
@@ -378,7 +406,6 @@ return Cell;
     [self presentViewController:obj_nav animated:YES completion:nil];
 }
 
-
 - (IBAction)invitedForNewJobClicked:(id)sender {
     EmployerLastDetailsCtr *obj_EmployerLastDetailsCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLastDetailsCtr"];
     obj_EmployerLastDetailsCtr.isFrominVitedScreen = YES;
@@ -444,7 +471,6 @@ return Cell;
     NSIndexPath *currentItem = [visibleItems objectAtIndex:0];
     
     NSIndexPath *nextItem = [NSIndexPath indexPathForItem:currentItem.item + 1 inSection:currentItem.section];
-    
     
     if (_isfromOpenJobSelected == YES) {
         

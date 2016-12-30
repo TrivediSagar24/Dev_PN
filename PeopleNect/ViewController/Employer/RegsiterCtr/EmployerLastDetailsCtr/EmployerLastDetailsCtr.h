@@ -29,7 +29,6 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressViewHeightConstraints;
 @property (strong, nonatomic) NSString *jobId;
 @property (strong, nonatomic) NSString *repostProfileURL;
-
 @property (strong, nonatomic) IBOutlet UIView *addressView;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfJobTitle;
 @property (strong, nonatomic) IBOutlet UIView *profileView;
@@ -49,6 +48,8 @@
 @property (strong,nonatomic)    NSString *categoryId;
 @property (strong, nonatomic) IBOutlet APRoundedButton *subtractBtn;
 @property (strong, nonatomic) IBOutlet UILabel *companyAddresslbl;
+@property (nonatomic)  BOOL isfromRepostJob;
+
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfStreetNumber;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfComplement;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextField *tfZipCode;

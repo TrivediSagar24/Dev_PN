@@ -255,7 +255,7 @@ static CLLocationCoordinate2D currentLocation;
         
         id<GMUClusterItem> itemCluster =
         
-        [[POIItemForEmployer alloc]initWithPosition:CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]) name:@"Name"];
+        [[POIItemForEmployer alloc]initWithPosition:CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]) name:[NSString stringWithFormat:@"%d",i]];
         
         [_clusterManager addItem:itemCluster];
         [_clusterManager cluster];
@@ -266,6 +266,7 @@ static CLLocationCoordinate2D currentLocation;
     
     bounds = [bounds includingCoordinate:currentLocation];
     
+    /*
     for(int i=0;i<[[EmployeeDetails valueForKey:@"name"]count];i++)
     {
         CLLocationCoordinate2D position = CLLocationCoordinate2DMake([[[EmployeeDetails valueForKey:@"lat"]objectAtIndex:i]doubleValue], [[[EmployeeDetails valueForKey:@"lng"]objectAtIndex:i]doubleValue]);
@@ -278,6 +279,7 @@ static CLLocationCoordinate2D currentLocation;
         marker.appearAnimation = kGMSMarkerAnimationPop;
        // marker.map = _obj_MapView;
     }
+     */
     //[_obj_MapView animateWithCameraUpdate:[GMSCameraUpdate fitBounds:bounds withPadding:20.0f]];
 }
 -(void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture{
@@ -290,21 +292,32 @@ static CLLocationCoordinate2D currentLocation;
 -(BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker{
    
     
+      employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
+    
+    UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:
+                        obj_employerInviteForJobVC];
+    
+    obj_nav.definesPresentationContext = YES;
+    
+    obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    
+    
     if ([marker.userData isKindOfClass:[NSString class]]) {
         
+        
     }else{
-        employerInviteForJobVC *obj_employerInviteForJobVC =[self.storyboard instantiateViewControllerWithIdentifier:@"employerInviteForJobVC"];
+
+        if ([marker.userData isKindOfClass:[GMUStaticCluster class]]) {
+            obj_employerInviteForJobVC.employeeSelected = 0;
+            [self presentViewController:obj_nav animated:YES completion:nil];
+        }
+        else{
+              int markerSelected = [[marker.userData valueForKey:@"name"]intValue];
+            
+            obj_employerInviteForJobVC.employeeSelected = markerSelected;
+            [self presentViewController:obj_nav animated:YES completion:nil];
+        }
         
-        obj_employerInviteForJobVC.employeeSelected = [marker.accessibilityLabel integerValue];
-        
-        UINavigationController *obj_nav = [[UINavigationController alloc]initWithRootViewController:
-                                           obj_employerInviteForJobVC];
-        
-        obj_nav.definesPresentationContext = YES;
-        
-        obj_nav.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        
-        [self presentViewController:obj_nav animated:YES completion:nil];
     }
     return YES;
 }
@@ -656,24 +669,34 @@ static CLLocationCoordinate2D currentLocation;
     int spacer = 10;
     
     nearByCount = 0;
+    float height;
+    if IS_IPHONE_6_Plus{
+        height = 60;
+    }
+    if IS_IPHONE_6{
+        height = 40;
+    }else{
+        height = kDEV_PROPROTIONAL_Height(40);
+    }
+    
+    float width = kDEV_PROPROTIONAL_Width(100);
     
     for(int i=0 ;i<[arrayCategoryList count];i++)
     {
         
         NSString *str_uppercase = [arrayCategoryList objectAtIndex:i];
         
-        UIButton *btnAddTemp = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 100, 40)];
+        UIButton *btnAddTemp = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, width, height)];
         [btnAddTemp setTitle:str_uppercase forState:UIControlStateNormal];
         
         [btnAddTemp sizeToFit];
         
-        UIButton *btnAddActual = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, 40)];
+        UIButton *btnAddActual = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, height)];
         [btnAddActual setTitle:str_uppercase forState:UIControlStateNormal];
         
         [btnAddActual setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         
-        
-        UIImageView *lineimage = [[UIImageView alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, 30, (btnAddTemp.frame.size.width+spacer*2)+1, 3)];
+        UIImageView *lineimage = [[UIImageView alloc]initWithFrame:CGRectMake(btnAddActual.frame.origin.x-spacer, height-10, (btnAddTemp.frame.size.width+spacer*2)+1, 3)];
         
         lineimage.backgroundColor = [UIColor blueColor];
         
@@ -692,7 +715,7 @@ static CLLocationCoordinate2D currentLocation;
         
         if (i==arrayCategoryList.count-1)
         {
-            UIButton *btnAddActualTemp = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, 40)];
+            UIButton *btnAddActualTemp = [[UIButton alloc]initWithFrame:CGRectMake(distX, 0, btnAddTemp.frame.size.width, height)];
             [btnAddActualTemp setTitle:str_uppercase forState:UIControlStateNormal];
             
             [btnAddActualTemp addTarget:self action:@selector(btnActualTempForTagsPressed:) forControlEvents:UIControlEventTouchUpInside];

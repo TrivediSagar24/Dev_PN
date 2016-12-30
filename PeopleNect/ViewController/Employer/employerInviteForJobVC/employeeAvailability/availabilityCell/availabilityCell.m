@@ -14,8 +14,11 @@
     _availabilityView.layer.borderColor = RGBCGCOLOR(92.0, 121.0, 159.0);
     _availabilityView.layer.borderWidth = 1.0;
     _availabilityView.layer.masksToBounds = YES;
-    _availabilityView.layer.cornerRadius = 10;
-
+    
+    if IS_IPHONE_4
+        _availabilityView.layer.cornerRadius = 10;
+    else
+        _availabilityView.layer.cornerRadius = 10;
 }
 -(void)layoutSubviews{
       // _availabilityView.layer.cornerRadius = (self.frame.size.width*10)/414;

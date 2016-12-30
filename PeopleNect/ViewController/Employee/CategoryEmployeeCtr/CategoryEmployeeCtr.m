@@ -250,7 +250,6 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
 
 - (IBAction)popViewBackClicked:(id)sender
 {
-
     if (_iscomingFromSettingCtr==YES) {
         for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
         {
@@ -259,7 +258,6 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
                 [self.navigationController popToViewController:viewControllrObj animated:YES];
             }
         }
-
     }
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"repost"]) {
         for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
@@ -270,6 +268,17 @@ if ([_selectedCategoryId isEqualToString:[[kAppDel.obj_EmployeeCategory.category
             }
         }
     }
+    
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"reposting"]) {
+        for (UIViewController *viewControllrObj in self.navigationController.viewControllers)
+        {
+            if ([viewControllrObj isKindOfClass:[repostJobEmployerCtr class]])
+            {
+                [self.navigationController popToViewController:viewControllrObj animated:YES];
+            }
+        }
+    }
+    
 }
 
 #pragma mark - ImagePicker Delegates. -

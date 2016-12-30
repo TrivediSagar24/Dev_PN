@@ -2654,7 +2654,7 @@
                                                     <constraint firstAttribute="height" constant="1" id="DLj-zr-k4h"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1GN-Tt-OMm" userLabel="streetNameView">
@@ -9740,7 +9740,7 @@
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="axa-wb-A6u">
-                                                <rect key="frame" x="28" y="60" width="27" height="14"/>
+                                                <rect key="frame" x="28" y="61" width="27" height="14"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                                 <color key="textColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -9749,7 +9749,6 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="axa-wb-A6u" firstAttribute="centerX" secondItem="e0E-th-VQx" secondAttribute="centerX" id="8Qw-Gh-fMS"/>
-                                            <constraint firstItem="axa-wb-A6u" firstAttribute="top" secondItem="e0E-th-VQx" secondAttribute="bottom" constant="8" id="L7m-Sf-Rcg"/>
                                             <constraint firstAttribute="trailing" secondItem="e0E-th-VQx" secondAttribute="trailing" id="U1H-F1-m42"/>
                                             <constraint firstItem="e0E-th-VQx" firstAttribute="height" secondItem="buz-yn-auI" secondAttribute="height" multiplier="22:83" id="X72-vz-Bys"/>
                                             <constraint firstItem="e0E-th-VQx" firstAttribute="top" secondItem="buz-yn-auI" secondAttribute="top" constant="30" id="c8Z-8N-ZkT"/>
@@ -9776,10 +9775,10 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="xpU-n9-i80" secondAttribute="trailing" id="3Sp-N4-a9i"/>
-                                            <constraint firstItem="zGf-OM-POy" firstAttribute="top" secondItem="xpU-n9-i80" secondAttribute="bottom" constant="8" id="5PK-10-V3a"/>
                                             <constraint firstItem="zGf-OM-POy" firstAttribute="centerX" secondItem="xpU-n9-i80" secondAttribute="centerX" id="NRb-fz-pY0"/>
                                             <constraint firstItem="xpU-n9-i80" firstAttribute="height" secondItem="Lsf-ig-zje" secondAttribute="height" multiplier="25:83" id="mC1-Pi-115"/>
                                             <constraint firstItem="xpU-n9-i80" firstAttribute="leading" secondItem="Lsf-ig-zje" secondAttribute="leading" constant="8" id="nHb-uc-K97"/>
+                                            <constraint firstAttribute="bottom" secondItem="zGf-OM-POy" secondAttribute="bottom" constant="8" id="oZL-7C-CC1"/>
                                             <constraint firstItem="xpU-n9-i80" firstAttribute="top" secondItem="Lsf-ig-zje" secondAttribute="top" constant="30" id="piY-IF-6bQ"/>
                                         </constraints>
                                     </view>
@@ -9802,6 +9801,7 @@
                                     <constraint firstItem="buz-yn-auI" firstAttribute="leading" secondItem="Dnu-fo-se9" secondAttribute="leading" constant="25" id="Xfv-sm-IMf"/>
                                     <constraint firstItem="buz-yn-auI" firstAttribute="top" secondItem="Dnu-fo-se9" secondAttribute="top" constant="20" id="YAC-hM-PPB"/>
                                     <constraint firstItem="Lsf-ig-zje" firstAttribute="height" secondItem="buz-yn-auI" secondAttribute="height" id="enY-PW-WEA"/>
+                                    <constraint firstItem="axa-wb-A6u" firstAttribute="bottom" secondItem="zGf-OM-POy" secondAttribute="bottom" id="l4A-92-PDD"/>
                                     <constraint firstItem="Zik-wu-db7" firstAttribute="width" secondItem="Dnu-fo-se9" secondAttribute="width" multiplier="60:320" id="qwR-ov-tU3"/>
                                     <constraint firstItem="Zik-wu-db7" firstAttribute="height" secondItem="Dnu-fo-se9" secondAttribute="height" multiplier="60:103" id="raH-wT-N3m"/>
                                     <constraint firstAttribute="bottom" secondItem="buz-yn-auI" secondAttribute="bottom" id="wC1-jo-nlm"/>
@@ -10138,16 +10138,19 @@
                         <outlet property="ProfileBtn" destination="rX4-XS-gC4" id="wyk-Z1-Ewg"/>
                         <outlet property="ProfileView" destination="c3f-AG-0RU" id="1Fg-U4-ewp"/>
                         <outlet property="busyBtn" destination="xpU-n9-i80" id="jVM-f4-9fw"/>
+                        <outlet property="busyLblBottomConstraints" destination="oZL-7C-CC1" id="zbR-A2-9WD"/>
                         <outlet property="busyView" destination="Lsf-ig-zje" id="GP8-Tz-Bn8"/>
                         <outlet property="chatBtn" destination="e0E-th-VQx" id="VOH-qI-9ib"/>
                         <outlet property="chatLabel" destination="axa-wb-A6u" id="NAI-Kf-bmk"/>
                         <outlet property="chatView" destination="buz-yn-auI" id="IC4-yq-jvr"/>
+                        <outlet property="collectionTopConstraints" destination="Vke-Dh-qzm" id="jq3-vD-2E5"/>
                         <outlet property="invitedJobView" destination="2rJ-7t-OLs" id="FwH-km-mw1"/>
                         <outlet property="leftViewArrow" destination="GiO-jT-3k9" id="eGo-RM-Qjm"/>
                         <outlet property="obj_CollectionView" destination="XlU-em-1Y6" id="QbL-50-VMw"/>
                         <outlet property="postedJobBtn" destination="ORa-xs-jCU" id="QuV-BT-l7g"/>
                         <outlet property="profileImage" destination="YHJ-xd-tyz" id="z8e-aG-4M0"/>
                         <outlet property="rightViewArrow" destination="mfK-HQ-sRy" id="247-Nx-SL9"/>
+                        <outlet property="starTopConstraints" destination="Kw3-1G-KCi" id="LhE-U1-wUu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R7N-qC-2hd" userLabel="First Responder" sceneMemberID="firstResponder"/>

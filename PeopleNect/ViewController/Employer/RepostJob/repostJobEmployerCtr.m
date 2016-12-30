@@ -123,21 +123,23 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row==0) {
-        [[NSUserDefaults standardUserDefaults ]setObject:@"repost" forKey:@"PostJob"];
+        [[NSUserDefaults standardUserDefaults ]setObject:@"reposting" forKey:@"PostJob"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
         [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
     }
     else
     {
-        [[NSUserDefaults standardUserDefaults ]setObject:@"last" forKey:@"PostJob"];
-        [[NSUserDefaults standardUserDefaults]synchronize];
+//        [[NSUserDefaults standardUserDefaults ]setObject:@"last" forKey:@"PostJob"];
+//        [[NSUserDefaults standardUserDefaults]synchronize];
         
         EmployerLastDetailsCtr *obj_EmployerLastDetailsCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"EmployerLastDetailsCtr"];
         
         obj_EmployerLastDetailsCtr.jobId = [[closeJobArray objectAtIndex:indexPath.row-1]valueForKey:@"jobId"];
        
         obj_EmployerLastDetailsCtr.repostProfileURL = [[closeJobArray objectAtIndex:indexPath.row-1]valueForKey:@"pictureUrl"];
+        
+    obj_EmployerLastDetailsCtr.isfromRepostJob = YES;
 
         [self.navigationController pushViewController:obj_EmployerLastDetailsCtr animated:YES];
     }
@@ -158,16 +160,13 @@
         [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             [kAppDel.progressHud hideAnimated:YES];
             closeJobArray = [responseObject valueForKey:@"data"];
-            if (closeJobArray.count==0) {
-                [[NSUserDefaults standardUserDefaults ]setObject:@"repost" forKey:@"PostJob"];
-                [[NSUserDefaults standardUserDefaults]synchronize];
-                CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
-                [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
-            }
+            [self CategoryView];
             _respostTableView.delegate = self;
             _respostTableView.dataSource = self;
             [_respostTableView reloadData];
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            [self CategoryView];
             _respostTableView.delegate = self;
             _respostTableView.dataSource = self;
             [_respostTableView reloadData];
@@ -175,6 +174,16 @@
         }];
     }else{
         [self presentViewController:[GlobalMethods AlertWithTitle:@"Internet Connection" Message:InternetAvailbility AlertMessage:@"OK"] animated:YES completion:nil];
+    }
+}
+-(void)CategoryView{
+    if (closeJobArray.count==0) {
+        
+        [[NSUserDefaults standardUserDefaults ]setObject:@"repost" forKey:@"PostJob"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+        
+        CategoryEmployeeCtr *obj_CategoryEmployeeCtr = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryEmployeeCtr"];
+        [self.navigationController pushViewController:obj_CategoryEmployeeCtr animated:YES];
     }
 }
 @end

@@ -41,8 +41,9 @@
     self.tfTotallPay.text = [NSString stringWithFormat:@"$0"];
     self.btnCheckBox2.selected = YES;
     
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"last"]){
-        
+//    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"last"]){
+        if (_isfromRepostJob==YES) {
+            
 //        _tfJobTitle.enabled = NO;
 //        _tvJobDescription.userInteractionEnabled = NO;
 //        _btnCheckBox1.userInteractionEnabled = NO;
@@ -133,17 +134,11 @@
     _tfStreetName.autoCompleteShouldSelectOnExactMatchAutomatically = YES;
     
     _tfStreetName.autoCompleteTableFrame = CGRectMake((self.view.frame.size.width-_tfStreetName.frame.size.width)*0.5, 0, _tfStreetName.frame.size.width, 100.0);
-    
-}
-
--(void)viewDidDisappear:(BOOL)animated{
-     [[NSUserDefaults standardUserDefaults ]setObject:@"over" forKey:@"PostJob"];
 }
 
 #pragma mark - Navigation Back Button -
 -(void)barBackButton{
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"PostJob"] isEqualToString:@"last"]) {
-        
+     if (_isfromRepostJob==YES)  {
         for (UIViewController *viewControllrObj in self.navigationController.viewControllers){
             
             if ([viewControllrObj isKindOfClass:[repostJobEmployerCtr class]]){

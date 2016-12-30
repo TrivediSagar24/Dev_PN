@@ -56,7 +56,6 @@
         }
     }
     
-
     if ([[selectedWeekAvailibility objectAtIndex:indexPath.row]isEqualToString:@"0"]) {
         Cell.weekNameLbl.hidden = YES;
         Cell.availabilityLabel.text = @"Not Available";
@@ -69,8 +68,19 @@
     return Cell;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+   
     
-    return CGSizeMake(collectionView.frame.size.width-30, collectionView.frame.size.height/7);
+    if IS_IPHONE_6_Plus {
+        return CGSizeMake(collectionView.frame.size.width-50, collectionView.frame.size.height/7);
+    }
+    
+    if IS_IPHONE_6 {
+        return CGSizeMake(collectionView.frame.size.width-30, collectionView.frame.size.height/7);
+    }else{
+        return CGSizeMake(collectionView.frame.size.width, collectionView.frame.size.height/7);
+
+    }
+   
 }
 
 - (IBAction)closeBtnClicked:(id)sender {

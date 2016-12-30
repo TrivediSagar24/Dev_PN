@@ -27,6 +27,9 @@
 #import <GoogleMaps/GoogleMaps.h>
 @import GoogleMaps;
 #import <Google-Maps-iOS-Utils/GMUMarkerClustering.h>
+#import "GMUCluster.h"
+#import "GMUStaticCluster.h"
+
 
 @interface MenuCtr : UIViewController
 <UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate,GMSMapViewDelegate,GMUClusterManagerDelegate,UIGestureRecognizerDelegate,UIScrollViewDelegate,GMUClusterManagerDelegate>
