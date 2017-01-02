@@ -12,8 +12,8 @@
 
 @implementation responseDataOC
 -(responseDataOC *) initWithDictionary:(NSMutableDictionary *)dictionary{
-    
-    if(self == [super init]){
+     self = [super init];
+    if(self){
         self.employerId = [[dictionary  valueForKey:@"data"  ]  valueForKey:@"employerId"];
         
         self.employerName =[[dictionary valueForKey:@"data"] valueForKey:@"name"];
@@ -29,7 +29,7 @@
         self.employerNumber = [[dictionary valueForKey:@"data"] valueForKey:@"number"];
         self.employerComplement = [[dictionary valueForKey:@"data"] valueForKey:@"complement"];
         
-        _employerLocationLat = [[dictionary valueForKey:@"data"] valueForKey:@"lat"];
+_employerLocationLat = [[dictionary valueForKey:@"data"] valueForKey:@"lat"];
         _employerLocationLong = [[dictionary valueForKey:@"data"] valueForKey:@"lng"];
     }
     
@@ -88,8 +88,8 @@
 #pragma mark - responseUpdateEmployerDetails -
 @implementation responseUpdateEmployerDetails
 -(responseUpdateEmployerDetails *)initWithDictionary:(NSMutableDictionary *)dictionary{
-
-    if(self == [super init]){
+    self = [super init];
+    if(self){
     
         self.employerCompanyName = [[dictionary valueForKey:@"data"] valueForKey:@"companyName"];
         self.employerCompanyAddress = [[dictionary valueForKey:@"data"] valueForKey:@"companyaddress"];
@@ -148,9 +148,11 @@
 
 -(reponseGmailFacebookLogin*) initWithDictionary:(NSMutableDictionary *)dictionary{
     
+    self = [super init];
+
     _Employee_Response = [[NSMutableDictionary alloc]init];
     
-    if(self = [super init])
+    if(self)
     {
         _Employee_Response = dictionary;
         
@@ -253,8 +255,10 @@
 
 -(responseEmployeeUserDetail*) initWithDictionary:(NSMutableDictionary *)dictionary
 {
+    self = [super init];
+
      _Employee_Response = [[NSMutableDictionary alloc]init];
-    if(self = [super init])
+    if(self)
     {
         _Employee_Response = dictionary;
        _Employee_availability = [[dictionary valueForKey:@"data"] valueForKey:@"availability"];
@@ -319,7 +323,9 @@
 
 -(id)initWithCoder : (NSCoder *)decoder {
     
-    if(self == [super init]){
+    self = [super init];
+
+    if(self){
         _Employee_availability  = [decoder decodeObjectForKey:@"availability"];
         _Employee_category_id = [decoder decodeObjectForKey:@"category_id"];
         _Employee_category_name = [decoder decodeObjectForKey:@"category_name"];
@@ -369,8 +375,9 @@
 
 
 -(id)initWithCoder : (NSCoder *)decoder {
-    
-    if(self == [super init]){
+    self = [super init];
+
+    if(self){
         
         self.countryCode  = [decoder decodeObjectForKey:@"countryCode"];
         self.countryId = [decoder decodeObjectForKey:@"countryId"];
@@ -422,8 +429,10 @@
 @implementation EmployeeCategory
 
 -(EmployeeCategory*) initWithDictionary:(NSMutableDictionary *)dictionary{
+    self = [super init];
+
     _categoryList = [[NSMutableDictionary alloc]init];
-    if (self = [super init])
+    if (self)
     {
         [_categoryList setObject: [[dictionary objectForKey:@"categoryList"]valueForKey:@"categoryName"] forKey:@"categoryName"];
          [_categoryList setObject: [[dictionary objectForKey:@"categoryList"]valueForKey:@"categoryId"] forKey:@"categoryId"];
@@ -458,7 +467,9 @@
 
 -(responseCategoryList *) initWithDictionary :(NSMutableDictionary *)dictionary{
     
-    if(self ==[super init]){
+    self = [super init];
+
+    if(self){
         self.categoryId = [[NSMutableArray alloc] init];
         self.categoryName = [[NSMutableArray alloc] init];
         
@@ -512,7 +523,10 @@
     self.employeeRating = [[NSMutableArray alloc] init];
     self.employeeSubcategoryId = [[NSMutableArray alloc] init];
     self.employeeSubactegoryName = [[NSMutableArray alloc] init];
-    if(self == [super init]){
+    
+    self = [super init];
+
+    if(self){
     /*---Allocating and initialising the arrays----------*/
         self.employeeAvailabilityStatus = [Array  valueForKey:@"availabilityStatus"];
         self.employeeCategoryId =[Array valueForKey:@"categoryId"];
@@ -611,10 +625,11 @@
 @implementation responseRegiserEmployee
 
 -(responseRegiserEmployee*) initWithDictionary:(NSMutableDictionary *)dictionary{
-    
+    self = [super init];
+
     _Employee_Response = [[NSMutableDictionary alloc]init];
     
-    if(self = [super init])
+    if(self)
     {
         _Employee_Response = dictionary;
         _Employee_country_code= [[dictionary valueForKey:@"data"] valueForKey:@"country_code"];

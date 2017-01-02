@@ -241,6 +241,8 @@
     messageforchat = [[JSQMessage alloc] initWithSenderId:senderId senderDisplayName:senderDisplayName date:date text:text];
     [self sendMessage:text];
     [data addObject:messageforchat];
+    [JSQSystemSoundPlayer jsq_playMessageSentSound];
+    [self finishSendingMessageAnimated:YES];
 }
 
 
@@ -659,9 +661,7 @@
         
         //[kAppDel.progressHud hideAnimated:YES];
 
-        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
-        
-        Sort = [[responseObject valueForKey:@"data"]mutableCopy];
+        NSMutableArray *Sort = [[responseObject valueForKey:@"data"]mutableCopy];
         
         Sort = [GlobalMethods SortArray:Sort];
 
@@ -858,10 +858,6 @@
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
        
         latestMessageId = [[responseObject valueForKey:@"data"]valueForKey:@"id"];
-        
-        
-        [JSQSystemSoundPlayer jsq_playMessageSentSound];
-        [self finishSendingMessageAnimated:YES];
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         //NSLog(@"error %@",error);

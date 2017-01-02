@@ -117,7 +117,8 @@
         
         return Cell;
     }
-    if (indexPath.section==1) {
+//     if (indexPath.section==1)
+    else{
         if (_guestJob.count==0) {
             Cell.textLabel.textColor = Cell.jobTitleLbl.textColor;
             Cell.textLabel.text = @"no available guest jobs";
@@ -134,8 +135,7 @@
         }
         return Cell;
     }
-    return nil;
-    
+
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

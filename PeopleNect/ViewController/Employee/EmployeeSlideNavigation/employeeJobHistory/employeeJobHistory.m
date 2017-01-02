@@ -171,14 +171,14 @@
         
         return cell;
     }
-    else if (indexPath.section==2){
+    //else if (indexPath.section==2){
+     else {
         onGoingSectionCell *cell = [tableView dequeueReusableCellWithIdentifier:@"onGoingSectionCell" forIndexPath:indexPath];
         
         cell.followBtn.hidden = YES;
         
         return cell;
     }
-    return nil;
 }
 
 

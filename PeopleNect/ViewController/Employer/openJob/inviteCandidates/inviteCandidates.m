@@ -46,6 +46,8 @@
 
 
 -(void)viewDidAppear:(BOOL)animated{
+    
+    [super viewDidAppear:animated];
     _heightForAvailableTable.constant = (self.view.frame.size.height*318)/568;
     
     heightforTableView = _availableTableView.frame.origin.y + (self.view.frame.size.height*268)/568;
@@ -152,7 +154,8 @@
         return inviteCandidatesCell;
 
     }
-    if (hot == YES) {
+//    if (hot == YES)
+    else {
         
         if (_hotEmployeeArray.count>0) {
             
@@ -201,8 +204,6 @@
         }
         return inviteCandidatesCell;
     }
-    
-    return nil;
 }
 
 #pragma mark - IBActions  -

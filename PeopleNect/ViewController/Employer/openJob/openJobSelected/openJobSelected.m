@@ -316,8 +316,8 @@ if (section==2){
         
         return cell;
     }
-    if (indexPath.section==3) {
-        
+     //if (indexPath.section==3)
+    else {
         cell.hiredBtn.hidden = YES;
         cell.xrejectedLbl.hidden = YES;
         cell.ratingLbl.hidden = YES;
@@ -364,7 +364,6 @@ if (section==2){
 
         return cell;
     }
-    return nil;
     
 }
 

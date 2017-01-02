@@ -54,6 +54,7 @@
 
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self radiusLbl];
     if ([_wait isEqualToString:@"wait"]|| [_result isEqualToString:@"selected"] || [_result isEqualToString:@"rejected"]) {
         [self waitingImage];

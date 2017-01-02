@@ -68,6 +68,8 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+
     _EmployeeProfileImage.layer.cornerRadius = _EmployeeProfileImage.frame.size.height/2;
     _saveBtn.frame = CGRectMake(_saveBtn.frame.origin.x, _tfPassword.frame.origin.y+_tfPassword.frame.size.height+15, _saveBtn.frame.size.width, _saveBtn.frame.size.height);
     if (_tfPassword.hidden){

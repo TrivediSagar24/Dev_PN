@@ -101,7 +101,9 @@
         }
     }
     calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];
-    calendar.source = localSource;
+    if (localSource!=nil) {
+        calendar.source = localSource;
+    }
     calendar.title = calendarName;
     NSError* error;
    [eventStore saveCalendar:calendar commit:YES error:&error];

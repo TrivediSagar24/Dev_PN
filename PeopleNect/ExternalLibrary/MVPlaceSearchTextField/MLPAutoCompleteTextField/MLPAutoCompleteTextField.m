@@ -245,10 +245,10 @@ static NSString *kDefaultAutoCompleteCellIdentifier = @"_DefaultAutoCompleteCell
           atIndexPath:(NSIndexPath *)indexPath
 withAutoCompleteString:(NSString *)string
 {
-    
+    BOOL attributedTextSupport ;
     NSAttributedString *boldedString = nil;
     if(self.applyBoldEffectToAutoCompleteSuggestions){
-        BOOL attributedTextSupport = [cell.textLabel respondsToSelector:@selector(setAttributedText:)];
+    attributedTextSupport = [cell.textLabel respondsToSelector:@selector(setAttributedText:)];
         NSAssert(attributedTextSupport, @"Attributed strings on UILabels are  not supported before iOS 6.0");
         NSRange boldedRange = [[string lowercaseString]
                                rangeOfString:[self.text lowercaseString]];
@@ -623,11 +623,12 @@ withAutoCompleteString:(NSString *)string
 
 - (void)registerAutoCompleteCellClass:(Class)cellClass forCellReuseIdentifier:(NSString *)reuseIdentifier
 {
+    BOOL classSettingSupported;
     NSAssert(self.autoCompleteTableView, @"Must have an autoCompleteTableView to register cells to.");
     if(self.reuseIdentifier){
         [self unregisterAutoCompleteCellForReuseIdentifier:self.reuseIdentifier];
     }
-    BOOL classSettingSupported = [self.autoCompleteTableView respondsToSelector:@selector(registerClass:forCellReuseIdentifier:)];
+    classSettingSupported = [self.autoCompleteTableView respondsToSelector:@selector(registerClass:forCellReuseIdentifier:)];
     NSAssert(classSettingSupported, @"Unable to set class for cell for autocomplete table, in iOS 5.0 you can set a custom NIB for a reuse identifier to get similar functionality.");
     [self.autoCompleteTableView registerClass:cellClass forCellReuseIdentifier:reuseIdentifier];
     [self setReuseIdentifier:reuseIdentifier];
@@ -942,7 +943,8 @@ withAutoCompleteString:(NSString *)string
     if(!self.isCancelled){
         
         if(suggestions.count){
-            NSObject *firstObject = suggestions[0];
+            NSObject *firstObject;
+           firstObject = suggestions[0];
             NSAssert([firstObject isKindOfClass:[NSString class]] ||
                      [firstObject conformsToProtocol:@protocol(MLPAutoCompletionObject)],
                      @"MLPAutoCompleteTextField expects an array with objects that are either strings or conform to the MLPAutoCompletionObject protocol for possible completions.");

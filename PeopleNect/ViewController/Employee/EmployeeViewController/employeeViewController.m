@@ -74,6 +74,8 @@ static int count = 0;
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
+
     [self autoSuggestionOptionalProperty];
     
     if (kAppDel.obj_reponseGmailFacebookLogin.Employee_email.length>0)
@@ -96,6 +98,8 @@ static int count = 0;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+
     if (facebook == TRUE){
         count = count;
     }

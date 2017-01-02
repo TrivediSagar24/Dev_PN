@@ -18,6 +18,7 @@
     IBOutlet NSLayoutConstraint *collectionTopConstraints;
     NSInteger indexOfChat;
     NSMutableDictionary *EmployeeDetails;
+    NSMutableArray *Sort;
     NSString *employeeProfileImage;
 }
 @end
@@ -89,8 +90,7 @@
     [[self navigationController] setNavigationBarHidden:YES animated:YES];
 }
 -(void)viewDidAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-
+    [super viewDidAppear:animated];
     if IS_IPHONE_4{
       busyLblBottomConstraints.constant = 5;
     }
@@ -515,6 +515,8 @@ return Cell;
 
 #pragma mark  - receiveMessageWebservice -
 -(void)receiveMessageWebservice{
+    Sort  = [[NSMutableArray alloc]init];
+
     NSMutableDictionary *_param = [[NSMutableDictionary alloc]init];
     [_param setObject:@"receiverMessage" forKey:@"methodName"];
     [_param setObject:self.employeeId forKey:@"sender_id"];
@@ -524,7 +526,6 @@ return Cell;
     kAppDel.progressHud = [GlobalMethods ShowProgressHud:self.view];
     [kAFClient POST:MAIN_URL parameters:_param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [kAppDel.progressHud hideAnimated:YES];
-        NSMutableArray *Sort  = [[NSMutableArray alloc]init];
         
         Sort = [[responseObject valueForKey:@"data"]mutableCopy];
         

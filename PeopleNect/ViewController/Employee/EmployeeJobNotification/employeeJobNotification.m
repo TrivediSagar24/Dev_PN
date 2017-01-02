@@ -1515,7 +1515,11 @@ CGRect sliderFrame;
     
     
     StatTimelbl.text = [startTimeArray objectAtIndex:sender.tag];
+    NSLog(@"start Time %@",[startTimeArray objectAtIndex:sender.tag]);
+    
     endTimelbl.text = [endTimeArray objectAtIndex:sender.tag];
+    NSLog(@"end Time %@",[endTimeArray objectAtIndex:sender.tag]);
+
     
 //    startTimeArray
 //    endTimeArray
@@ -1645,7 +1649,7 @@ CGRect sliderFrame;
     
     StatTimelbl = [[UILabel alloc]init];
     
-  //  StatTimelbl.text = @"00:00";
+   StatTimelbl.text = @"01:00";
     
     StatTimelbl.textColor = _lblProgressWeekNames.textColor;
     
@@ -1653,7 +1657,7 @@ CGRect sliderFrame;
     
     endTimelbl = [[UILabel alloc]init];
     
-   // endTimelbl.text = @"24:00";
+   endTimelbl.text = @"25:00";
     
     endTimelbl.textColor = _lblProgressWeekNames.textColor;
     

@@ -47,6 +47,9 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    
+    [super viewDidAppear:animated];
+    
     NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"ChangeLocation"];
     _changeLocationData = [[managedObjectContext executeFetchRequest:fetchRequest error:nil] mutableCopy];

@@ -157,6 +157,7 @@ static CLLocationCoordinate2D currentLocation;
 }
  
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [[SlideNavigationController sharedInstance ]setEnableSwipeGesture:YES];
 }
 
@@ -262,9 +263,9 @@ static CLLocationCoordinate2D currentLocation;
         [_clusterManager setDelegate:self mapDelegate:self];
     }
     
-     GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
-    
-    bounds = [bounds includingCoordinate:currentLocation];
+//     GMSCoordinateBounds *bounds = [[GMSCoordinateBounds alloc] init];
+//    
+//    bounds = [bounds includingCoordinate:currentLocation];
     
     /*
     for(int i=0;i<[[EmployeeDetails valueForKey:@"name"]count];i++)
@@ -670,9 +671,9 @@ static CLLocationCoordinate2D currentLocation;
     
     nearByCount = 0;
     float height;
-    if IS_IPHONE_6_Plus{
-        height = 60;
-    }
+//    if IS_IPHONE_6_Plus{
+//        height = 60;
+//    }
     if IS_IPHONE_6{
         height = 40;
     }else{
