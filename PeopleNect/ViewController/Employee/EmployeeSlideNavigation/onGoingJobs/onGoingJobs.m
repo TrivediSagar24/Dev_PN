@@ -63,10 +63,33 @@
 
 - (void)tableView:(FZAccordionTableView *)tableView didOpenSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
     
-    AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
-    customHeader.rightArrowImg.frame = CGRectMake(customHeader.rightArrowImg.frame.origin.x, 15, 18, 12);
+//    return _nextApplicationArray.count;
+//    //        return 5;
+//}else
+//return _pendingApplicationArray.count;
+    int count;
+    count= 0;
     
-    customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_down"];
+ AccordionHeaderView *customHeader = (AccordionHeaderView *)header;
+    
+    if (section==0) {
+        
+        if (_nextApplicationArray.count>0) {
+            count=1;
+        }
+        
+    }else
+    {
+        if (_pendingApplicationArray.count>0) {
+            count=1;
+        }
+    }
+    
+    if (count==1) {
+        customHeader.rightArrowImg.frame = CGRectMake(customHeader.rightArrowImg.frame.origin.x, 15, 18, 12);
+        
+        customHeader.rightArrowImg.image=[UIImage imageNamed:@"arrow_down"];
+    }
 }
 
 - (void)tableView:(FZAccordionTableView *)tableView willCloseSection:(NSInteger)section withHeader:(UITableViewHeaderFooterView *)header {
@@ -100,11 +123,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 230;
+    //return 230;
+
+    return 190;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-       return kDefaultAccordionHeaderViewHeight;
+     return kDefaultAccordionHeaderViewHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {

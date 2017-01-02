@@ -54,7 +54,6 @@
     
     data = [[NSMutableArray alloc]init];
 
-    
     if (_arrayHistory.count==0) {
         
         self.senderDisplayName = [_FromEmployerInvite valueForKey:@"DisplyName"];
@@ -186,11 +185,14 @@
     self.navigationController.navigationBar.translucent = NO;
     
     self.navigationItem.leftBarButtonItem = [self customNavigationBarButton:@selector(barBackButton) Target:self ];
-    
+   
+    /* For Right Navigation Button
+     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"dot"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]
     style:UIBarButtonItemStylePlain target:self
    action:@selector(RightBarButtonPressed)];
     
+     */
     if (self.delegateModal)
     {
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
